@@ -12,6 +12,7 @@ import {
   Globe,
   ShieldAlert,
   Link2,
+  FileText,
   Upload, 
   Download, 
   Check, 
@@ -22,7 +23,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -58,9 +59,7 @@ export default function Home() {
   const [base64Error, setBase64Error] = useState<string | null>(null);
 
   // Markdown State'leri
-  const [markdownInput, setMarkdownInput] = useState<string>(
-    "# PrivaTools\n\n**Client-side** açık kaynak araç seti."
-  );
+  const [markdownInput, setMarkdownInput] = useState<string>("# PrivaTools\n\n**Client-side** açık kaynak araç seti.");
   const [markdownCopied, setMarkdownCopied] = useState<boolean>(false);
 
   // Meta Tag State'leri
@@ -76,11 +75,14 @@ export default function Home() {
   const [jwtPayload, setJwtPayload] = useState<string>("");
   const [jwtError, setJwtError] = useState<string | null>(null);
 
-  // URL Encoder/Decoder State'leri
+  // URL State'leri
   const [urlInput, setUrlInput] = useState<string>("");
   const [urlOutput, setUrlOutput] = useState<string>("");
   const [urlMode, setUrlMode] = useState<"encode" | "decode">("encode");
   const [urlCopied, setUrlCopied] = useState<boolean>(false);
+
+  // Metin Analizörü State'leri
+  const [analyzerText, setAnalyzerText] = useState<string>("");
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -214,6 +216,13 @@ export default function Home() {
       setUrlOutput("Hata: Dönüştürme yapılamadı.");
     }
   };
+
+  // Metin Analizi İstatistikleri
+  const charCount = analyzerText.length;
+  const wordCount = analyzerText.trim() ? analyzerText.trim().split(/\s+/).length : 0;
+  const sentenceCount = analyzerText.trim() ? analyzerText.split(/[.!?]+/).filter(Boolean).length : 0;
+  const paragraphCount = analyzerText.trim() ? analyzerText.split(/\n+/).filter(Boolean).length : 0;
+  const readingTime = Math.ceil(wordCount / 200); // Ortalama 200 wpm
 
   // Markdown Parser
   const parseMarkdown = (text: string) => {
@@ -393,6 +402,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Link2 className="w-4 h-4 text-emerald-400" />
               <span>URL Encoder / Decoder</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("text")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "text"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <FileText className="w-4 h-4 text-emerald-400" />
+              <span>Metin Analizörü</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -743,21 +767,13 @@ export default function Home() {
                       </button>
                     )}
                   </div>
-
-                  {base64Error ? (
-                    <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
-                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                      <p>{base64Error}</p>
-                    </div>
-                  ) : (
-                    <textarea
-                      rows={10}
-                      readOnly
-                      value={base64Output}
-                      placeholder="Sonuç burada görüntülenecek..."
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                    />
-                  )}
+                  <textarea
+                    rows={10}
+                    readOnly
+                    value={base64Output}
+                    placeholder="Sonuç burada görüntülenecek..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                  />
                 </div>
               </div>
             </div>
@@ -773,15 +789,6 @@ export default function Home() {
                     Markdown kodlarınızı yazın ve gerçek zamanlı biçimlendirilmiş çıktısını görüntüleyin.
                   </p>
                 </div>
-                {markdownInput && (
-                  <button
-                    onClick={() => copyToClipboard(markdownInput, setMarkdownCopied)}
-                    className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5"
-                  >
-                    {markdownCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                    {markdownCopied ? "Kopyalandı" : "Markdown'ı Kopyala"}
-                  </button>
-                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -841,16 +848,6 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-xs font-medium text-slate-400">Üretilen HTML Kodu</label>
-                    <button
-                      onClick={() => copyToClipboard(metaTagCode, setMetaCopied)}
-                      className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                    >
-                      {metaCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                      {metaCopied ? "Kopyalandı" : "Kopyala"}
-                    </button>
-                  </div>
                   <textarea
                     rows={12}
                     readOnly
@@ -874,7 +871,6 @@ export default function Home() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-1">JWT Token Yapıştırın</label>
                   <textarea
                     rows={4}
                     value={jwtInput}
@@ -884,36 +880,22 @@ export default function Home() {
                   />
                 </div>
 
-                {jwtError ? (
-                  <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <p>{jwtError}</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-xs font-medium text-slate-400">Header</label>
-                      <textarea
-                        rows={8}
-                        readOnly
-                        value={jwtHeader}
-                        placeholder="Header verisi burada görünecek..."
-                        className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-medium text-slate-400">Payload</label>
-                      <textarea
-                        rows={8}
-                        readOnly
-                        value={jwtPayload}
-                        placeholder="Payload verisi burada görünecek..."
-                        className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                      />
-                    </div>
-                  </div>
-                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <textarea
+                    rows={8}
+                    readOnly
+                    value={jwtHeader}
+                    placeholder="Header verisi..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                  />
+                  <textarea
+                    rows={8}
+                    readOnly
+                    value={jwtPayload}
+                    placeholder="Payload verisi..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -921,74 +903,71 @@ export default function Home() {
           {/* TAB 9: URL Encoder / Decoder */}
           {activeTab === "url" && (
             <div className="space-y-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-xl font-semibold text-white">URL Encoder / Decoder</h1>
-                  <p className="text-sm text-slate-400 mt-1">
-                    URL adreslerinizdeki özel karakterleri istemci tarafında güvenle kodlayın veya çözün.
-                  </p>
-                </div>
-                <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
-                  <button
-                    onClick={() => {
-                      setUrlMode("encode");
-                      handleUrlProcess(urlInput, "encode");
-                    }}
-                    className={`px-3 py-1.5 rounded-md font-medium transition ${
-                      urlMode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Encode
-                  </button>
-                  <button
-                    onClick={() => {
-                      setUrlMode("decode");
-                      handleUrlProcess(urlInput, "decode");
-                    }}
-                    className={`px-3 py-1.5 rounded-md font-medium transition ${
-                      urlMode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Decode
-                  </button>
-                </div>
+              <div>
+                <h1 className="text-xl font-semibold text-white">URL Encoder / Decoder</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  URL adreslerinizdeki özel karakterleri istemci tarafında güvenle kodlayın veya çözün.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">
-                    {urlMode === "encode" ? "Düz URL / Metin" : "Kodlanmış (Encoded) URL"}
-                  </label>
-                  <textarea
-                    rows={10}
-                    value={urlInput}
-                    onChange={(e) => handleUrlProcess(e.target.value, urlMode)}
-                    placeholder={urlMode === "encode" ? "https://example.com/search?q=test string" : "https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dtest%20string"}
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-                  />
-                </div>
+                <textarea
+                  rows={10}
+                  value={urlInput}
+                  onChange={(e) => handleUrlProcess(e.target.value, urlMode)}
+                  placeholder="Metin veya URL yazın..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                />
+                <textarea
+                  rows={10}
+                  readOnly
+                  value={urlOutput}
+                  placeholder="Çıktı burada görünecek..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                />
+              </div>
+            </div>
+          )}
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-xs font-medium text-slate-400">Sonuç</label>
-                    {urlOutput && (
-                      <button
-                        onClick={() => copyToClipboard(urlOutput, setUrlCopied)}
-                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                      >
-                        {urlCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {urlCopied ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    )}
-                  </div>
-                  <textarea
-                    rows={10}
-                    readOnly
-                    value={urlOutput}
-                    placeholder="Dönüştürülmüş çıktı burada görünecek..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                  />
+          {/* TAB 10: Metin Analizörü */}
+          {activeTab === "text" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Metin İstatistik Analizörü</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Metninizin kelime, karakter, cümle ve tahmini okuma süresi istatistiklerini hesaplayın.
+                </p>
+              </div>
+
+              {/* İstatistik Kartları */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
+                  <p className="text-xs text-slate-500 font-medium">Karakter</p>
+                  <p className="text-xl font-bold text-emerald-400 mt-1 font-mono">{charCount}</p>
                 </div>
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
+                  <p className="text-xs text-slate-500 font-medium">Kelime</p>
+                  <p className="text-xl font-bold text-emerald-400 mt-1 font-mono">{wordCount}</p>
+                </div>
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
+                  <p className="text-xs text-slate-500 font-medium">Cümle / Paragraf</p>
+                  <p className="text-xl font-bold text-slate-200 mt-1 font-mono">{sentenceCount} / {paragraphCount}</p>
+                </div>
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
+                  <p className="text-xs text-slate-500 font-medium">Okuma Süresi</p>
+                  <p className="text-xl font-bold text-slate-200 mt-1 font-mono">~{readingTime} dk</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-400">Metin Alanı</label>
+                <textarea
+                  rows={10}
+                  value={analyzerText}
+                  onChange={(e) => setAnalyzerText(e.target.value)}
+                  placeholder="Analiz edilmesini istediğiniz metni buraya yapıştırın..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+                />
               </div>
             </div>
           )}
