@@ -15,6 +15,7 @@ import {
   FileText,
   Fingerprint,
   Code,
+  Clock,
   Upload, 
   Download, 
   Check, 
@@ -25,7 +26,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -96,6 +97,11 @@ export default function Home() {
   const [htmlOutput, setHtmlOutput] = useState<string>("");
   const [htmlMode, setHtmlMode] = useState<"encode" | "decode">("encode");
   const [htmlCopied, setHtmlCopied] = useState<boolean>(false);
+
+  // Unix Timestamp State'leri
+  const [timestampInput, setTimestampInput] = useState<string>(Math.floor(Date.now() / 1000).toString());
+  const [convertedDate, setConvertedDate] = useState<string>("");
+  const [timestampCopied, setTimestampCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -263,6 +269,27 @@ export default function Home() {
     } else {
       const doc = new DOMParser().parseFromString(text, "text/html");
       setHtmlOutput(doc.documentElement.textContent || "");
+    }
+  };
+
+  // Timestamp Dönüştürücü
+  const handleConvertTimestamp = (val: string) => {
+    setTimestampInput(val);
+    if (!val.trim()) {
+      setConvertedDate("");
+      return;
+    }
+    const num = Number(val);
+    if (isNaN(num)) {
+      setConvertedDate("Geçersiz sayısal zaman damgası.");
+      return;
+    }
+    // Saniye veya Milisaniye tespiti
+    const date = new Date(num > 9999999999 ? num : num * 1000);
+    if (isNaN(date.getTime())) {
+      setConvertedDate("Geçersiz tarih.");
+    } else {
+      setConvertedDate(date.toUTCString() + " (UTC) \n" + date.toLocaleString() + " (Yerel)");
     }
   };
 
@@ -499,6 +526,24 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Code className="w-4 h-4 text-emerald-400" />
               <span>HTML Entity Converter</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("timestamp");
+              if (!convertedDate) handleConvertTimestamp(timestampInput);
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "timestamp"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Clock className="w-4 h-4 text-emerald-400" />
+              <span>Unix Timestamp Converter</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1132,38 +1177,73 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <textarea
+                  rows={10}
+                  value={htmlInput}
+                  onChange={(e) => handleHtmlProcess(e.target.value, htmlMode)}
+                  placeholder="Metin veya HTML yazın..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                />
+                <textarea
+                  rows={10}
+                  readOnly
+                  value={htmlOutput}
+                  placeholder="Sonuç..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 13: Unix Timestamp Converter */}
+          {activeTab === "timestamp" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Unix Timestamp Dönüştürücü</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Unix zaman damgasını insani tarih/saat formatına dönüştürün.
+                </p>
+              </div>
+
+              <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">
-                    {htmlMode === "encode" ? "Düz HTML / Metin" : "HTML Entities"}
-                  </label>
-                  <textarea
-                    rows={10}
-                    value={htmlInput}
-                    onChange={(e) => handleHtmlProcess(e.target.value, htmlMode)}
-                    placeholder={htmlMode === "encode" ? "<h1>Hello & World</h1>" : "&lt;h1&gt;Hello &amp; World&lt;/h1&gt;"}
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-medium text-slate-400">Unix Timestamp (Saniye veya Milisaniye)</label>
+                    <button
+                      onClick={() => handleConvertTimestamp(Math.floor(Date.now() / 1000).toString())}
+                      className="text-xs text-emerald-400 hover:underline"
+                    >
+                      Şu Anki Zamanı Getir
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={timestampInput}
+                    onChange={(e) => handleConvertTimestamp(e.target.value)}
+                    placeholder="1726084292"
+                    className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-3 text-xs font-mono text-slate-200 focus:outline-none"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-xs font-medium text-slate-400">Sonuç</label>
-                    {htmlOutput && (
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-medium text-slate-400">Çözümlenmiş Tarih & Saat</label>
+                    {convertedDate && (
                       <button
-                        onClick={() => copyToClipboard(htmlOutput, setHtmlCopied)}
+                        onClick={() => copyToClipboard(convertedDate, setTimestampCopied)}
                         className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
                       >
-                        {htmlCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {htmlCopied ? "Kopyalandı" : "Kopyala"}
+                        {timestampCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {timestampCopied ? "Kopyalandı" : "Kopyala"}
                       </button>
                     )}
                   </div>
                   <textarea
-                    rows={10}
+                    rows={4}
                     readOnly
-                    value={htmlOutput}
-                    placeholder="Sonuç burada görüntülenecek..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                    value={convertedDate}
+                    placeholder="Dönüştürülen tarih burada görüntülenecek..."
+                    className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
                   />
                 </div>
               </div>
