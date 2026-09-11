@@ -5,17 +5,17 @@ import imageCompression from "browser-image-compression";
 import { 
   FileImage, 
   KeyRound, 
-  QrCode, 
-  Sliders, 
+  Palette, 
   Upload, 
   Download, 
   Check, 
   Copy,
-  ArrowRight
+  ArrowRight,
+  Sliders
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "qr">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -28,6 +28,14 @@ export default function Home() {
   const [password, setPassword] = useState<string>("");
   const [passLength, setPassLength] = useState<number>(16);
   const [copied, setCopied] = useState<boolean>(false);
+
+  // CSS Box Shadow State'leri
+  const [shadowX, setShadowX] = useState<number>(10);
+  const [shadowY, setShadowY] = useState<number>(10);
+  const [blur, setBlur] = useState<number>(20);
+  const [spread, setSpread] = useState<number>(0);
+  const [shadowColor, setShadowColor] = useState<string>("#000000");
+  const [shadowCopied, setShadowCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,16 +76,19 @@ export default function Home() {
     setCopied(false);
   };
 
-  const copyToClipboard = () => {
-    if (!password) return;
-    navigator.clipboard.writeText(password);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = (text: string, setStatus: (v: boolean) => void) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setStatus(true);
+    setTimeout(() => setStatus(false), 2000);
   };
+
+  // CSS Box-Shadow Kodu Üretici
+  const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
-      {/* Üst Navigasyon - Clean SaaS Bar */}
+      {/* Üst Navigasyon */}
       <header className="border-b border-slate-800/80 bg-[#0D121F]/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-400">
@@ -90,7 +101,7 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Ana Uygulama Paneli - Dashboard Layout */}
+      {/* Ana Uygulama Paneli */}
       <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Sol Menü / Araç Seçici */}
@@ -130,6 +141,21 @@ export default function Home() {
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
+
+          <button
+            onClick={() => setActiveTab("shadow")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "shadow"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Palette className="w-4 h-4 text-emerald-400" />
+              <span>CSS Shadow Generator</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
         </aside>
 
         {/* Sağ Panel / Aktif Araç Alanı */}
@@ -146,7 +172,6 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Yükleme Alanı */}
                 <div className="border border-slate-800 hover:border-slate-700 bg-[#090D16] rounded-lg p-6 flex flex-col items-center justify-center min-h-[220px] relative transition">
                   <input
                     type="file"
@@ -159,7 +184,6 @@ export default function Home() {
                   <p className="text-xs text-slate-500 mt-1">PNG, JPG, WEBP</p>
                 </div>
 
-                {/* Dinamik Ayar & Sonuç Paneli */}
                 <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-xs font-medium text-slate-400">
@@ -229,7 +253,7 @@ export default function Home() {
                     className="w-full bg-slate-900 border border-slate-800 rounded-md px-4 py-3 font-mono text-emerald-400 text-sm focus:outline-none"
                   />
                   <button
-                    onClick={copyToClipboard}
+                    onClick={() => copyToClipboard(password, setCopied)}
                     className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-3 rounded-md text-xs font-medium transition flex items-center gap-1.5 shrink-0"
                   >
                     {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -265,12 +289,105 @@ export default function Home() {
             </div>
           )}
 
+          {/* TAB 3: CSS Box Shadow Generator */}
+          {activeTab === "shadow" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">CSS Box Shadow Üreteci</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Gelişmiş CSS gölge efektleri oluşturun ve hazır kodları projenize kopyalayın.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Sol: Canlı Önizleme Alanı */}
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-8 flex items-center justify-center min-h-[260px]">
+                  <div
+                    className="w-32 h-32 bg-slate-800 rounded-xl transition-all duration-150"
+                    style={{
+                      boxShadow: `${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor}`,
+                    }}
+                  />
+                </div>
+
+                {/* Sağ: Ayarlar ve Kod Çıktısı */}
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <div className="flex justify-between text-slate-400 mb-1">
+                        <span>X Offset</span>
+                        <span className="text-white font-mono">{shadowX}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="-50"
+                        max="50"
+                        value={shadowX}
+                        onChange={(e) => setShadowX(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-slate-400 mb-1">
+                        <span>Y Offset</span>
+                        <span className="text-white font-mono">{shadowY}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="-50"
+                        max="50"
+                        value={shadowY}
+                        onChange={(e) => setShadowY(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-slate-400 mb-1">
+                        <span>Bulanıklık (Blur)</span>
+                        <span className="text-white font-mono">{blur}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={blur}
+                        onChange={(e) => setBlur(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-400">Renk:</span>
+                      <input
+                        type="color"
+                        value={shadowColor}
+                        onChange={(e) => setShadowColor(e.target.value)}
+                        className="w-6 h-6 rounded bg-transparent cursor-pointer border-0"
+                      />
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(cssShadowCode, setShadowCopied)}
+                      className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2 px-3 rounded transition flex items-center gap-1.5"
+                    >
+                      {shadowCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      {shadowCopied ? "Kopyalandı" : "Kodu Kopyala"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </section>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 px-6 py-4 text-center text-xs text-slate-500">
-        PrivaTools Open Source Utility
+        PrivaTools Open Source Utility Framework
       </footer>
     </div>
   );
