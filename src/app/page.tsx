@@ -9,6 +9,7 @@ import {
   Code2, 
   Binary,
   FileCode,
+  Globe,
   Upload, 
   Download, 
   Check, 
@@ -19,7 +20,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -56,9 +57,16 @@ export default function Home() {
 
   // Markdown State'leri
   const [markdownInput, setMarkdownInput] = useState<string>(
-    "# PrivaTools\n\n**Client-side** açık kaynak araç seti.\n\n- %100 Gizlilik\n- Hızlı İşlem\n- Sunucusuz Mimari\n\n`code .` komutu ile başlayın!"
+    "# PrivaTools\n\n**Client-side** açık kaynak araç seti.\n\n- %100 Gizlilik\n- Hızlı İşlem\n- Sunucusuz Mimari"
   );
   const [markdownCopied, setMarkdownCopied] = useState<boolean>(false);
+
+  // Meta Tag State'leri
+  const [siteTitle, setSiteTitle] = useState<string>("PrivaTools - Open Source Utilities");
+  const [siteDescription, setSiteDescription] = useState<string>("Browser-based, zero-server privacy utility tools for developers.");
+  const [siteUrl, setSiteUrl] = useState<string>("https://privatools.vercel.app");
+  const [siteImage, setSiteImage] = useState<string>("https://privatools.vercel.app/og-image.png");
+  const [metaCopied, setMetaCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +152,7 @@ export default function Home() {
     }
   };
 
-  // Basit Markdown Dönüştürücü (Client-Side Parser)
+  // Markdown Parser
   const parseMarkdown = (text: string) => {
     let parsed = text
       .replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold text-white mb-2">$1</h1>')
@@ -158,6 +166,25 @@ export default function Home() {
   };
 
   const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
+
+  const metaTagCode = `<!-- Primary Meta Tags -->
+<title>${siteTitle}</title>
+<meta name="title" content="${siteTitle}" />
+<meta name="description" content="${siteDescription}" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="${siteUrl}" />
+<meta property="og:title" content="${siteTitle}" />
+<meta property="og:description" content="${siteDescription}" />
+<meta property="og:image" content="${siteImage}" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="${siteUrl}" />
+<meta property="twitter:title" content="${siteTitle}" />
+<meta property="twitter:description" content="${siteDescription}" />
+<meta property="twitter:image" content="${siteImage}" />`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -272,6 +299,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <FileCode className="w-4 h-4 text-emerald-400" />
               <span>Markdown Live Editor</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("meta")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "meta"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Globe className="w-4 h-4 text-emerald-400" />
+              <span>Meta Tag & OpenGraph</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -675,11 +717,86 @@ export default function Home() {
                   />
                 </div>
 
-             <div className="space-y-2">
+                <div className="space-y-2">
                   <label className="text-xs font-medium text-slate-400">Canlı Önizleme</label>
                   <div
                     dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
                     className="w-full h-[230px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: Meta Tag Generator */}
+          {activeTab === "meta" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Meta Tag & OpenGraph Üreteci</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Arama motorları ve sosyal medya paylaşımları için dinamik HTML meta etiketleri oluşturun.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-medium">Site Başlığı (Title)</label>
+                    <input
+                      type="text"
+                      value={siteTitle}
+                      onChange={(e) => setSiteTitle(e.target.value)}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-medium">Site Açıklaması (Description)</label>
+                    <textarea
+                      rows={3}
+                      value={siteDescription}
+                      onChange={(e) => setSiteDescription(e.target.value)}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-medium">Site URL Adresi</label>
+                    <input
+                      type="text"
+                      value={siteUrl}
+                      onChange={(e) => setSiteUrl(e.target.value)}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-400 mb-1 font-medium">Sosyal Medya Kapak Görsel URL (OG Image)</label>
+                    <input
+                      type="text"
+                      value={siteImage}
+                      onChange={(e) => setSiteImage(e.target.value)}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-medium text-slate-400">Üretilen HTML Kodu</label>
+                    <button
+                      onClick={() => copyToClipboard(metaTagCode, setMetaCopied)}
+                      className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                    >
+                      {metaCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                      {metaCopied ? "Kopyalandı" : "Kopyala"}
+                    </button>
+                  </div>
+                  <textarea
+                    rows={12}
+                    readOnly
+                    value={metaTagCode}
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
                   />
                 </div>
               </div>
