@@ -13,6 +13,7 @@ import {
   ShieldAlert,
   Link2,
   FileText,
+  Fingerprint,
   Upload, 
   Download, 
   Check, 
@@ -23,7 +24,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -83,6 +84,11 @@ export default function Home() {
 
   // Metin Analizörü State'leri
   const [analyzerText, setAnalyzerText] = useState<string>("");
+
+  // UUID Generator State'leri
+  const [uuids, setUuids] = useState<string[]>([]);
+  const [uuidQuantity, setUuidQuantity] = useState<number>(5);
+  const [uuidCopied, setUuidCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -217,12 +223,32 @@ export default function Home() {
     }
   };
 
+  // UUID v4 Üretici
+  const generateUuids = (count: number) => {
+    const list: string[] = [];
+    for (let i = 0; i < count; i++) {
+      if (typeof crypto !== "undefined" && crypto.randomUUID) {
+        list.push(crypto.randomUUID());
+      } else {
+        // Fallback random UUID
+        list.push(
+          "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            const r = (Math.random() * 16) | 0,
+              v = c === "x" ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          })
+        );
+      }
+    }
+    setUuids(list);
+  };
+
   // Metin Analizi İstatistikleri
   const charCount = analyzerText.length;
   const wordCount = analyzerText.trim() ? analyzerText.trim().split(/\s+/).length : 0;
   const sentenceCount = analyzerText.trim() ? analyzerText.split(/[.!?]+/).filter(Boolean).length : 0;
   const paragraphCount = analyzerText.trim() ? analyzerText.split(/\n+/).filter(Boolean).length : 0;
-  const readingTime = Math.ceil(wordCount / 200); // Ortalama 200 wpm
+  const readingTime = Math.ceil(wordCount / 200);
 
   // Markdown Parser
   const parseMarkdown = (text: string) => {
@@ -417,6 +443,24 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <FileText className="w-4 h-4 text-emerald-400" />
               <span>Metin Analizörü</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("uuid");
+              if (uuids.length === 0) generateUuids(uuidQuantity);
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "uuid"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Fingerprint className="w-4 h-4 text-emerald-400" />
+              <span>UUID Generator</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -782,34 +826,25 @@ export default function Home() {
           {/* TAB 6: Markdown Live Editor */}
           {activeTab === "markdown" && (
             <div className="space-y-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-xl font-semibold text-white">Markdown Live Editor</h1>
-                  <p className="text-sm text-slate-400 mt-1">
-                    Markdown kodlarınızı yazın ve gerçek zamanlı biçimlendirilmiş çıktısını görüntüleyin.
-                  </p>
-                </div>
+              <div>
+                <h1 className="text-xl font-semibold text-white">Markdown Live Editor</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Markdown kodlarınızı yazın ve gerçek zamanlı biçimlendirilmiş çıktısını görüntüleyin.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">Markdown Girişi</label>
-                  <textarea
-                    rows={12}
-                    value={markdownInput}
-                    onChange={(e) => setMarkdownInput(e.target.value)}
-                    placeholder="Markdown kodlarını yazın..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">Canlı Önizleme</label>
-                  <div
-                    dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
-                    className="w-full h-[230px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
-                  />
-                </div>
+                <textarea
+                  rows={12}
+                  value={markdownInput}
+                  onChange={(e) => setMarkdownInput(e.target.value)}
+                  placeholder="Markdown kodlarını yazın..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                />
+                <div
+                  dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
+                  className="w-full h-[230px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
+                />
               </div>
             </div>
           )}
@@ -835,7 +870,6 @@ export default function Home() {
                       className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
                     />
                   </div>
-
                   <div>
                     <label className="block text-slate-400 mb-1 font-medium">Site Açıklaması (Description)</label>
                     <textarea
@@ -847,14 +881,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <textarea
-                    rows={12}
-                    readOnly
-                    value={metaTagCode}
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                  />
-                </div>
+                <textarea
+                  rows={12}
+                  readOnly
+                  value={metaTagCode}
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                />
               </div>
             </div>
           )}
@@ -870,15 +902,13 @@ export default function Home() {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <textarea
-                    rows={4}
-                    value={jwtInput}
-                    onChange={(e) => handleDecodeJwt(e.target.value)}
-                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                  />
-                </div>
+                <textarea
+                  rows={4}
+                  value={jwtInput}
+                  onChange={(e) => handleDecodeJwt(e.target.value)}
+                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <textarea
@@ -939,7 +969,6 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* İstatistik Kartları */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
                   <p className="text-xs text-slate-500 font-medium">Karakter</p>
@@ -959,15 +988,73 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-slate-400">Metin Alanı</label>
-                <textarea
-                  rows={10}
-                  value={analyzerText}
-                  onChange={(e) => setAnalyzerText(e.target.value)}
-                  placeholder="Analiz edilmesini istediğiniz metni buraya yapıştırın..."
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-                />
+              <textarea
+                rows={10}
+                value={analyzerText}
+                onChange={(e) => setAnalyzerText(e.target.value)}
+                placeholder="Analiz edilecek metni yazın..."
+                className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+              />
+            </div>
+          )}
+
+          {/* TAB 11: UUID Generator */}
+          {activeTab === "uuid" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">UUID / GUID Generator</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Kriptografik olarak çakışmasız, rastgele UUID v4 tanımlayıcıları üretin.
+                </p>
+              </div>
+
+              <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-medium text-slate-400">Adet:</label>
+                    <select
+                      value={uuidQuantity}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setUuidQuantity(val);
+                        generateUuids(val);
+                      }}
+                      className="bg-slate-900 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none"
+                    >
+                      <option value={1}>1 Adet</option>
+                      <option value={5}>5 Adet</option>
+                      <option value={10}>10 Adet</option>
+                      <option value={20}>20 Adet</option>
+                    </select>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => generateUuids(uuidQuantity)}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md text-xs font-medium transition"
+                    >
+                      Yeniden Üret
+                    </button>
+                    {uuids.length > 0 && (
+                      <button
+                        onClick={() => copyToClipboard(uuids.join("\n"), setUuidCopied)}
+                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-1.5 px-3 rounded transition flex items-center gap-1.5"
+                      >
+                        {uuidCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        {uuidCopied ? "Kopyalandı" : "Tümünü Kopyala"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <textarea
+                    rows={8}
+                    readOnly
+                    value={uuids.join("\n")}
+                    className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
+                  />
+                </div>
               </div>
             </div>
           )}
