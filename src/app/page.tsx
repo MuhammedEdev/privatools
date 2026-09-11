@@ -8,6 +8,7 @@ import {
   Palette, 
   Code2, 
   Binary,
+  FileCode,
   Upload, 
   Download, 
   Check, 
@@ -18,7 +19,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -52,6 +53,12 @@ export default function Home() {
   const [base64Mode, setBase64Mode] = useState<"encode" | "decode">("encode");
   const [base64Copied, setBase64Copied] = useState<boolean>(false);
   const [base64Error, setBase64Error] = useState<string | null>(null);
+
+  // Markdown State'leri
+  const [markdownInput, setMarkdownInput] = useState<string>(
+    "# PrivaTools\n\n**Client-side** açık kaynak araç seti.\n\n- %100 Gizlilik\n- Hızlı İşlem\n- Sunucusuz Mimari\n\n`code .` komutu ile başlayın!"
+  );
+  const [markdownCopied, setMarkdownCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +142,19 @@ export default function Home() {
       setBase64Error("Geçersiz Base64 dizisi çözülemedi.");
       setBase64Output("");
     }
+  };
+
+  // Basit Markdown Dönüştürücü (Client-Side Parser)
+  const parseMarkdown = (text: string) => {
+    let parsed = text
+      .replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold text-white mb-2">$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-lg font-semibold text-white mb-2">$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3 class="text-base font-medium text-white mb-1">$1</h3>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong class="font-bold text-emerald-400">$1</strong>')
+      .replace(/\*(.*)\*/gim, '<em class="italic">$1</em>')
+      .replace(/`(.*)`/gim, '<code class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded text-xs">$1</code>')
+      .replace(/^\- (.*$)/gim, '<li class="ml-4 list-disc text-slate-300">$1</li>');
+    return { __html: parsed.replace(/\n/g, '<br />') };
   };
 
   const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
@@ -237,6 +257,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Binary className="w-4 h-4 text-emerald-400" />
               <span>Base64 Encoder / Decoder</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("markdown")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "markdown"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <FileCode className="w-4 h-4 text-emerald-400" />
+              <span>Markdown Live Editor</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -602,6 +637,51 @@ export default function Home() {
                       className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
                     />
                   )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: Markdown Live Editor */}
+          {activeTab === "markdown" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-xl font-semibold text-white">Markdown Live Editor</h1>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Markdown kodlarınızı yazın ve gerçek zamanlı biçimlendirilmiş çıktısını görüntüleyin.
+                  </p>
+                </div>
+                {markdownInput && (
+                  <button
+                    onClick={() => copyToClipboard(markdownInput, setMarkdownCopied)}
+                    className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5"
+                  >
+                    {markdownCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {markdownCopied ? "Kopyalandı" : "Markdown'ı Kopyala"}
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-400">Markdown Girişi</label>
+                  <textarea
+                    rows={12}
+                    value={markdownInput}
+                    onChange={(e) => setMarkdownInput(e.target.value)}
+                    placeholder="Markdown kodlarını yazın..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-400">Canlı Önizleme</label>
+                  <div
+                    rows={12}
+                    dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
+                    className="w-full min-h-[220px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
+                  />
                 </div>
               </div>
             </div>
