@@ -14,6 +14,7 @@ import {
   Link2,
   FileText,
   Fingerprint,
+  Code,
   Upload, 
   Download, 
   Check, 
@@ -24,7 +25,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -89,6 +90,12 @@ export default function Home() {
   const [uuids, setUuids] = useState<string[]>([]);
   const [uuidQuantity, setUuidQuantity] = useState<number>(5);
   const [uuidCopied, setUuidCopied] = useState<boolean>(false);
+
+  // HTML Entity State'leri
+  const [htmlInput, setHtmlInput] = useState<string>("");
+  const [htmlOutput, setHtmlOutput] = useState<string>("");
+  const [htmlMode, setHtmlMode] = useState<"encode" | "decode">("encode");
+  const [htmlCopied, setHtmlCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -230,7 +237,6 @@ export default function Home() {
       if (typeof crypto !== "undefined" && crypto.randomUUID) {
         list.push(crypto.randomUUID());
       } else {
-        // Fallback random UUID
         list.push(
           "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
             const r = (Math.random() * 16) | 0,
@@ -241,6 +247,23 @@ export default function Home() {
       }
     }
     setUuids(list);
+  };
+
+  // HTML Entity İşleyici
+  const handleHtmlProcess = (text: string, mode: "encode" | "decode") => {
+    setHtmlInput(text);
+    if (!text.trim()) {
+      setHtmlOutput("");
+      return;
+    }
+    if (mode === "encode") {
+      setHtmlOutput(
+        text.replace(/[\u00A0-\u9999<>&"']/g, (i) => `&#${i.charCodeAt(0)};`)
+      );
+    } else {
+      const doc = new DOMParser().parseFromString(text, "text/html");
+      setHtmlOutput(doc.documentElement.textContent || "");
+    }
   };
 
   // Metin Analizi İstatistikleri
@@ -461,6 +484,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Fingerprint className="w-4 h-4 text-emerald-400" />
               <span>UUID Generator</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("html")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "html"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Code className="w-4 h-4 text-emerald-400" />
+              <span>HTML Entity Converter</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1047,12 +1085,85 @@ export default function Home() {
                   </div>
                 </div>
 
+                <textarea
+                  rows={8}
+                  readOnly
+                  value={uuids.join("\n")}
+                  className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 12: HTML Entity Converter */}
+          {activeTab === "html" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-xl font-semibold text-white">HTML Entity Converter</h1>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Özel karakterleri HTML Entity kodlarına dönüştürün veya çözün.
+                  </p>
+                </div>
+                <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
+                  <button
+                    onClick={() => {
+                      setHtmlMode("encode");
+                      handleHtmlProcess(htmlInput, "encode");
+                    }}
+                    className={`px-3 py-1.5 rounded-md font-medium transition ${
+                      htmlMode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Encode
+                  </button>
+                  <button
+                    onClick={() => {
+                      setHtmlMode("decode");
+                      handleHtmlProcess(htmlInput, "decode");
+                    }}
+                    className={`px-3 py-1.5 rounded-md font-medium transition ${
+                      htmlMode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Decode
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-400">
+                    {htmlMode === "encode" ? "Düz HTML / Metin" : "HTML Entities"}
+                  </label>
                   <textarea
-                    rows={8}
+                    rows={10}
+                    value={htmlInput}
+                    onChange={(e) => handleHtmlProcess(e.target.value, htmlMode)}
+                    placeholder={htmlMode === "encode" ? "<h1>Hello & World</h1>" : "&lt;h1&gt;Hello &amp; World&lt;/h1&gt;"}
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-medium text-slate-400">Sonuç</label>
+                    {htmlOutput && (
+                      <button
+                        onClick={() => copyToClipboard(htmlOutput, setHtmlCopied)}
+                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        {htmlCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {htmlCopied ? "Kopyalandı" : "Kopyala"}
+                      </button>
+                    )}
+                  </div>
+                  <textarea
+                    rows={10}
                     readOnly
-                    value={uuids.join("\n")}
-                    className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
+                    value={htmlOutput}
+                    placeholder="Sonuç burada görüntülenecek..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
                   />
                 </div>
               </div>
