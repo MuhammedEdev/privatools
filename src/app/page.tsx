@@ -675,12 +675,11 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="space-y-2">
+             <div className="space-y-2">
                   <label className="text-xs font-medium text-slate-400">Canlı Önizleme</label>
                   <div
-                    rows={12}
                     dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
-                    className="w-full min-h-[220px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
+                    className="w-full h-[230px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
                   />
                 </div>
               </div>
