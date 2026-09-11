@@ -11,6 +11,7 @@ import {
   FileCode,
   Globe,
   ShieldAlert,
+  Link2,
   Upload, 
   Download, 
   Check, 
@@ -21,7 +22,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -58,7 +59,7 @@ export default function Home() {
 
   // Markdown State'leri
   const [markdownInput, setMarkdownInput] = useState<string>(
-    "# PrivaTools\n\n**Client-side** açık kaynak araç seti.\n\n- %100 Gizlilik\n- Hızlı İşlem\n- Sunucusuz Mimari"
+    "# PrivaTools\n\n**Client-side** açık kaynak araç seti."
   );
   const [markdownCopied, setMarkdownCopied] = useState<boolean>(false);
 
@@ -74,6 +75,12 @@ export default function Home() {
   const [jwtHeader, setJwtHeader] = useState<string>("");
   const [jwtPayload, setJwtPayload] = useState<string>("");
   const [jwtError, setJwtError] = useState<string | null>(null);
+
+  // URL Encoder/Decoder State'leri
+  const [urlInput, setUrlInput] = useState<string>("");
+  const [urlOutput, setUrlOutput] = useState<string>("");
+  const [urlMode, setUrlMode] = useState<"encode" | "decode">("encode");
+  const [urlCopied, setUrlCopied] = useState<boolean>(false);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -190,6 +197,24 @@ export default function Home() {
     }
   };
 
+  // URL Encode/Decode Mantığı
+  const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
+    setUrlInput(text);
+    if (!text.trim()) {
+      setUrlOutput("");
+      return;
+    }
+    try {
+      if (mode === "encode") {
+        setUrlOutput(encodeURIComponent(text));
+      } else {
+        setUrlOutput(decodeURIComponent(text));
+      }
+    } catch (err) {
+      setUrlOutput("Hata: Dönüştürme yapılamadı.");
+    }
+  };
+
   // Markdown Parser
   const parseMarkdown = (text: string) => {
     let parsed = text
@@ -208,21 +233,7 @@ export default function Home() {
   const metaTagCode = `<!-- Primary Meta Tags -->
 <title>${siteTitle}</title>
 <meta name="title" content="${siteTitle}" />
-<meta name="description" content="${siteDescription}" />
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content="${siteUrl}" />
-<meta property="og:title" content="${siteTitle}" />
-<meta property="og:description" content="${siteDescription}" />
-<meta property="og:image" content="${siteImage}" />
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content="${siteUrl}" />
-<meta property="twitter:title" content="${siteTitle}" />
-<meta property="twitter:description" content="${siteDescription}" />
-<meta property="twitter:image" content="${siteImage}" />`;
+<meta name="description" content="${siteDescription}" />`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -351,7 +362,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-2.5">
               <Globe className="w-4 h-4 text-emerald-400" />
-              <span>Meta Tag & OpenGraph</span>
+              <span>Meta Tag Generator</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -367,6 +378,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <ShieldAlert className="w-4 h-4 text-emerald-400" />
               <span>JWT Decoder</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("url")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "url"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Link2 className="w-4 h-4 text-emerald-400" />
+              <span>URL Encoder / Decoder</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -785,7 +811,7 @@ export default function Home() {
           {activeTab === "meta" && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-xl font-semibold text-white">Meta Tag & OpenGraph Üreteci</h1>
+                <h1 className="text-xl font-semibold text-white">Meta Tag Generator</h1>
                 <p className="text-sm text-slate-400 mt-1">
                   Arama motorları ve sosyal medya paylaşımları için dinamik HTML meta etiketleri oluşturun.
                 </p>
@@ -810,26 +836,6 @@ export default function Home() {
                       value={siteDescription}
                       onChange={(e) => setSiteDescription(e.target.value)}
                       className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-400 mb-1 font-medium">Site URL Adresi</label>
-                    <input
-                      type="text"
-                      value={siteUrl}
-                      onChange={(e) => setSiteUrl(e.target.value)}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-400 mb-1 font-medium">Sosyal Medya Kapak Görsel URL (OG Image)</label>
-                    <input
-                      type="text"
-                      value={siteImage}
-                      onChange={(e) => setSiteImage(e.target.value)}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
                     />
                   </div>
                 </div>
@@ -860,7 +866,7 @@ export default function Home() {
           {activeTab === "jwt" && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-xl font-semibold text-white">JWT (JSON Web Token) Decoder</h1>
+                <h1 className="text-xl font-semibold text-white">JWT Decoder</h1>
                 <p className="text-sm text-slate-400 mt-1">
                   JWT tokenlarınızı istemci tarafında çözerek Header ve Payload içeriklerini görüntüleyin.
                 </p>
@@ -886,7 +892,7 @@ export default function Home() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-medium text-slate-400">Header (Başlık)</label>
+                      <label className="text-xs font-medium text-slate-400">Header</label>
                       <textarea
                         rows={8}
                         readOnly
@@ -897,7 +903,7 @@ export default function Home() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-xs font-medium text-slate-400">Payload (Veri Yükü)</label>
+                      <label className="text-xs font-medium text-slate-400">Payload</label>
                       <textarea
                         rows={8}
                         readOnly
@@ -908,6 +914,81 @@ export default function Home() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 9: URL Encoder / Decoder */}
+          {activeTab === "url" && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-xl font-semibold text-white">URL Encoder / Decoder</h1>
+                  <p className="text-sm text-slate-400 mt-1">
+                    URL adreslerinizdeki özel karakterleri istemci tarafında güvenle kodlayın veya çözün.
+                  </p>
+                </div>
+                <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
+                  <button
+                    onClick={() => {
+                      setUrlMode("encode");
+                      handleUrlProcess(urlInput, "encode");
+                    }}
+                    className={`px-3 py-1.5 rounded-md font-medium transition ${
+                      urlMode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Encode
+                  </button>
+                  <button
+                    onClick={() => {
+                      setUrlMode("decode");
+                      handleUrlProcess(urlInput, "decode");
+                    }}
+                    className={`px-3 py-1.5 rounded-md font-medium transition ${
+                      urlMode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    Decode
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-slate-400">
+                    {urlMode === "encode" ? "Düz URL / Metin" : "Kodlanmış (Encoded) URL"}
+                  </label>
+                  <textarea
+                    rows={10}
+                    value={urlInput}
+                    onChange={(e) => handleUrlProcess(e.target.value, urlMode)}
+                    placeholder={urlMode === "encode" ? "https://example.com/search?q=test string" : "https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dtest%20string"}
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-medium text-slate-400">Sonuç</label>
+                    {urlOutput && (
+                      <button
+                        onClick={() => copyToClipboard(urlOutput, setUrlCopied)}
+                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        {urlCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {urlCopied ? "Kopyalandı" : "Kopyala"}
+                      </button>
+                    )}
+                  </div>
+                  <textarea
+                    rows={10}
+                    readOnly
+                    value={urlOutput}
+                    placeholder="Dönüştürülmüş çıktı burada görünecek..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                  />
+                </div>
               </div>
             </div>
           )}
