@@ -10,6 +10,7 @@ import {
   Binary,
   FileCode,
   Globe,
+  ShieldAlert,
   Upload, 
   Download, 
   Check, 
@@ -20,7 +21,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -67,6 +68,12 @@ export default function Home() {
   const [siteUrl, setSiteUrl] = useState<string>("https://privatools.vercel.app");
   const [siteImage, setSiteImage] = useState<string>("https://privatools.vercel.app/og-image.png");
   const [metaCopied, setMetaCopied] = useState<boolean>(false);
+
+  // JWT Decoder State'leri
+  const [jwtInput, setJwtInput] = useState<string>("");
+  const [jwtHeader, setJwtHeader] = useState<string>("");
+  const [jwtPayload, setJwtPayload] = useState<string>("");
+  const [jwtError, setJwtError] = useState<string | null>(null);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -149,6 +156,37 @@ export default function Home() {
     } catch (err) {
       setBase64Error("Geçersiz Base64 dizisi çözülemedi.");
       setBase64Output("");
+    }
+  };
+
+  // JWT Çözümleme Mantığı
+  const handleDecodeJwt = (token: string) => {
+    setJwtInput(token);
+    setJwtError(null);
+    if (!token.trim()) {
+      setJwtHeader("");
+      setJwtPayload("");
+      return;
+    }
+
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      setJwtError("Geçersiz JWT yapısı. Token 3 parçadan oluşmalıdır (Header.Payload.Signature).");
+      setJwtHeader("");
+      setJwtPayload("");
+      return;
+    }
+
+    try {
+      const headerDecoded = JSON.parse(atob(parts[0].replace(/-/g, "+").replace(/_/g, "/")));
+      const payloadDecoded = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+
+      setJwtHeader(JSON.stringify(headerDecoded, null, 2));
+      setJwtPayload(JSON.stringify(payloadDecoded, null, 2));
+    } catch (err) {
+      setJwtError("JWT verisi Base64 çözümlenirken hata oluştu.");
+      setJwtHeader("");
+      setJwtPayload("");
     }
   };
 
@@ -314,6 +352,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Globe className="w-4 h-4 text-emerald-400" />
               <span>Meta Tag & OpenGraph</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("jwt")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "jwt"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <ShieldAlert className="w-4 h-4 text-emerald-400" />
+              <span>JWT Decoder</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -799,6 +852,62 @@ export default function Home() {
                     className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
                   />
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 8: JWT Decoder */}
+          {activeTab === "jwt" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">JWT (JSON Web Token) Decoder</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  JWT tokenlarınızı istemci tarafında çözerek Header ve Payload içeriklerini görüntüleyin.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">JWT Token Yapıştırın</label>
+                  <textarea
+                    rows={4}
+                    value={jwtInput}
+                    onChange={(e) => handleDecodeJwt(e.target.value)}
+                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                  />
+                </div>
+
+                {jwtError ? (
+                  <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <p>{jwtError}</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-400">Header (Başlık)</label>
+                      <textarea
+                        rows={8}
+                        readOnly
+                        value={jwtHeader}
+                        placeholder="Header verisi burada görünecek..."
+                        className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-400">Payload (Veri Yükü)</label>
+                      <textarea
+                        rows={8}
+                        readOnly
+                        value={jwtPayload}
+                        placeholder="Payload verisi burada görünecek..."
+                        className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
