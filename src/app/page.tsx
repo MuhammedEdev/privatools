@@ -19,6 +19,7 @@ import {
   Pipette,
   Regex,
   Hash,
+  LayoutGrid,
   Upload, 
   Download, 
   Check, 
@@ -29,7 +30,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -124,6 +125,14 @@ export default function Home() {
   const [sha512Output, setSha512Output] = useState<string>("");
   const [hashCopiedKey, setHashCopiedKey] = useState<string | null>(null);
 
+  // Flexbox Playground State'leri
+  const [flexDirection, setFlexDirection] = useState<"row" | "row-reverse" | "column" | "column-reverse">("row");
+  const [justifyContent, setJustifyContent] = useState<"flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly">("center");
+  const [alignItems, setAlignItems] = useState<"flex-start" | "flex-end" | "center" | "stretch" | "baseline">("center");
+  const [flexGap, setFlexGap] = useState<number>(16);
+  const [flexItemCount, setFlexItemCount] = useState<number>(4);
+  const [flexCopied, setFlexCopied] = useState<boolean>(false);
+
   // Hash Hesaplama Fonksiyonu (Web Crypto API)
   const computeHashes = async (text: string) => {
     setHashInput(text);
@@ -137,15 +146,12 @@ export default function Home() {
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
 
-    // SHA-1
     const buffer1 = await crypto.subtle.digest("SHA-1", data);
     setSha1Output(Array.from(new Uint8Array(buffer1)).map(b => b.toString(16).padStart(2, '0')).join(''));
 
-    // SHA-256
     const buffer256 = await crypto.subtle.digest("SHA-256", data);
     setSha256Output(Array.from(new Uint8Array(buffer256)).map(b => b.toString(16).padStart(2, '0')).join(''));
 
-    // SHA-512
     const buffer512 = await crypto.subtle.digest("SHA-512", data);
     setSha512Output(Array.from(new Uint8Array(buffer512)).map(b => b.toString(16).padStart(2, '0')).join(''));
   };
@@ -432,6 +438,8 @@ export default function Home() {
 
   const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
 
+  const flexCode = `.container {\n  display: flex;\n  flex-direction: ${flexDirection};\n  justify-content: ${justifyContent};\n  align-items: ${alignItems};\n  gap: ${flexGap}px;\n}`;
+
   const metaTagCode = `<!-- Primary Meta Tags -->
 <title>${siteTitle}</title>
 <meta name="title" content="${siteTitle}" />
@@ -712,6 +720,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Hash className="w-4 h-4 text-emerald-400" />
               <span>Crypto Hash Generator</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("flexbox")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "flexbox"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <LayoutGrid className="w-4 h-4 text-emerald-400" />
+              <span>Flexbox Visual Playground</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1603,7 +1626,6 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-3">
-                  {/* SHA-1 */}
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
                       <label className="text-xs font-medium text-slate-400">SHA-1</label>
@@ -1623,7 +1645,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* SHA-256 */}
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
                       <label className="text-xs font-medium text-slate-400">SHA-256</label>
@@ -1643,7 +1664,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* SHA-512 */}
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
                       <label className="text-xs font-medium text-slate-400">SHA-512</label>
@@ -1661,6 +1681,137 @@ export default function Home() {
                       value={sha512Output}
                       className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 17: Flexbox Visual Playground */}
+          {activeTab === "flexbox" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Flexbox Visual Playground</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Flexbox düzeninizi görsel olarak hizalayın ve CSS kodlarını kopyalayın.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Visual Area */}
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 min-h-[300px] flex flex-col justify-between">
+                  <div
+                    className="w-full h-full min-h-[220px] bg-[#0D121F] border border-slate-800/80 rounded-lg p-3 transition-all duration-200"
+                    style={{
+                      display: "flex",
+                      flexDirection,
+                      justifyContent,
+                      alignItems,
+                      gap: `${flexGap}px`,
+                    }}
+                  >
+                    {Array.from({ length: flexItemCount }).map((_, idx) => (
+                      <div
+                        key={idx}
+                        className="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-mono text-xs font-bold flex items-center justify-center shrink-0"
+                      >
+                        {idx + 1}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
+                    <span className="text-xs text-slate-400 font-mono">live preview</span>
+                    <button
+                      onClick={() => copyToClipboard(flexCode, setFlexCopied)}
+                      className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-1.5 px-3 rounded transition flex items-center gap-1.5"
+                    >
+                      {flexCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      {flexCopied ? "Kopyalandı" : "CSS Kopyala"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Controls Area */}
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs">
+                  {/* Flex Direction */}
+                  <div className="space-y-1">
+                    <label className="text-slate-400 font-medium">flex-direction</label>
+                    <select
+                      value={flexDirection}
+                      onChange={(e) => setFlexDirection(e.target.value as any)}
+                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
+                    >
+                      <option value="row">row</option>
+                      <option value="row-reverse">row-reverse</option>
+                      <option value="column">column</option>
+                      <option value="column-reverse">column-reverse</option>
+                    </select>
+                  </div>
+
+                  {/* Justify Content */}
+                  <div className="space-y-1">
+                    <label className="text-slate-400 font-medium">justify-content</label>
+                    <select
+                      value={justifyContent}
+                      onChange={(e) => setJustifyContent(e.target.value as any)}
+                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
+                    >
+                      <option value="flex-start">flex-start</option>
+                      <option value="flex-end">flex-end</option>
+                      <option value="center">center</option>
+                      <option value="space-between">space-between</option>
+                      <option value="space-around">space-around</option>
+                      <option value="space-evenly">space-evenly</option>
+                    </select>
+                  </div>
+
+                  {/* Align Items */}
+                  <div className="space-y-1">
+                    <label className="text-slate-400 font-medium">align-items</label>
+                    <select
+                      value={alignItems}
+                      onChange={(e) => setAlignItems(e.target.value as any)}
+                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
+                    >
+                      <option value="flex-start">flex-start</option>
+                      <option value="flex-end">flex-end</option>
+                      <option value="center">center</option>
+                      <option value="stretch">stretch</option>
+                      <option value="baseline">baseline</option>
+                    </select>
+                  </div>
+
+                  {/* Gap & Item Count */}
+                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+                    <div>
+                      <div className="flex justify-between text-slate-400 mb-1">
+                        <span>gap</span>
+                        <span className="text-white font-mono">{flexGap}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="40"
+                        value={flexGap}
+                        onChange={(e) => setFlexGap(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-slate-400 mb-1">
+                        <span>Eleman Sayısı</span>
+                        <span className="text-white font-mono">{flexItemCount}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1"
+                        max="8"
+                        value={flexItemCount}
+                        onChange={(e) => setFlexItemCount(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
