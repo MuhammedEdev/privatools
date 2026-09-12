@@ -30,6 +30,14 @@ import {
   Sliders,
   AlertCircle
 } from "lucide-react";
+// Oluşturduğumuz Modüler Bileşenler
+import PasswordGenerator from "@/components/tools/PasswordGenerator";
+import JwtDecoder from "@/components/tools/JwtDecoder";
+import UuidGenerator from "@/components/tools/UuidGenerator";
+import ColorPicker from "@/components/tools/ColorPicker";
+import HashGenerator from "@/components/tools/HashGenerator";
+import FlexboxPlayground from "@/components/tools/FlexboxPlayground";
+import QrGenerator from "@/components/tools/QrGenerator";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
@@ -40,11 +48,6 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [quality, setQuality] = useState<number>(0.8);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
-  // Şifre Üreteci State'leri
-  const [password, setPassword] = useState<string>("");
-  const [passLength, setPassLength] = useState<number>(16);
-  const [copied, setCopied] = useState<boolean>(false);
 
   // CSS Box Shadow State'leri
   const [shadowX, setShadowX] = useState<number>(10);
@@ -69,49 +72,28 @@ export default function Home() {
 
   // Markdown State'leri
   const [markdownInput, setMarkdownInput] = useState<string>("# PrivaTools\n\n**Client-side** açık kaynak araç seti.");
-  const [markdownCopied, setMarkdownCopied] = useState<boolean>(false);
 
   // Meta Tag State'leri
   const [siteTitle, setSiteTitle] = useState<string>("PrivaTools - Open Source Utilities");
   const [siteDescription, setSiteDescription] = useState<string>("Browser-based, zero-server privacy utility tools for developers.");
-  const [siteUrl, setSiteUrl] = useState<string>("https://privatools.vercel.app");
-  const [siteImage, setSiteImage] = useState<string>("https://privatools.vercel.app/og-image.png");
-  const [metaCopied, setMetaCopied] = useState<boolean>(false);
-
-  // JWT Decoder State'leri
-  const [jwtInput, setJwtInput] = useState<string>("");
-  const [jwtHeader, setJwtHeader] = useState<string>("");
-  const [jwtPayload, setJwtPayload] = useState<string>("");
-  const [jwtError, setJwtError] = useState<string | null>(null);
 
   // URL State'leri
   const [urlInput, setUrlInput] = useState<string>("");
   const [urlOutput, setUrlOutput] = useState<string>("");
   const [urlMode, setUrlMode] = useState<"encode" | "decode">("encode");
-  const [urlCopied, setUrlCopied] = useState<boolean>(false);
 
   // Metin Analizörü State'leri
   const [analyzerText, setAnalyzerText] = useState<string>("");
-
-  // UUID Generator State'leri
-  const [uuids, setUuids] = useState<string[]>([]);
-  const [uuidQuantity, setUuidQuantity] = useState<number>(5);
-  const [uuidCopied, setUuidCopied] = useState<boolean>(false);
 
   // HTML Entity State'leri
   const [htmlInput, setHtmlInput] = useState<string>("");
   const [htmlOutput, setHtmlOutput] = useState<string>("");
   const [htmlMode, setHtmlMode] = useState<"encode" | "decode">("encode");
-  const [htmlCopied, setHtmlCopied] = useState<boolean>(false);
 
   // Unix Timestamp State'leri
   const [timestampInput, setTimestampInput] = useState<string>(Math.floor(Date.now() / 1000).toString());
   const [convertedDate, setConvertedDate] = useState<string>("");
   const [timestampCopied, setTimestampCopied] = useState<boolean>(false);
-
-  // Renk Dönüştürücü State'leri
-  const [hexColor, setHexColor] = useState<string>("#10b981");
-  const [colorCopied, setColorCopied] = useState<string | null>(null);
 
   // Regex Tester State'leri
   const [regexPattern, setRegexPattern] = useState<string>("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
@@ -120,35 +102,15 @@ export default function Home() {
   const [regexMatches, setRegexMatches] = useState<string[]>([]);
   const [regexError, setRegexError] = useState<string | null>(null);
 
-  // Hash Generator State'leri
-  const [hashInput, setHashInput] = useState<string>("PrivaTools");
-  const [sha1Output, setSha1Output] = useState<string>("");
-  const [sha256Output, setSha256Output] = useState<string>("");
-  const [sha512Output, setSha512Output] = useState<string>("");
-  const [hashCopiedKey, setHashCopiedKey] = useState<string | null>(null);
-
-  // Flexbox Playground State'leri
-  const [flexDirection, setFlexDirection] = useState<"row" | "row-reverse" | "column" | "column-reverse">("row");
-  const [justifyContent, setJustifyContent] = useState<"flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly">("center");
-  const [alignItems, setAlignItems] = useState<"flex-start" | "flex-end" | "center" | "stretch" | "baseline">("center");
-  const [flexGap, setFlexGap] = useState<number>(16);
-  const [flexItemCount, setFlexItemCount] = useState<number>(4);
-  const [flexCopied, setFlexCopied] = useState<boolean>(false);
-
-  // Lorem Ipsum Generator State'leri
+  // Lorem Ipsum State'leri
   const [loremParagraphCount, setLoremParagraphCount] = useState<number>(3);
   const [loremOutput, setLoremOutput] = useState<string>("");
   const [loremCopied, setLoremCopied] = useState<boolean>(false);
 
-  // QR Code Generator State'leri
-  const [qrText, setQrText] = useState<string>("https://privatools.vercel.app");
-
   const sampleParagraphs = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "Curabitur pretium tiddus quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purpureus. Morbi in sem quis dui placerat ornare.",
-    "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras dolor metus, aliquet adipiscing, lacus. Nulla facilisi.",
-    "Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue."
+    "Curabitur pretium tiddus quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purpureus. Morbi in sem quis dui placerat ornare."
   ];
 
   const generateLorem = (count: number) => {
@@ -157,28 +119,6 @@ export default function Home() {
       result.push(sampleParagraphs[i % sampleParagraphs.length]);
     }
     setLoremOutput(result.join("\n\n"));
-  };
-
-  const computeHashes = async (text: string) => {
-    setHashInput(text);
-    if (!text) {
-      setSha1Output("");
-      setSha256Output("");
-      setSha512Output("");
-      return;
-    }
-
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-
-    const buffer1 = await crypto.subtle.digest("SHA-1", data);
-    setSha1Output(Array.from(new Uint8Array(buffer1)).map(b => b.toString(16).padStart(2, '0')).join(''));
-
-    const buffer256 = await crypto.subtle.digest("SHA-256", data);
-    setSha256Output(Array.from(new Uint8Array(buffer256)).map(b => b.toString(16).padStart(2, '0')).join(''));
-
-    const buffer512 = await crypto.subtle.digest("SHA-512", data);
-    setSha512Output(Array.from(new Uint8Array(buffer512)).map(b => b.toString(16).padStart(2, '0')).join(''));
   };
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -208,26 +148,11 @@ export default function Home() {
     }
   };
 
-  const generatePassword = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
-    let result = "";
-    for (let i = 0; i < passLength; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setPassword(result);
-    setCopied(false);
-  };
-
-  const copyToClipboard = (text: string, setStatus: (v: any) => void, valKey?: string) => {
+  const copyToClipboard = (text: string, setStatus: (v: any) => void) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
-    if (valKey) {
-      setStatus(valKey);
-      setTimeout(() => setStatus(null), 2000);
-    } else {
-      setStatus(true);
-      setTimeout(() => setStatus(false), 2000);
-    }
+    setStatus(true);
+    setTimeout(() => setStatus(false), 2000);
   };
 
   const handleFormatJson = (input: string) => {
@@ -266,36 +191,6 @@ export default function Home() {
     }
   };
 
-  const handleDecodeJwt = (token: string) => {
-    setJwtInput(token);
-    setJwtError(null);
-    if (!token.trim()) {
-      setJwtHeader("");
-      setJwtPayload("");
-      return;
-    }
-
-    const parts = token.split(".");
-    if (parts.length !== 3) {
-      setJwtError("Geçersiz JWT yapısı. Token 3 parçadan oluşmalıdır (Header.Payload.Signature).");
-      setJwtHeader("");
-      setJwtPayload("");
-      return;
-    }
-
-    try {
-      const headerDecoded = JSON.parse(atob(parts[0].replace(/-/g, "+").replace(/_/g, "/")));
-      const payloadDecoded = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
-
-      setJwtHeader(JSON.stringify(headerDecoded, null, 2));
-      setJwtPayload(JSON.stringify(payloadDecoded, null, 2));
-    } catch (err) {
-      setJwtError("JWT verisi Base64 çözümlenirken hata oluştu.");
-      setJwtHeader("");
-      setJwtPayload("");
-    }
-  };
-
   const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
     setUrlInput(text);
     if (!text.trim()) {
@@ -311,24 +206,6 @@ export default function Home() {
     } catch (err) {
       setUrlOutput("Hata: Dönüştürme yapılamadı.");
     }
-  };
-
-  const generateUuids = (count: number) => {
-    const list: string[] = [];
-    for (let i = 0; i < count; i++) {
-      if (typeof crypto !== "undefined" && crypto.randomUUID) {
-        list.push(crypto.randomUUID());
-      } else {
-        list.push(
-          "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-            const r = (Math.random() * 16) | 0,
-              v = c === "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          })
-        );
-      }
-    }
-    setUuids(list);
   };
 
   const handleHtmlProcess = (text: string, mode: "encode" | "decode") => {
@@ -365,43 +242,6 @@ export default function Home() {
       setConvertedDate(date.toUTCString() + " (UTC) \n" + date.toLocaleString() + " (Yerel)");
     }
   };
-
-  const hexToRgb = (hex: string) => {
-    let c = hex.replace("#", "");
-    if (c.length === 3) c = c.split("").map(x => x + x).join("");
-    const num = parseInt(c, 16);
-    return isNaN(num) || c.length !== 6
-      ? { r: 0, g: 0, b: 0 }
-      : { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
-  };
-
-  const rgbToHsl = (r: number, g: number, b: number) => {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h = 0, s = 0, l = (max + min) / 2;
-
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-      }
-      h /= 6;
-    }
-    return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100)
-    };
-  };
-
-  const currentColorRgb = hexToRgb(hexColor);
-  const currentColorHsl = rgbToHsl(currentColorRgb.r, currentColorRgb.g, currentColorRgb.b);
-
-  const rgbString = `rgb(${currentColorRgb.r}, ${currentColorRgb.g}, ${currentColorRgb.b})`;
-  const hslString = `hsl(${currentColorHsl.h}, ${currentColorHsl.s}%, ${currentColorHsl.l}%)`;
 
   const handleRegexTest = (pattern: string, flags: string, text: string) => {
     setRegexPattern(pattern);
@@ -449,10 +289,7 @@ export default function Home() {
   };
 
   const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
-  const flexCode = `.container {\n  display: flex;\n  flex-direction: ${flexDirection};\n  justify-content: ${justifyContent};\n  align-items: ${alignItems};\n  gap: ${flexGap}px;\n}`;
   const metaTagCode = `<!-- Primary Meta Tags -->\n<title>${siteTitle}</title>\n<meta name="title" content="${siteTitle}" />\n<meta name="description" content="${siteDescription}" />`;
-
-  const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText || "https://privatools.vercel.app")}`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -491,10 +328,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab("password");
-              if (!password) generatePassword();
-            }}
+            onClick={() => setActiveTab("password")}
             className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
               activeTab === "password"
                 ? "bg-slate-800 text-white border border-slate-700"
@@ -632,10 +466,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab("uuid");
-              if (uuids.length === 0) generateUuids(uuidQuantity);
-            }}
+            onClick={() => setActiveTab("uuid")}
             className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
               activeTab === "uuid"
                 ? "bg-slate-800 text-white border border-slate-700"
@@ -716,10 +547,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab("hash");
-              if (!sha256Output) computeHashes(hashInput);
-            }}
+            onClick={() => setActiveTab("hash")}
             className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
               activeTab === "hash"
                 ? "bg-slate-800 text-white border border-slate-700"
@@ -858,60 +686,14 @@ export default function Home() {
             </div>
           )}
 
-          {/* TAB 2: Şifre Üreteci */}
-          {activeTab === "password" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Parola Oluşturucu</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Cihazınızda kriptografik olarak rastgele ve yüksek güvenlikli şifreler üretin.
-                </p>
-              </div>
-
-              <div className="bg-[#090D16] border border-slate-800 rounded-lg p-6 space-y-6">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="text"
-                    readOnly
-                    value={password}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-md px-4 py-3 font-mono text-emerald-400 text-sm focus:outline-none"
-                  />
-                  <button
-                    onClick={() => copyToClipboard(password, setCopied)}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-3 rounded-md text-xs font-medium transition flex items-center gap-1.5 shrink-0"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    {copied ? "Kopyalandı" : "Kopyala"}
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span>Uzunluk</span>
-                    <span className="font-mono text-white">{passLength} karakter</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="8"
-                    max="64"
-                    value={passLength}
-                    onChange={(e) => {
-                      setPassLength(parseInt(e.target.value));
-                      generatePassword();
-                    }}
-                    className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                  />
-                </div>
-
-                <button
-                  onClick={generatePassword}
-                  className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs py-2.5 rounded-md transition"
-                >
-                  Yeniden Üret
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Modülerleştirilen Bileşenler */}
+          {activeTab === "password" && <PasswordGenerator />}
+          {activeTab === "jwt" && <JwtDecoder />}
+          {activeTab === "uuid" && <UuidGenerator />}
+          {activeTab === "color" && <ColorPicker />}
+          {activeTab === "hash" && <HashGenerator />}
+          {activeTab === "flexbox" && <FlexboxPlayground />}
+          {activeTab === "qr" && <QrGenerator />}
 
           {/* TAB 3: CSS Shadow */}
           {activeTab === "shadow" && (
@@ -1207,45 +989,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* TAB 8: JWT Decoder */}
-          {activeTab === "jwt" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">JWT Decoder</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  JWT tokenlarınızı istemci tarafında çözerek Header ve Payload içeriklerini görüntüleyin.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <textarea
-                  rows={4}
-                  value={jwtInput}
-                  onChange={(e) => handleDecodeJwt(e.target.value)}
-                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <textarea
-                    rows={8}
-                    readOnly
-                    value={jwtHeader}
-                    placeholder="Header verisi..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                  />
-                  <textarea
-                    rows={8}
-                    readOnly
-                    value={jwtPayload}
-                    placeholder="Payload verisi..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* TAB 9: URL Encoder / Decoder */}
           {activeTab === "url" && (
             <div className="space-y-6">
@@ -1314,65 +1057,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* TAB 11: UUID Generator */}
-          {activeTab === "uuid" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">UUID / GUID Generator</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Kriptografik olarak çakışmasız, rastgele UUID v4 tanımlayıcıları üretin.
-                </p>
-              </div>
-
-              <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <label className="text-xs font-medium text-slate-400">Adet:</label>
-                    <select
-                      value={uuidQuantity}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value);
-                        setUuidQuantity(val);
-                        generateUuids(val);
-                      }}
-                      className="bg-slate-900 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none"
-                    >
-                      <option value={1}>1 Adet</option>
-                      <option value={5}>5 Adet</option>
-                      <option value={10}>10 Adet</option>
-                      <option value={20}>20 Adet</option>
-                    </select>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => generateUuids(uuidQuantity)}
-                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md text-xs font-medium transition"
-                    >
-                      Yeniden Üret
-                    </button>
-                    {uuids.length > 0 && (
-                      <button
-                        onClick={() => copyToClipboard(uuids.join("\n"), setUuidCopied)}
-                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-1.5 px-3 rounded transition flex items-center gap-1.5"
-                      >
-                        {uuidCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        {uuidCopied ? "Kopyalandı" : "Tümünü Kopyala"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <textarea
-                  rows={8}
-                  readOnly
-                  value={uuids.join("\n")}
-                  className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
-                />
-              </div>
-            </div>
-          )}
-
           {/* TAB 12: HTML Entity Converter */}
           {activeTab === "html" && (
             <div className="space-y-6">
@@ -1413,7 +1097,7 @@ export default function Home() {
                 <textarea
                   rows={10}
                   value={htmlInput}
-                  onChange={(e) => handleHtmlProcess(e.target.value, htmlMode)}
+                  onChange={(e) => handleHtmlProcess(htmlInput, htmlMode)}
                   placeholder="Metin veya HTML yazın..."
                   className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
                 />
@@ -1478,92 +1162,6 @@ export default function Home() {
                     placeholder="Dönüştürülen tarih burada görüntülenecek..."
                     className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
                   />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 14: Color Converter & Picker */}
-          {activeTab === "color" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Color Code Converter & Picker</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Renk seçin, HEX, RGB ve HSL formatları arasında anında dönüşüm yapın.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-6 flex flex-col items-center justify-center min-h-[240px] gap-4">
-                  <div 
-                    className="w-32 h-32 rounded-2xl shadow-lg border-2 border-slate-700/50 transition-all duration-200"
-                    style={{ backgroundColor: hexColor }}
-                  />
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs text-slate-400 font-medium">Renk Seçin:</label>
-                    <input
-                      type="color"
-                      value={hexColor}
-                      onChange={(e) => setHexColor(e.target.value)}
-                      className="w-8 h-8 rounded bg-transparent cursor-pointer border-0"
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-400">HEX</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={hexColor.toUpperCase()}
-                        onChange={(e) => setHexColor(e.target.value)}
-                        className="w-full bg-[#0D121F] border border-slate-800 rounded-md px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none"
-                      />
-                      <button
-                        onClick={() => copyToClipboard(hexColor.toUpperCase(), setColorCopied, "hex")}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-md text-xs font-medium transition shrink-0"
-                      >
-                        {colorCopied === "hex" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-400">RGB</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        readOnly
-                        value={rgbString}
-                        className="w-full bg-[#0D121F] border border-slate-800 rounded-md px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none"
-                      />
-                      <button
-                        onClick={() => copyToClipboard(rgbString, setColorCopied, "rgb")}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-md text-xs font-medium transition shrink-0"
-                      >
-                        {colorCopied === "rgb" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-400">HSL</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        readOnly
-                        value={hslString}
-                        className="w-full bg-[#0D121F] border border-slate-800 rounded-md px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none"
-                      />
-                      <button
-                        onClick={() => copyToClipboard(hslString, setColorCopied, "hsl")}
-                        className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-md text-xs font-medium transition shrink-0"
-                      >
-                        {colorCopied === "hsl" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1645,215 +1243,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* TAB 16: Crypto Hash Generator */}
-          {activeTab === "hash" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Crypto Hash Generator</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Web Crypto API kullanarak istemci tarafında güvenli SHA-1, SHA-256 ve SHA-512 özetleri üretin.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-slate-400">Girdi Metni</label>
-                  <textarea
-                    rows={4}
-                    value={hashInput}
-                    onChange={(e) => computeHashes(e.target.value)}
-                    placeholder="Hash çıkarılacak metni girin..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-medium text-slate-400">SHA-1</label>
-                      <button
-                        onClick={() => copyToClipboard(sha1Output, setHashCopiedKey, "sha1")}
-                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                      >
-                        {hashCopiedKey === "sha1" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {hashCopiedKey === "sha1" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      readOnly
-                      value={sha1Output}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-medium text-slate-400">SHA-256</label>
-                      <button
-                        onClick={() => copyToClipboard(sha256Output, setHashCopiedKey, "sha256")}
-                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                      >
-                        {hashCopiedKey === "sha256" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {hashCopiedKey === "sha256" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      readOnly
-                      value={sha256Output}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-medium text-slate-400">SHA-512</label>
-                      <button
-                        onClick={() => copyToClipboard(sha512Output, setHashCopiedKey, "sha512")}
-                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                      >
-                        {hashCopiedKey === "sha512" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {hashCopiedKey === "sha512" ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      readOnly
-                      value={sha512Output}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 17: Flexbox Visual Playground */}
-          {activeTab === "flexbox" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Flexbox Visual Playground</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Flexbox düzeninizi görsel olarak hizalayın ve CSS kodlarını kopyalayın.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 min-h-[300px] flex flex-col justify-between">
-                  <div
-                    className="w-full h-full min-h-[220px] bg-[#0D121F] border border-slate-800/80 rounded-lg p-3 transition-all duration-200"
-                    style={{
-                      display: "flex",
-                      flexDirection,
-                      justifyContent,
-                      alignItems,
-                      gap: `${flexGap}px`,
-                    }}
-                  >
-                    {Array.from({ length: flexItemCount }).map((_, idx) => (
-                      <div
-                        key={idx}
-                        className="w-12 h-12 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-mono text-xs font-bold flex items-center justify-center shrink-0"
-                      >
-                        {idx + 1}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
-                    <span className="text-xs text-slate-400 font-mono">live preview</span>
-                    <button
-                      onClick={() => copyToClipboard(flexCode, setFlexCopied)}
-                      className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-1.5 px-3 rounded transition flex items-center gap-1.5"
-                    >
-                      {flexCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      {flexCopied ? "Kopyalandı" : "CSS Kopyala"}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs">
-                  <div className="space-y-1">
-                    <label className="text-slate-400 font-medium">flex-direction</label>
-                    <select
-                      value={flexDirection}
-                      onChange={(e) => setFlexDirection(e.target.value as any)}
-                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
-                    >
-                      <option value="row">row</option>
-                      <option value="row-reverse">row-reverse</option>
-                      <option value="column">column</option>
-                      <option value="column-reverse">column-reverse</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-slate-400 font-medium">justify-content</label>
-                    <select
-                      value={justifyContent}
-                      onChange={(e) => setJustifyContent(e.target.value as any)}
-                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
-                    >
-                      <option value="flex-start">flex-start</option>
-                      <option value="flex-end">flex-end</option>
-                      <option value="center">center</option>
-                      <option value="space-between">space-between</option>
-                      <option value="space-around">space-around</option>
-                      <option value="space-evenly">space-evenly</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-slate-400 font-medium">align-items</label>
-                    <select
-                      value={alignItems}
-                      onChange={(e) => setAlignItems(e.target.value as any)}
-                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
-                    >
-                      <option value="flex-start">flex-start</option>
-                      <option value="flex-end">flex-end</option>
-                      <option value="center">center</option>
-                      <option value="stretch">stretch</option>
-                      <option value="baseline">baseline</option>
-                    </select>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1">
-                        <span>gap</span>
-                        <span className="text-white font-mono">{flexGap}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="40"
-                        value={flexGap}
-                        onChange={(e) => setFlexGap(parseInt(e.target.value))}
-                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1">
-                        <span>Eleman Sayısı</span>
-                        <span className="text-white font-mono">{flexItemCount}</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="1"
-                        max="8"
-                        value={flexItemCount}
-                        onChange={(e) => setFlexItemCount(parseInt(e.target.value))}
-                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* TAB 18: Lorem Ipsum Generator */}
           {activeTab === "lorem" && (
             <div className="space-y-6">
@@ -1909,48 +1298,6 @@ export default function Home() {
                   value={loremOutput}
                   className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
                 />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 19: QR Code Generator */}
-          {activeTab === "qr" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">QR Code Generator</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  URL veya metinleriniz için hızlıca taranabilir QR kodları oluşturun.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-400">URL veya Metin</label>
-                    <textarea
-                      rows={4}
-                      value={qrText}
-                      onChange={(e) => setQrText(e.target.value)}
-                      placeholder="https://example.com"
-                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-6 flex flex-col items-center justify-center gap-4">
-                  <div className="p-3 bg-white rounded-xl shadow-lg">
-                    <img src={qrImageUrl} alt="Generated QR Code" className="w-44 h-44 rounded" />
-                  </div>
-                  <a
-                    href={qrImageUrl}
-                    download="qrcode.png"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2 px-4 rounded transition flex items-center gap-1.5"
-                  >
-                    <Download className="w-3.5 h-3.5" /> Görseli İndir
-                  </a>
-                </div>
               </div>
             </div>
           )}
