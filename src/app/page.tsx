@@ -20,6 +20,7 @@ import {
   Regex,
   Hash,
   LayoutGrid,
+  AlignLeft,
   Upload, 
   Download, 
   Check, 
@@ -30,7 +31,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -132,6 +133,27 @@ export default function Home() {
   const [flexGap, setFlexGap] = useState<number>(16);
   const [flexItemCount, setFlexItemCount] = useState<number>(4);
   const [flexCopied, setFlexCopied] = useState<boolean>(false);
+
+  // Lorem Ipsum Generator State'leri
+  const [loremParagraphCount, setLoremParagraphCount] = useState<number>(3);
+  const [loremOutput, setLoremOutput] = useState<string>("");
+  const [loremCopied, setLoremCopied] = useState<boolean>(false);
+
+  const sampleParagraphs = [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "Curabitur pretium tiddus quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purpureus. Morbi in sem quis dui placerat ornare.",
+    "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras dolor metus, aliquet adipiscing, lacus. Nulla facilisi.",
+    "Integer lacinia sollicitudin massa. Cras metus. Sed aliquet risus a tortor. Integer id quam. Morbi mi. Quisque nisl felis, venenatis tristique, dignissim in, ultrices sit amet, augue."
+  ];
+
+  const generateLorem = (count: number) => {
+    let result = [];
+    for (let i = 0; i < count; i++) {
+      result.push(sampleParagraphs[i % sampleParagraphs.length]);
+    }
+    setLoremOutput(result.join("\n\n"));
+  };
 
   // Hash Hesaplama Fonksiyonu (Web Crypto API)
   const computeHashes = async (text: string) => {
@@ -735,6 +757,24 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <LayoutGrid className="w-4 h-4 text-emerald-400" />
               <span>Flexbox Visual Playground</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("lorem");
+              if (!loremOutput) generateLorem(loremParagraphCount);
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "lorem"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <AlignLeft className="w-4 h-4 text-emerald-400" />
+              <span>Lorem Ipsum Generator</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1698,7 +1738,6 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Visual Area */}
                 <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 min-h-[300px] flex flex-col justify-between">
                   <div
                     className="w-full h-full min-h-[220px] bg-[#0D121F] border border-slate-800/80 rounded-lg p-3 transition-all duration-200"
@@ -1732,9 +1771,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Controls Area */}
                 <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs">
-                  {/* Flex Direction */}
                   <div className="space-y-1">
                     <label className="text-slate-400 font-medium">flex-direction</label>
                     <select
@@ -1749,7 +1786,6 @@ export default function Home() {
                     </select>
                   </div>
 
-                  {/* Justify Content */}
                   <div className="space-y-1">
                     <label className="text-slate-400 font-medium">justify-content</label>
                     <select
@@ -1766,7 +1802,6 @@ export default function Home() {
                     </select>
                   </div>
 
-                  {/* Align Items */}
                   <div className="space-y-1">
                     <label className="text-slate-400 font-medium">align-items</label>
                     <select
@@ -1782,7 +1817,6 @@ export default function Home() {
                     </select>
                   </div>
 
-                  {/* Gap & Item Count */}
                   <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
                     <div>
                       <div className="flex justify-between text-slate-400 mb-1">
@@ -1814,6 +1848,65 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 18: Lorem Ipsum Generator */}
+          {activeTab === "lorem" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Lorem Ipsum Generator</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Arayüz tasarımlarınız ve prototipleriniz için hızlıca taslak metin (placeholder) üretin.
+                </p>
+              </div>
+
+              <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-medium text-slate-400">Paragraf Sayısı:</label>
+                    <select
+                      value={loremParagraphCount}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setLoremParagraphCount(val);
+                        generateLorem(val);
+                      }}
+                      className="bg-slate-900 border border-slate-800 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none"
+                    >
+                      <option value={1}>1 Paragraf</option>
+                      <option value={2}>2 Paragraf</option>
+                      <option value={3}>3 Paragraf</option>
+                      <option value={5}>5 Paragraf</option>
+                    </select>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => generateLorem(loremParagraphCount)}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-md text-xs font-medium transition"
+                    >
+                      Yeniden Üret
+                    </button>
+                    {loremOutput && (
+                      <button
+                        onClick={() => copyToClipboard(loremOutput, setLoremCopied)}
+                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-1.5 px-3 rounded transition flex items-center gap-1.5"
+                      >
+                        {loremCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        {loremCopied ? "Kopyalandı" : "Tümünü Kopyala"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <textarea
+                  rows={8}
+                  readOnly
+                  value={loremOutput}
+                  className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
+                />
               </div>
             </div>
           )}
