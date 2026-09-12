@@ -18,6 +18,7 @@ import {
   Clock,
   Pipette,
   Regex,
+  Hash,
   Upload, 
   Download, 
   Check, 
@@ -28,7 +29,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -115,6 +116,39 @@ export default function Home() {
   const [regexText, setRegexText] = useState<string>("İletişim için support@privatools.app veya test@example.com adreslerine yazabilirsiniz.");
   const [regexMatches, setRegexMatches] = useState<string[]>([]);
   const [regexError, setRegexError] = useState<string | null>(null);
+
+  // Hash Generator State'leri
+  const [hashInput, setHashInput] = useState<string>("PrivaTools");
+  const [sha1Output, setSha1Output] = useState<string>("");
+  const [sha256Output, setSha256Output] = useState<string>("");
+  const [sha512Output, setSha512Output] = useState<string>("");
+  const [hashCopiedKey, setHashCopiedKey] = useState<string | null>(null);
+
+  // Hash Hesaplama Fonksiyonu (Web Crypto API)
+  const computeHashes = async (text: string) => {
+    setHashInput(text);
+    if (!text) {
+      setSha1Output("");
+      setSha256Output("");
+      setSha512Output("");
+      return;
+    }
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+
+    // SHA-1
+    const buffer1 = await crypto.subtle.digest("SHA-1", data);
+    setSha1Output(Array.from(new Uint8Array(buffer1)).map(b => b.toString(16).padStart(2, '0')).join(''));
+
+    // SHA-256
+    const buffer256 = await crypto.subtle.digest("SHA-256", data);
+    setSha256Output(Array.from(new Uint8Array(buffer256)).map(b => b.toString(16).padStart(2, '0')).join(''));
+
+    // SHA-512
+    const buffer512 = await crypto.subtle.digest("SHA-512", data);
+    setSha512Output(Array.from(new Uint8Array(buffer512)).map(b => b.toString(16).padStart(2, '0')).join(''));
+  };
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -660,6 +694,24 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Regex className="w-4 h-4 text-emerald-400" />
               <span>Regex Tester & Matcher</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("hash");
+              if (!sha256Output) computeHashes(hashInput);
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "hash"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Hash className="w-4 h-4 text-emerald-400" />
+              <span>Crypto Hash Generator</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1522,6 +1574,93 @@ export default function Home() {
                         <p className="text-slate-500 italic">Eşleşme bulunamadı.</p>
                       )}
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 16: Crypto Hash Generator */}
+          {activeTab === "hash" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Crypto Hash Generator</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Web Crypto API kullanarak istemci tarafında güvenli SHA-1, SHA-256 ve SHA-512 özetleri üretin.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-slate-400">Girdi Metni</label>
+                  <textarea
+                    rows={4}
+                    value={hashInput}
+                    onChange={(e) => computeHashes(e.target.value)}
+                    placeholder="Hash çıkarılacak metni girin..."
+                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  {/* SHA-1 */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-medium text-slate-400">SHA-1</label>
+                      <button
+                        onClick={() => copyToClipboard(sha1Output, setHashCopiedKey, "sha1")}
+                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        {hashCopiedKey === "sha1" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {hashCopiedKey === "sha1" ? "Kopyalandı" : "Kopyala"}
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      readOnly
+                      value={sha1Output}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
+                    />
+                  </div>
+
+                  {/* SHA-256 */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-medium text-slate-400">SHA-256</label>
+                      <button
+                        onClick={() => copyToClipboard(sha256Output, setHashCopiedKey, "sha256")}
+                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        {hashCopiedKey === "sha256" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {hashCopiedKey === "sha256" ? "Kopyalandı" : "Kopyala"}
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      readOnly
+                      value={sha256Output}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
+                    />
+                  </div>
+
+                  {/* SHA-512 */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-medium text-slate-400">SHA-512</label>
+                      <button
+                        onClick={() => copyToClipboard(sha512Output, setHashCopiedKey, "sha512")}
+                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                      >
+                        {hashCopiedKey === "sha512" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {hashCopiedKey === "sha512" ? "Kopyalandı" : "Kopyala"}
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      readOnly
+                      value={sha512Output}
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-xs font-mono text-emerald-400 focus:outline-none"
+                    />
                   </div>
                 </div>
               </div>
