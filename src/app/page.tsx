@@ -17,6 +17,7 @@ import {
   Code,
   Clock,
   Pipette,
+  Regex,
   Upload, 
   Download, 
   Check, 
@@ -27,7 +28,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -107,6 +108,13 @@ export default function Home() {
   // Renk Dönüştürücü State'leri
   const [hexColor, setHexColor] = useState<string>("#10b981");
   const [colorCopied, setColorCopied] = useState<string | null>(null);
+
+  // Regex Tester State'leri
+  const [regexPattern, setRegexPattern] = useState<string>("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
+  const [regexFlags, setRegexFlags] = useState<string>("g");
+  const [regexText, setRegexText] = useState<string>("İletişim için support@privatools.app veya test@example.com adreslerine yazabilirsiniz.");
+  const [regexMatches, setRegexMatches] = useState<string[]>([]);
+  const [regexError, setRegexError] = useState<string | null>(null);
 
   // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -339,6 +347,34 @@ export default function Home() {
 
   const rgbString = `rgb(${currentColorRgb.r}, ${currentColorRgb.g}, ${currentColorRgb.b})`;
   const hslString = `hsl(${currentColorHsl.h}, ${currentColorHsl.s}%, ${currentColorHsl.l}%)`;
+
+  // Regex Test Fonksiyonu
+  const handleRegexTest = (pattern: string, flags: string, text: string) => {
+    setRegexPattern(pattern);
+    setRegexFlags(flags);
+    setRegexText(text);
+
+    if (!pattern.trim() || !text.trim()) {
+      setRegexMatches([]);
+      setRegexError(null);
+      return;
+    }
+
+    try {
+      const re = new RegExp(pattern, flags);
+      setRegexError(null);
+      if (flags.includes("g")) {
+        const matches = text.match(re);
+        setRegexMatches(matches ? Array.from(matches) : []);
+      } else {
+        const match = text.match(re);
+        setRegexMatches(match ? [match[0]] : []);
+      }
+    } catch (err: any) {
+      setRegexError(err.message || "Geçersiz Regex kalıbı");
+      setRegexMatches([]);
+    }
+  };
 
   // Metin Analizi İstatistikleri
   const charCount = analyzerText.length;
@@ -606,6 +642,24 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <Pipette className="w-4 h-4 text-emerald-400" />
               <span>Color Converter & Picker</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("regex");
+              if (regexMatches.length === 0) handleRegexTest(regexPattern, regexFlags, regexText);
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "regex"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Regex className="w-4 h-4 text-emerald-400" />
+              <span>Regex Tester & Matcher</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1340,7 +1394,6 @@ export default function Home() {
                 </div>
 
                 <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
-                  {/* HEX */}
                   <div className="space-y-1">
                     <label className="text-xs font-medium text-slate-400">HEX</label>
                     <div className="flex items-center gap-2">
@@ -1359,7 +1412,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* RGB */}
                   <div className="space-y-1">
                     <label className="text-xs font-medium text-slate-400">RGB</label>
                     <div className="flex items-center gap-2">
@@ -1378,7 +1430,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* HSL */}
                   <div className="space-y-1">
                     <label className="text-xs font-medium text-slate-400">HSL</label>
                     <div className="flex items-center gap-2">
@@ -1394,6 +1445,82 @@ export default function Home() {
                       >
                         {colorCopied === "hsl" ? "Kopyalandı" : "Kopyala"}
                       </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 15: Regex Tester & Matcher */}
+          {activeTab === "regex" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">Regex Tester & Matcher</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  Düzenli ifadelerinizi (Regex) gerçek zamanlı olarak test edin ve eşleşen ifadeleri görün.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div className="sm:col-span-3 space-y-1">
+                    <label className="text-xs font-medium text-slate-400">Regex Kalıbı (Pattern)</label>
+                    <input
+                      type="text"
+                      value={regexPattern}
+                      onChange={(e) => handleRegexTest(e.target.value, regexFlags, regexText)}
+                      placeholder="[a-z]+"
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md px-3 py-2.5 text-xs font-mono text-emerald-400 focus:outline-none focus:border-slate-700"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-slate-400">Bayraklar (Flags)</label>
+                    <input
+                      type="text"
+                      value={regexFlags}
+                      onChange={(e) => handleRegexTest(regexPattern, e.target.value, regexText)}
+                      placeholder="g, i, m"
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-md px-3 py-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700"
+                    />
+                  </div>
+                </div>
+
+                {regexError && (
+                  <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-3 text-rose-400 text-xs flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{regexError}</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-400">Test Metni</label>
+                    <textarea
+                      rows={8}
+                      value={regexText}
+                      onChange={(e) => handleRegexTest(regexPattern, regexFlags, e.target.value)}
+                      placeholder="Test edilecek metni yazın..."
+                      className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-xs font-medium text-slate-400">
+                        Eşleşen İfadeler ({regexMatches.length})
+                      </label>
+                    </div>
+                    <div className="w-full h-[165px] bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono overflow-y-auto space-y-1">
+                      {regexMatches.length > 0 ? (
+                        regexMatches.map((m, idx) => (
+                          <div key={idx} className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded">
+                            {idx + 1}. {m}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-slate-500 italic">Eşleşme bulunamadı.</p>
+                      )}
                     </div>
                   </div>
                 </div>
