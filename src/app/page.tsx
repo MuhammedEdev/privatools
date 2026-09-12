@@ -21,6 +21,7 @@ import {
   Hash,
   LayoutGrid,
   AlignLeft,
+  QrCode,
   Upload, 
   Download, 
   Check, 
@@ -31,7 +32,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
 
   // Görsel Sıkıştırma State'leri
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -139,6 +140,9 @@ export default function Home() {
   const [loremOutput, setLoremOutput] = useState<string>("");
   const [loremCopied, setLoremCopied] = useState<boolean>(false);
 
+  // QR Code Generator State'leri
+  const [qrText, setQrText] = useState<string>("https://privatools.vercel.app");
+
   const sampleParagraphs = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -155,7 +159,6 @@ export default function Home() {
     setLoremOutput(result.join("\n\n"));
   };
 
-  // Hash Hesaplama Fonksiyonu (Web Crypto API)
   const computeHashes = async (text: string) => {
     setHashInput(text);
     if (!text) {
@@ -178,7 +181,6 @@ export default function Home() {
     setSha512Output(Array.from(new Uint8Array(buffer512)).map(b => b.toString(16).padStart(2, '0')).join(''));
   };
 
-  // Görsel Sıkıştırma Mantığı
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
@@ -206,7 +208,6 @@ export default function Home() {
     }
   };
 
-  // Dinamik Şifre Üretici
   const generatePassword = () => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
     let result = "";
@@ -229,7 +230,6 @@ export default function Home() {
     }
   };
 
-  // JSON Düzenleyici
   const handleFormatJson = (input: string) => {
     setRawJson(input);
     if (!input.trim()) {
@@ -247,7 +247,6 @@ export default function Home() {
     }
   };
 
-  // Base64 İşleme
   const handleBase64Process = (text: string, mode: "encode" | "decode") => {
     setBase64Input(text);
     setBase64Error(null);
@@ -267,7 +266,6 @@ export default function Home() {
     }
   };
 
-  // JWT Çözümleme Mantığı
   const handleDecodeJwt = (token: string) => {
     setJwtInput(token);
     setJwtError(null);
@@ -298,7 +296,6 @@ export default function Home() {
     }
   };
 
-  // URL Encode/Decode Mantığı
   const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
     setUrlInput(text);
     if (!text.trim()) {
@@ -316,7 +313,6 @@ export default function Home() {
     }
   };
 
-  // UUID v4 Üretici
   const generateUuids = (count: number) => {
     const list: string[] = [];
     for (let i = 0; i < count; i++) {
@@ -335,7 +331,6 @@ export default function Home() {
     setUuids(list);
   };
 
-  // HTML Entity İşleyici
   const handleHtmlProcess = (text: string, mode: "encode" | "decode") => {
     setHtmlInput(text);
     if (!text.trim()) {
@@ -352,7 +347,6 @@ export default function Home() {
     }
   };
 
-  // Timestamp Dönüştürücü
   const handleConvertTimestamp = (val: string) => {
     setTimestampInput(val);
     if (!val.trim()) {
@@ -372,7 +366,6 @@ export default function Home() {
     }
   };
 
-  // Renk Dönüşüm Fonksiyonları
   const hexToRgb = (hex: string) => {
     let c = hex.replace("#", "");
     if (c.length === 3) c = c.split("").map(x => x + x).join("");
@@ -410,7 +403,6 @@ export default function Home() {
   const rgbString = `rgb(${currentColorRgb.r}, ${currentColorRgb.g}, ${currentColorRgb.b})`;
   const hslString = `hsl(${currentColorHsl.h}, ${currentColorHsl.s}%, ${currentColorHsl.l}%)`;
 
-  // Regex Test Fonksiyonu
   const handleRegexTest = (pattern: string, flags: string, text: string) => {
     setRegexPattern(pattern);
     setRegexFlags(flags);
@@ -438,14 +430,12 @@ export default function Home() {
     }
   };
 
-  // Metin Analizi İstatistikleri
   const charCount = analyzerText.length;
   const wordCount = analyzerText.trim() ? analyzerText.trim().split(/\s+/).length : 0;
   const sentenceCount = analyzerText.trim() ? analyzerText.split(/[.!?]+/).filter(Boolean).length : 0;
   const paragraphCount = analyzerText.trim() ? analyzerText.split(/\n+/).filter(Boolean).length : 0;
   const readingTime = Math.ceil(wordCount / 200);
 
-  // Markdown Parser
   const parseMarkdown = (text: string) => {
     let parsed = text
       .replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold text-white mb-2">$1</h1>')
@@ -459,13 +449,10 @@ export default function Home() {
   };
 
   const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
-
   const flexCode = `.container {\n  display: flex;\n  flex-direction: ${flexDirection};\n  justify-content: ${justifyContent};\n  align-items: ${alignItems};\n  gap: ${flexGap}px;\n}`;
+  const metaTagCode = `<!-- Primary Meta Tags -->\n<title>${siteTitle}</title>\n<meta name="title" content="${siteTitle}" />\n<meta name="description" content="${siteDescription}" />`;
 
-  const metaTagCode = `<!-- Primary Meta Tags -->
-<title>${siteTitle}</title>
-<meta name="title" content="${siteTitle}" />
-<meta name="description" content="${siteDescription}" />`;
+  const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText || "https://privatools.vercel.app")}`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -486,7 +473,7 @@ export default function Home() {
         {/* Sidebar */}
         <aside className="lg:col-span-3 space-y-2">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Araçlar
+            Araçlar (19)
           </p>
           <button
             onClick={() => setActiveTab("compressor")}
@@ -775,6 +762,21 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <AlignLeft className="w-4 h-4 text-emerald-400" />
               <span>Lorem Ipsum Generator</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
+
+          <button
+            onClick={() => setActiveTab("qr")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "qr"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <QrCode className="w-4 h-4 text-emerald-400" />
+              <span>QR Code Generator</span>
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
@@ -1907,6 +1909,48 @@ export default function Home() {
                   value={loremOutput}
                   className="w-full bg-[#0D121F] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed"
                 />
+              </div>
+            </div>
+          )}
+
+          {/* TAB 19: QR Code Generator */}
+          {activeTab === "qr" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl font-semibold text-white">QR Code Generator</h1>
+                <p className="text-sm text-slate-400 mt-1">
+                  URL veya metinleriniz için hızlıca taranabilir QR kodları oluşturun.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-slate-400">URL veya Metin</label>
+                    <textarea
+                      rows={4}
+                      value={qrText}
+                      onChange={(e) => setQrText(e.target.value)}
+                      placeholder="https://example.com"
+                      className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-6 flex flex-col items-center justify-center gap-4">
+                  <div className="p-3 bg-white rounded-xl shadow-lg">
+                    <img src={qrImageUrl} alt="Generated QR Code" className="w-44 h-44 rounded" />
+                  </div>
+                  <a
+                    href={qrImageUrl}
+                    download="qrcode.png"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2 px-4 rounded transition flex items-center gap-1.5"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Görseli İndir
+                  </a>
+                </div>
               </div>
             </div>
           )}
