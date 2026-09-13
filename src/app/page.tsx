@@ -43,6 +43,9 @@ import BoxShadowGenerator from "@/components/tools/BoxShadowGenerator";
 import JsonFormatter from "@/components/tools/JsonFormatter";
 import Base64Converter from "@/components/tools/Base64Converter";
 import MarkdownEditor from "@/components/tools/MarkdownEditor";
+import MetaTagGenerator from "@/components/tools/MetaTagGenerator";
+import UrlEncoderDecoder from "@/components/tools/UrlEncoderDecoder";
+import TextAnalyzer from "@/components/tools/TextAnalyzer";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
@@ -53,18 +56,6 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [quality, setQuality] = useState<number>(0.8);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
-  // Meta Tag State'leri
-  const [siteTitle, setSiteTitle] = useState<string>("PrivaTools - Open Source Utilities");
-  const [siteDescription, setSiteDescription] = useState<string>("Browser-based, zero-server privacy utility tools for developers.");
-
-  // URL State'leri
-  const [urlInput, setUrlInput] = useState<string>("");
-  const [urlOutput, setUrlOutput] = useState<string>("");
-  const [urlMode, setUrlMode] = useState<"encode" | "decode">("encode");
-
-  // Metin Analizörü State'leri
-  const [analyzerText, setAnalyzerText] = useState<string>("");
 
   // HTML Entity State'leri
   const [htmlInput, setHtmlInput] = useState<string>("");
@@ -136,23 +127,6 @@ export default function Home() {
     setTimeout(() => setStatus(false), 2000);
   };
 
-  const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
-    setUrlInput(text);
-    if (!text.trim()) {
-      setUrlOutput("");
-      return;
-    }
-    try {
-      if (mode === "encode") {
-        setUrlOutput(encodeURIComponent(text));
-      } else {
-        setUrlOutput(decodeURIComponent(text));
-      }
-    } catch (err) {
-      setUrlOutput("Hata: Dönüştürme yapılamadı.");
-    }
-  };
-
   const handleHtmlProcess = (text: string, mode: "encode" | "decode") => {
     setHtmlInput(text);
     if (!text.trim()) {
@@ -214,14 +188,6 @@ export default function Home() {
       setRegexMatches([]);
     }
   };
-
-  const charCount = analyzerText.length;
-  const wordCount = analyzerText.trim() ? analyzerText.trim().split(/\s+/).length : 0;
-  const sentenceCount = analyzerText.trim() ? analyzerText.split(/[.!?]+/).filter(Boolean).length : 0;
-  const paragraphCount = analyzerText.trim() ? analyzerText.split(/\n+/).filter(Boolean).length : 0;
-  const readingTime = Math.ceil(wordCount / 200);
-
-  const metaTagCode = `<!-- Primary Meta Tags -->\n<title>${siteTitle}</title>\n<meta name="title" content="${siteTitle}" />\n<meta name="description" content="${siteDescription}" />`;
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -627,116 +593,9 @@ export default function Home() {
           {activeTab === "json" && <JsonFormatter />}
           {activeTab === "base64" && <Base64Converter />}
           {activeTab === "markdown" && <MarkdownEditor />}
-
-          {/* TAB 7: Meta Tag Generator */}
-          {activeTab === "meta" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Meta Tag Generator</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Arama motorları ve sosyal medya paylaşımları için dinamik HTML meta etiketleri oluşturun.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <label className="block text-slate-400 mb-1 font-medium">Site Başlığı (Title)</label>
-                    <input
-                      type="text"
-                      value={siteTitle}
-                      onChange={(e) => setSiteTitle(e.target.value)}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-400 mb-1 font-medium">Site Açıklaması (Description)</label>
-                    <textarea
-                      rows={3}
-                      value={siteDescription}
-                      onChange={(e) => setSiteDescription(e.target.value)}
-                      className="w-full bg-[#090D16] border border-slate-800 rounded-md p-2.5 text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                    />
-                  </div>
-                </div>
-
-                <textarea
-                  rows={12}
-                  readOnly
-                  value={metaTagCode}
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 9: URL Encoder / Decoder */}
-          {activeTab === "url" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">URL Encoder / Decoder</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  URL adreslerinizdeki özel karakterleri istemci tarafında güvenle kodlayın veya çözün.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <textarea
-                  rows={10}
-                  value={urlInput}
-                  onChange={(e) => handleUrlProcess(e.target.value, urlMode)}
-                  placeholder="Metin veya URL yazın..."
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                />
-                <textarea
-                  rows={10}
-                  readOnly
-                  value={urlOutput}
-                  placeholder="Çıktı burada görünecek..."
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 10: Metin Analizörü */}
-          {activeTab === "text" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Metin İstatistik Analizörü</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Metninizin kelime, karakter, cümle ve tahmini okuma süresi istatistiklerini hesaplayın.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
-                  <p className="text-xs text-slate-500 font-medium">Karakter</p>
-                  <p className="text-xl font-bold text-emerald-400 mt-1 font-mono">{charCount}</p>
-                </div>
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
-                  <p className="text-xs text-slate-500 font-medium">Kelime</p>
-                  <p className="text-xl font-bold text-emerald-400 mt-1 font-mono">{wordCount}</p>
-                </div>
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
-                  <p className="text-xs text-slate-500 font-medium">Cümle / Paragraf</p>
-                  <p className="text-xl font-bold text-slate-200 mt-1 font-mono">{sentenceCount} / {paragraphCount}</p>
-                </div>
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-4 text-center">
-                  <p className="text-xs text-slate-500 font-medium">Okuma Süresi</p>
-                  <p className="text-xl font-bold text-slate-200 mt-1 font-mono">~{readingTime} dk</p>
-                </div>
-              </div>
-
-              <textarea
-                rows={10}
-                value={analyzerText}
-                onChange={(e) => setAnalyzerText(e.target.value)}
-                placeholder="Analiz edilecek metni yazın..."
-                className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-              />
-            </div>
-          )}
+          {activeTab === "meta" && <MetaTagGenerator />}
+          {activeTab === "url" && <UrlEncoderDecoder />}
+          {activeTab === "text" && <TextAnalyzer />}
 
           {/* TAB 12: HTML Entity Converter */}
           {activeTab === "html" && (
