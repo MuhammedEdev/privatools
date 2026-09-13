@@ -38,6 +38,7 @@ import ColorPicker from "@/components/tools/ColorPicker";
 import HashGenerator from "@/components/tools/HashGenerator";
 import FlexboxPlayground from "@/components/tools/FlexboxPlayground";
 import QrGenerator from "@/components/tools/QrGenerator";
+import BoxShadowGenerator from "@/components/tools/BoxShadowGenerator";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
