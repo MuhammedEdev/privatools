@@ -30,7 +30,8 @@ import {
   Sliders,
   AlertCircle
 } from "lucide-react";
-// Oluşturduğumuz Modüler Bileşenler
+
+// Modüler Bileşenler
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import JwtDecoder from "@/components/tools/JwtDecoder";
 import UuidGenerator from "@/components/tools/UuidGenerator";
@@ -39,6 +40,9 @@ import HashGenerator from "@/components/tools/HashGenerator";
 import FlexboxPlayground from "@/components/tools/FlexboxPlayground";
 import QrGenerator from "@/components/tools/QrGenerator";
 import BoxShadowGenerator from "@/components/tools/BoxShadowGenerator";
+import JsonFormatter from "@/components/tools/JsonFormatter";
+import Base64Converter from "@/components/tools/Base64Converter";
+import MarkdownEditor from "@/components/tools/MarkdownEditor";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
@@ -49,30 +53,6 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [quality, setQuality] = useState<number>(0.8);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
-  // CSS Box Shadow State'leri
-  const [shadowX, setShadowX] = useState<number>(10);
-  const [shadowY, setShadowY] = useState<number>(10);
-  const [blur, setBlur] = useState<number>(20);
-  const [spread, setSpread] = useState<number>(0);
-  const [shadowColor, setShadowColor] = useState<string>("#000000");
-  const [shadowCopied, setShadowCopied] = useState<boolean>(false);
-
-  // JSON Formatter State'leri
-  const [rawJson, setRawJson] = useState<string>('{"name":"PrivaTools","type":"Open Source"}');
-  const [formattedJson, setFormattedJson] = useState<string>("");
-  const [jsonError, setJsonError] = useState<string | null>(null);
-  const [jsonCopied, setJsonCopied] = useState<boolean>(false);
-
-  // Base64 State'leri
-  const [base64Input, setBase64Input] = useState<string>("");
-  const [base64Output, setBase64Output] = useState<string>("");
-  const [base64Mode, setBase64Mode] = useState<"encode" | "decode">("encode");
-  const [base64Copied, setBase64Copied] = useState<boolean>(false);
-  const [base64Error, setBase64Error] = useState<string | null>(null);
-
-  // Markdown State'leri
-  const [markdownInput, setMarkdownInput] = useState<string>("# PrivaTools\n\n**Client-side** açık kaynak araç seti.");
 
   // Meta Tag State'leri
   const [siteTitle, setSiteTitle] = useState<string>("PrivaTools - Open Source Utilities");
@@ -154,42 +134,6 @@ export default function Home() {
     navigator.clipboard.writeText(text);
     setStatus(true);
     setTimeout(() => setStatus(false), 2000);
-  };
-
-  const handleFormatJson = (input: string) => {
-    setRawJson(input);
-    if (!input.trim()) {
-      setFormattedJson("");
-      setJsonError(null);
-      return;
-    }
-    try {
-      const parsed = JSON.parse(input);
-      setFormattedJson(JSON.stringify(parsed, null, 2));
-      setJsonError(null);
-    } catch (err: any) {
-      setJsonError(err.message || "Geçersiz JSON formatı");
-      setFormattedJson("");
-    }
-  };
-
-  const handleBase64Process = (text: string, mode: "encode" | "decode") => {
-    setBase64Input(text);
-    setBase64Error(null);
-    if (!text.trim()) {
-      setBase64Output("");
-      return;
-    }
-    try {
-      if (mode === "encode") {
-        setBase64Output(btoa(unescape(encodeURIComponent(text))));
-      } else {
-        setBase64Output(decodeURIComponent(escape(atob(text))));
-      }
-    } catch (err) {
-      setBase64Error("Geçersiz Base64 dizisi çözülemedi.");
-      setBase64Output("");
-    }
   };
 
   const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
@@ -277,19 +221,6 @@ export default function Home() {
   const paragraphCount = analyzerText.trim() ? analyzerText.split(/\n+/).filter(Boolean).length : 0;
   const readingTime = Math.ceil(wordCount / 200);
 
-  const parseMarkdown = (text: string) => {
-    let parsed = text
-      .replace(/^# (.*$)/gim, '<h1 class="text-xl font-bold text-white mb-2">$1</h1>')
-      .replace(/^## (.*$)/gim, '<h2 class="text-lg font-semibold text-white mb-2">$1</h2>')
-      .replace(/^### (.*$)/gim, '<h3 class="text-base font-medium text-white mb-1">$1</h3>')
-      .replace(/\*\*(.*)\*\*/gim, '<strong class="font-bold text-emerald-400">$1</strong>')
-      .replace(/\*(.*)\*/gim, '<em class="italic">$1</em>')
-      .replace(/`(.*)`/gim, '<code class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded text-xs">$1</code>')
-      .replace(/^\- (.*$)/gim, '<li class="ml-4 list-disc text-slate-300">$1</li>');
-    return { __html: parsed.replace(/\n/g, '<br />') };
-  };
-
-  const cssShadowCode = `box-shadow: ${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor};`;
   const metaTagCode = `<!-- Primary Meta Tags -->\n<title>${siteTitle}</title>\n<meta name="title" content="${siteTitle}" />\n<meta name="description" content="${siteDescription}" />`;
 
   return (
@@ -359,10 +290,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => {
-              setActiveTab("json");
-              if (!formattedJson) handleFormatJson(rawJson);
-            }}
+            onClick={() => setActiveTab("json")}
             className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
               activeTab === "json"
                 ? "bg-slate-800 text-white border border-slate-700"
@@ -695,258 +623,10 @@ export default function Home() {
           {activeTab === "hash" && <HashGenerator />}
           {activeTab === "flexbox" && <FlexboxPlayground />}
           {activeTab === "qr" && <QrGenerator />}
-
-          {/* TAB 3: CSS Shadow */}
-          {activeTab === "shadow" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">CSS Box Shadow Üreteci</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Gelişmiş CSS gölge efektleri oluşturun ve hazır kodları projenize kopyalayın.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-8 flex items-center justify-center min-h-[260px]">
-                  <div
-                    className="w-32 h-32 bg-slate-800 rounded-xl transition-all duration-150"
-                    style={{
-                      boxShadow: `${shadowX}px ${shadowY}px ${blur}px ${spread}px ${shadowColor}`,
-                    }}
-                  />
-                </div>
-
-                <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4">
-                  <div className="space-y-3 text-xs">
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1">
-                        <span>X Offset</span>
-                        <span className="text-white font-mono">{shadowX}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="-50"
-                        max="50"
-                        value={shadowX}
-                        onChange={(e) => setShadowX(parseInt(e.target.value))}
-                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1">
-                        <span>Y Offset</span>
-                        <span className="text-white font-mono">{shadowY}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="-50"
-                        max="50"
-                        value={shadowY}
-                        onChange={(e) => setShadowY(parseInt(e.target.value))}
-                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-slate-400 mb-1">
-                        <span>Bulanıklık (Blur)</span>
-                        <span className="text-white font-mono">{blur}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={blur}
-                        onChange={(e) => setBlur(parseInt(e.target.value))}
-                        className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-400">Renk:</span>
-                      <input
-                        type="color"
-                        value={shadowColor}
-                        onChange={(e) => setShadowColor(e.target.value)}
-                        className="w-6 h-6 rounded bg-transparent cursor-pointer border-0"
-                      />
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(cssShadowCode, setShadowCopied)}
-                      className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2 px-3 rounded transition flex items-center gap-1.5"
-                    >
-                      {shadowCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      {shadowCopied ? "Kopyalandı" : "Kodu Kopyala"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: JSON Formatter */}
-          {activeTab === "json" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">JSON Formatter & Validator</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  JSON verilerinizi biçimlendirin, sözdizimi hatalarını anında tespit edin.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">Ham JSON Verisi</label>
-                  <textarea
-                    rows={12}
-                    value={rawJson}
-                    onChange={(e) => handleFormatJson(e.target.value)}
-                    placeholder="JSON verinizi buraya yapıştırın..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-                  />
-                </div>
-
-                <div className="space-y-2 flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-xs font-medium text-slate-400">Formatlanmış Sonuç</label>
-                      {formattedJson && (
-                        <button
-                          onClick={() => copyToClipboard(formattedJson, setJsonCopied)}
-                          className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                        >
-                          {jsonCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                          {jsonCopied ? "Kopyalandı" : "Kopyala"}
-                        </button>
-                      )}
-                    </div>
-
-                    {jsonError ? (
-                      <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
-                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-semibold">Sözdizimi Hatası</p>
-                          <p className="mt-1 opacity-90">{jsonError}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <textarea
-                        rows={12}
-                        readOnly
-                        value={formattedJson}
-                        placeholder="Düzenlenmiş çıktı burada görünecek..."
-                        className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 5: Base64 Encoder / Decoder */}
-          {activeTab === "base64" && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-xl font-semibold text-white">Base64 Encoder / Decoder</h1>
-                  <p className="text-sm text-slate-400 mt-1">
-                    Metinlerinizi istemci tarafında anında Base64 formatına çevirin veya çözün.
-                  </p>
-                </div>
-                <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
-                  <button
-                    onClick={() => {
-                      setBase64Mode("encode");
-                      handleBase64Process(base64Input, "encode");
-                    }}
-                    className={`px-3 py-1.5 rounded-md font-medium transition ${
-                      base64Mode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Encode
-                  </button>
-                  <button
-                    onClick={() => {
-                      setBase64Mode("decode");
-                      handleBase64Process(base64Input, "decode");
-                    }}
-                    className={`px-3 py-1.5 rounded-md font-medium transition ${
-                      base64Mode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    Decode
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-slate-400">
-                    {base64Mode === "encode" ? "Düz Metin (Plain Text)" : "Base64 Dizisi"}
-                  </label>
-                  <textarea
-                    rows={10}
-                    value={base64Input}
-                    onChange={(e) => handleBase64Process(e.target.value, base64Mode)}
-                    placeholder={base64Mode === "encode" ? "Dönüştürülecek metni yazın..." : "Çözülecek Base64 kodunu yapıştırın..."}
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-xs font-medium text-slate-400">Sonuç</label>
-                    {base64Output && (
-                      <button
-                        onClick={() => copyToClipboard(base64Output, setBase64Copied)}
-                        className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                      >
-                        {base64Copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {base64Copied ? "Kopyalandı" : "Kopyala"}
-                      </button>
-                    )}
-                  </div>
-                  <textarea
-                    rows={10}
-                    readOnly
-                    value={base64Output}
-                    placeholder="Sonuç burada görüntülenecek..."
-                    className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 6: Markdown Live Editor */}
-          {activeTab === "markdown" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold text-white">Markdown Live Editor</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Markdown kodlarınızı yazın ve gerçek zamanlı biçimlendirilmiş çıktısını görüntüleyin.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <textarea
-                  rows={12}
-                  value={markdownInput}
-                  onChange={(e) => setMarkdownInput(e.target.value)}
-                  placeholder="Markdown kodlarını yazın..."
-                  className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-                />
-                <div
-                  dangerouslySetInnerHTML={parseMarkdown(markdownInput)}
-                  className="w-full h-[230px] bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 leading-relaxed overflow-y-auto"
-                />
-              </div>
-            </div>
-          )}
+          {activeTab === "shadow" && <BoxShadowGenerator />}
+          {activeTab === "json" && <JsonFormatter />}
+          {activeTab === "base64" && <Base64Converter />}
+          {activeTab === "markdown" && <MarkdownEditor />}
 
           {/* TAB 7: Meta Tag Generator */}
           {activeTab === "meta" && (
