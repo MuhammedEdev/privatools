@@ -22,13 +22,9 @@ export default function JsonToTsConverter() {
             if (val === null) {
               type = "any";
             } else if (Array.isArray(val)) {
-              if (val.length > 0 && typeof val[0] === "object" && val[0] !== null) {
-                type = "ItemType[]";
-              } else {
-                type = `${typeof val[0]}[]`;
-              }
+              type = "any[]";
             } else if (type === "object") {
-              type = key.charAt(0).toUpperCase() + key.slice(1);
+              type = "Record<string, any>";
             }
             
             result += `  ${key}: ${type};\n`;
@@ -39,7 +35,7 @@ export default function JsonToTsConverter() {
       };
 
       setTsOutput(parseObject(parsed));
-    } catch (err: any) {
+    } catch (err) {
       setError("Geçersiz JSON formatı!");
       setTsOutput("");
     }
