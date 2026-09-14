@@ -1,80 +1,150 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Check, Copy, RefreshCw } from "lucide-react";
+import React, { useState } from "react";
 
 export default function PasswordGenerator() {
-  const [password, setPassword] = useState<string>("");
-  const [passLength, setPassLength] = useState<number>(16);
-  const [copied, setCopied] = useState<boolean>(false);
+  const [password, setPassword] = useState("");
+  const [length, setLength] = useState(16);
+  const [includeUppercase, setIncludeUppercase] = useState(true);
+  const [includeLowercase, setIncludeLowercase] = useState(true);
+  const [includeNumbers, setIncludeNumbers] = useState(true);
+  const [includeSymbols, setIncludeSymbols] = useState(true);
 
   const generatePassword = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
+    let chars = "";
+    if (includeUppercase) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (includeLowercase) chars += "abcdefghijklmnopqrstuvwxyz";
+    if (includeNumbers) chars += "0123456789";
+    if (includeSymbols) chars += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+    if (!chars) {
+      setPassword("Lütfen en az bir seçenek seçin!");
+      return;
+    }
+
     let result = "";
-    for (let i = 0; i < passLength; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    const array = new Uint32Array(length);
+    window.crypto.getRandomValues(array);
+    for (let i = 0; i < length; i++) {
+      result += chars[array[i] % chars.length];
     }
     setPassword(result);
-    setCopied(false);
   };
 
-  useEffect(() => {
-    generatePassword();
-  }, [passLength]);
+  // Şifre Güvenlik Hesaplama
+  const getStrength = () => {
+    if (!password || password.startsWith("Lütfen")) return { label: "Yok", color: "bg-zinc-700", width: "w-0" };
+    let score = 0;
+    if (length >= 12) score++;
+    if (length >= 16) score++;
+    if (includeUppercase && includeLowercase) score++;
+    if (includeNumbers) score++;
+    if (includeSymbols) score++;
+
+    if (score <= 2) return { label: "Zayıf", color: "bg-red-500", width: "w-1/3" };
+    if (score <= 4) return { label: "Orta", color: "bg-amber-500", width: "w-2/3" };
+    return { label: "Güçlü", color: "bg-emerald-500", width: "w-full" };
+  };
+
+  const strength = getStrength();
 
   const copyToClipboard = () => {
-    if (!password) return;
+    if (!password || password.startsWith("Lütfen")) return;
     navigator.clipboard.writeText(password);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    alert("Güvenli şifre kopyalandı!");
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-white">Güvenli Parola Oluşturucu</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Cihazınızda kriptografik olarak rastgele ve yüksek güvenlikli şifreler üretin.
-        </p>
+    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-xl mx-auto shadow-xl">
+      <h2 className="text-xl font-bold mb-4">Pro Password Generator</h2>
+
+      {/* Şifre Gösterim Alanı */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl p-3 font-mono text-indigo-300 text-lg tracking-wider break-all shadow-inner">
+          {password || "Şifre üretmek için butona basın..."}
+        </div>
+        <button
+          onClick={copyToClipboard}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl font-medium transition-colors text-sm"
+        >
+          Kopyala
+        </button>
       </div>
 
-      <div className="bg-[#090D16] border border-slate-800 rounded-lg p-6 space-y-6">
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            readOnly
-            value={password}
-            className="w-full bg-slate-900 border border-slate-800 rounded-md px-4 py-3 font-mono text-emerald-400 text-sm focus:outline-none"
-          />
-          <button
-            onClick={copyToClipboard}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-3 rounded-md text-xs font-medium transition flex items-center gap-1.5 shrink-0"
-          >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-            {copied ? "Kopyalandı" : "Kopyala"}
-          </button>
+      {/* Güvenlik Çubuğu */}
+      <div className="mb-6">
+        <div className="flex justify-between text-xs text-zinc-400 mb-1">
+          <span>Şifre Güvenliği:</span>
+          <span className="font-semibold text-white">{strength.label}</span>
         </div>
+        <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+          <div className={`h-full transition-all duration-300 ${strength.color} ${strength.width}`} />
+        </div>
+      </div>
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs text-slate-400">
-            <span>Parola Uzunluğu</span>
-            <span className="font-mono text-white">{passLength} karakter</span>
+      {/* Kontroller */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex justify-between text-sm text-zinc-400 mb-1">
+            <span>Uzunluk: {length} karakter</span>
           </div>
           <input
             type="range"
             min="8"
-            max="64"
-            value={passLength}
-            onChange={(e) => setPassLength(parseInt(e.target.value))}
-            className="w-full accent-emerald-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+            max="32"
+            value={length}
+            onChange={(e) => setLength(Number(e.target.value))}
+            className="w-full accent-indigo-600 cursor-pointer"
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <label className="flex items-center gap-2 cursor-pointer bg-zinc-800/50 p-2.5 rounded-lg border border-zinc-800">
+            <input
+              type="checkbox"
+              checked={includeUppercase}
+              onChange={(e) => setIncludeUppercase(e.target.checked)}
+              className="rounded accent-indigo-600"
+            />
+            <span>Büyük Harf (A-Z)</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer bg-zinc-800/50 p-2.5 rounded-lg border border-zinc-800">
+            <input
+              type="checkbox"
+              checked={includeLowercase}
+              onChange={(e) => setIncludeLowercase(e.target.checked)}
+              className="rounded accent-indigo-600"
+            />
+            <span>Küçük Harf (a-z)</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer bg-zinc-800/50 p-2.5 rounded-lg border border-zinc-800">
+            <input
+              type="checkbox"
+              checked={includeNumbers}
+              onChange={(e) => setIncludeNumbers(e.target.checked)}
+              className="rounded accent-indigo-600"
+            />
+            <span>Rakamlar (0-9)</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer bg-zinc-800/50 p-2.5 rounded-lg border border-zinc-800">
+            <input
+              type="checkbox"
+              checked={includeSymbols}
+              onChange={(e) => setIncludeSymbols(e.target.checked)}
+              className="rounded accent-indigo-600"
+            />
+            <span>Özel Karakterler (!@#)</span>
+          </label>
         </div>
 
         <button
           onClick={generatePassword}
-          className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium text-xs py-2.5 rounded-md transition flex items-center justify-center gap-2"
+          className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-3 rounded-xl transition-colors border border-zinc-700"
         >
-          <RefreshCw className="w-3.5 h-3.5" /> Yeniden Üret
+          Yeni Şifre Üret
         </button>
       </div>
     </div>
