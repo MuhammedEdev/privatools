@@ -17,17 +17,17 @@ export default function JsonToTsConverter() {
         for (const key in obj) {
           if (Object.prototype.hasOwnProperty.call(obj, key)) {
             const val = obj[key];
-            let type = typeof val;
+            let tsType = typeof val;
             
             if (val === null) {
-              type = "any";
+              tsType = "any";
             } else if (Array.isArray(val)) {
-              type = "any[]";
-            } else if (type === "object") {
-              type = "Record<string, any>";
+              tsType = "any[]";
+            } else if (tsType === "object") {
+              tsType = "Record<string, any>";
             }
             
-            result += `  ${key}: ${type};\n`;
+            result += `  ${key}: ${tsType};\n`;
           }
         }
         result += `}\n`;
