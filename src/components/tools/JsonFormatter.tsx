@@ -1,94 +1,101 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, Check, AlertCircle } from "lucide-react";
+import React, { useState } from "react";
 
 export default function JsonFormatter() {
-  const [rawJson, setRawJson] = useState<string>('{"name":"PrivaTools","type":"Open Source"}');
-  const [formattedJson, setFormattedJson] = useState<string>("");
-  const [jsonError, setJsonError] = useState<string | null>(null);
-  const [jsonCopied, setJsonCopied] = useState<boolean>(false);
+  const [jsonInput, setJsonInput] = useState('{\n  "name": "PrivaTools",\n  "version": "1.0.0",\n  "active": true,\n  "features": ["formatter", "converter", "secure"]\n}');
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFormatJson = (input: string) => {
-    setRawJson(input);
-    if (!input.trim()) {
-      setFormattedJson("");
-      setJsonError(null);
-      return;
-    }
+  const handleFormat = (indent: number) => {
     try {
-      const parsed = JSON.parse(input);
-      setFormattedJson(JSON.stringify(parsed, null, 2));
-      setJsonError(null);
+      setError(null);
+      const parsed = JSON.parse(jsonInput);
+      setJsonInput(JSON.stringify(parsed, null, indent));
     } catch (err: any) {
-      setJsonError(err.message || "Geçersiz JSON formatı");
-      setFormattedJson("");
+      setError(err.message);
+    }
+  };
+
+  const handleMinify = () => {
+    try {
+      setError(null);
+      const parsed = JSON.parse(jsonInput);
+      setJsonInput(JSON.stringify(parsed));
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
   const copyToClipboard = () => {
-    if (!formattedJson) return;
-    navigator.clipboard.writeText(formattedJson);
-    setJsonCopied(true);
-    setTimeout(() => setJsonCopied(false), 2000);
+    navigator.clipboard.writeText(jsonInput);
+    alert("JSON panoya kopyalandı!");
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-white">JSON Formatter & Validator</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          JSON verilerinizi biçimlendirin, sözdizimi hatalarını anında tespit edin.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="text-xs font-medium text-slate-400">Ham JSON Verisi</label>
-          <textarea
-            rows={12}
-            value={rawJson}
-            onChange={(e) => handleFormatJson(e.target.value)}
-            placeholder="JSON verinizi buraya yapıştırın..."
-            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
-          />
-        </div>
-
-        <div className="space-y-2 flex flex-col justify-between">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-xs font-medium text-slate-400">Formatlanmış Sonuç</label>
-              {formattedJson && (
-                <button
-                  onClick={copyToClipboard}
-                  className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
-                >
-                  {jsonCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                  {jsonCopied ? "Kopyalandı" : "Kopyala"}
-                </button>
-              )}
-            </div>
-
-            {jsonError ? (
-              <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-semibold">Sözdizimi Hatası</p>
-                  <p className="mt-1 opacity-90">{jsonError}</p>
-                </div>
-              </div>
-            ) : (
-              <textarea
-                rows={12}
-                readOnly
-                value={formattedJson}
-                placeholder="Düzenlenmiş çıktı burada görünecek..."
-                className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-              />
-            )}
-          </div>
+    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-3xl mx-auto shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <h2 className="text-xl font-bold">Pro JSON Formatter & Validator</h2>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handleFormat(2)}
+            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-medium rounded-lg transition-colors"
+          >
+            Format (2 Spaces)
+          </button>
+          <button
+            onClick={() => handleFormat(4)}
+            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-medium rounded-lg transition-colors"
+          >
+            Format (4 Spaces)
+          </button>
+          <button
+            onClick={handleMinify}
+            className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-lg transition-colors border border-zinc-700"
+          >
+            Minify
+          </button>
+          <button
+            onClick={copyToClipboard}
+            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-xs font-medium rounded-lg transition-colors"
+          >
+            Kopyala
+          </button>
         </div>
       </div>
+
+      <div className="relative">
+        <textarea
+          rows={14}
+          value={jsonInput}
+          onChange={(e) => {
+            setJsonInput(e.target.value);
+            try {
+              if (e.target.value.trim() === "") {
+                setError(null);
+                return;
+              }
+              JSON.parse(e.target.value);
+              setError(null);
+            } catch (err: any) {
+              setError(err.message);
+            }
+          }}
+          className={`w-full bg-zinc-950 border ${
+            error ? "border-red-500" : "border-zinc-800"
+          } rounded-xl p-4 text-sm font-mono text-emerald-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-inner`}
+          placeholder="JSON verinizi buraya yapıştırın..."
+        />
+      </div>
+
+      {error ? (
+        <div className="mt-3 p-3 bg-red-950/50 border border-red-800/60 rounded-lg flex items-center gap-2 text-red-300 text-xs font-mono">
+          <span className="font-bold">Hata:</span> {error}
+        </div>
+      ) : (
+        <div className="mt-3 p-3 bg-emerald-950/30 border border-emerald-800/40 rounded-lg flex items-center gap-2 text-emerald-400 text-xs font-mono">
+          <span>✓ Geçerli JSON formatı</span>
+        </div>
+      )}
     </div>
   );
 }
