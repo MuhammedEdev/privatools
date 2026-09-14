@@ -480,7 +480,7 @@ export default function Home() {
           {activeTab === "regex" && <RegexTester />}
           {activeTab === "lorem" && <LoremIpsumGenerator />}
           {activeTab === "unit" && <CssUnitConverter />}
-          {activeTab === "gradient" | <CssGradientGenerator />}
+{activeTab === "gradient" && <CssGradientGenerator />}
           {activeTab === "ts" && <JsonToTsConverter />}
           {activeTab === "keycode" && <KeycodeInfo />}
           {activeTab === "jsx" && <HtmlToJsxConverter />}
