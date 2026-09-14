@@ -1,89 +1,89 @@
 "use client";
 
-import { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import React, { useState } from "react";
 
 export default function JwtDecoder() {
-  const [jwtInput, setJwtInput] = useState<string>("");
-  const [jwtHeader, setJwtHeader] = useState<string>("");
-  const [jwtPayload, setJwtPayload] = useState<string>("");
-  const [jwtError, setJwtError] = useState<string | null>(null);
+  const [token, setToken] = useState(
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik11aGFtbWVkIEVsaGFjaSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+  );
+  const [error, setError] = useState<string | null>(null);
 
-  const handleDecodeJwt = (token: string) => {
-    setJwtInput(token);
-    setJwtError(null);
-    if (!token.trim()) {
-      setJwtHeader("");
-      setJwtPayload("");
-      return;
+  let header = {};
+  let payload = {};
+
+  try {
+    const parts = token.trim().split(".");
+    if (parts.length === 3) {
+      const base64UrlDecode = (str: string) => {
+        let output = str.replace(/-/g, "+").replace(/_/g, "/");
+        switch (output.length % 4) {
+          case 0:
+            break;
+          case 2:
+            output += "==";
+            break;
+          case 3:
+            output += "=";
+            break;
+          default:
+            throw new Error("Geçersiz base64url string.");
+        }
+        return decodeURIComponent(
+          atob(output)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+      };
+
+      header = JSON.parse(base64UrlDecode(parts[0]));
+      payload = JSON.parse(base64UrlDecode(parts[1]));
+      if (error) setError(null);
+    } else if (token.trim() !== "") {
+      setError("Geçersiz JWT formatı (3 parçadan oluşmalıdır: header.payload.signature)");
     }
-
-    const parts = token.split(".");
-    if (parts.length !== 3) {
-      setJwtError("Geçersiz JWT yapısı. Token 3 parçadan oluşmalıdır (Header.Payload.Signature).");
-      setJwtHeader("");
-      setJwtPayload("");
-      return;
-    }
-
-    try {
-      const headerDecoded = JSON.parse(atob(parts[0].replace(/-/g, "+").replace(/_/g, "/")));
-      const payloadDecoded = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
-
-      setJwtHeader(JSON.stringify(headerDecoded, null, 2));
-      setJwtPayload(JSON.stringify(payloadDecoded, null, 2));
-    } catch (err) {
-      setJwtError("JWT verisi Base64 çözümlenirken hata oluştu.");
-      setJwtHeader("");
-      setJwtPayload("");
-    }
-  };
+  } catch (err: any) {
+    setError("JWT çözümlenirken bir hata oluştu: " + err.message);
+  }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold text-white">JWT Decoder</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          JWT tokenlarınızı istemci tarafında çözerek Header ve Payload içeriklerini görüntüleyin.
-        </p>
-      </div>
+    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-3xl mx-auto shadow-xl">
+      <h2 className="text-xl font-bold mb-4">Pro JWT Decoder</h2>
 
       <div className="space-y-4">
-        <textarea
-          rows={4}
-          value={jwtInput}
-          onChange={(e) => handleDecodeJwt(e.target.value)}
-          placeholder="JWT tokenını buraya yapıştırın (eyJhbGciOiJIUzI1Ni...)"
-          className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-        />
+        <div>
+          <label className="block text-sm text-zinc-400 mb-1">JWT Token Girdisi</label>
+          <textarea
+            rows={4}
+            value={token}
+            onChange={(e) => {
+              setToken(e.target.value);
+              if (!e.target.value.trim()) setError(null);
+            }}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm font-mono text-indigo-300 focus:outline-none focus:border-indigo-500 shadow-inner break-all"
+            placeholder="eyJhbGciOiJIUzI1NiIsIn..."
+          />
+        </div>
 
-        {jwtError && (
-          <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-3 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{jwtError}</span>
+        {error && (
+          <div className="p-3 bg-red-950/50 border border-red-800/60 rounded-lg text-red-300 text-xs font-mono">
+            {error}
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-400">Header (Başlık)</label>
-            <textarea
-              rows={8}
-              readOnly
-              value={jwtHeader}
-              placeholder="Header JSON verisi..."
-              className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-            />
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">Header (Başlık)</label>
+            <pre className="w-full h-44 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs font-mono text-emerald-300 overflow-auto shadow-inner">
+              {JSON.stringify(header, null, 2)}
+            </pre>
           </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-400">Payload (Yük)</label>
-            <textarea
-              rows={8}
-              readOnly
-              value={jwtPayload}
-              placeholder="Payload JSON verisi..."
-              className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-            />
+
+          <div>
+            <label className="block text-sm text-zinc-400 mb-1">Payload (Veri / İçerik)</label>
+            <pre className="w-full h-44 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs font-mono text-emerald-300 overflow-auto shadow-inner">
+              {JSON.stringify(payload, null, 2)}
+            </pre>
           </div>
         </div>
       </div>
