@@ -22,10 +22,11 @@ import {
   AlignLeft,
   QrCode,
   Ruler,
+  Sparkles,
   ArrowRight
 } from "lucide-react";
 
-// Tüm Modüler Bileşenler (Artık 20 Araç!)
+// Tüm Modüler Bileşenler (Artık 21 Araç!)
 import ImageCompressor from "@/components/tools/ImageCompressor";
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import JwtDecoder from "@/components/tools/JwtDecoder";
@@ -46,9 +47,10 @@ import UnixTimestampConverter from "@/components/tools/UnixTimestampConverter";
 import RegexTester from "@/components/tools/RegexTester";
 import LoremIpsumGenerator from "@/components/tools/LoremIpsumGenerator";
 import CssUnitConverter from "@/components/tools/CssUnitConverter";
+import CssGradientGenerator from "@/components/tools/CssGradientGenerator";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr" | "unit">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr" | "unit" | "gradient">("compressor");
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -69,7 +71,7 @@ export default function Home() {
         {/* Sidebar */}
         <aside className="lg:col-span-3 space-y-2">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Araçlar (20)
+            Araçlar (21)
           </p>
           <button
             onClick={() => setActiveTab("compressor")}
@@ -370,6 +372,21 @@ export default function Home() {
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
+
+          <button
+            onClick={() => setActiveTab("gradient")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "gradient"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span>CSS Gradient Generator</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
         </aside>
 
         {/* Dashboard Area */}
@@ -395,6 +412,7 @@ export default function Home() {
           {activeTab === "regex" && <RegexTester />}
           {activeTab === "lorem" && <LoremIpsumGenerator />}
           {activeTab === "unit" && <CssUnitConverter />}
+          {activeTab === "gradient" && <CssGradientGenerator />}
 
         </section>
       </main>
