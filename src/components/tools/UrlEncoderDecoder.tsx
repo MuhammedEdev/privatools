@@ -1,57 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function UrlEncoderDecoder() {
-  const [urlInput, setUrlInput] = useState<string>("");
-  const [urlOutput, setUrlOutput] = useState<string>("");
-  const [urlMode, setUrlMode] = useState<"encode" | "decode">("encode");
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const [mode, setMode] = useState<"encode" | "decode">("encode");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleUrlProcess = (text: string, mode: "encode" | "decode") => {
-    setUrlInput(text);
+  const handleProcess = (text: string, currentMode: "encode" | "decode") => {
+    setInput(text);
+    setError(null);
+
     if (!text.trim()) {
-      setUrlOutput("");
+      setOutput("");
       return;
     }
+
     try {
-      if (mode === "encode") {
-        setUrlOutput(encodeURIComponent(text));
+      if (currentMode === "encode") {
+        setOutput(encodeURIComponent(text));
       } else {
-        setUrlOutput(decodeURIComponent(text));
+        setOutput(decodeURIComponent(text));
       }
     } catch (err) {
-      setUrlOutput("Hata: Dönüştürme yapılamadı.");
+      setError("Geçersiz URL kodlaması (Malformed URL encoding)!");
+      setOutput("");
     }
   };
 
+  const toggleMode = (newMode: "encode" | "decode") => {
+    setMode(newMode);
+    const temp = input;
+    setInput(output);
+    setOutput(temp);
+    setError(null);
+  };
+
+  const copyToClipboard = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    alert("Sonuç panoya kopyalandı!");
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-xl font-semibold text-white">URL Encoder / Decoder</h1>
-          <p className="text-sm text-slate-400 mt-1">
-            URL adreslerinizdeki özel karakterleri istemci tarafında güvenle kodlayın veya çözün.
-          </p>
-        </div>
-        <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
+    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-2xl mx-auto shadow-xl">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+        <h2 className="text-xl font-bold">Pro URL Encoder / Decoder</h2>
+        <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800">
           <button
-            onClick={() => {
-              setUrlMode("encode");
-              handleUrlProcess(urlInput, "encode");
-            }}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              urlMode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+            onClick={() => toggleMode("encode")}
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              mode === "encode" ? "bg-indigo-600 text-white" : "text-zinc-400 hover:text-white"
             }`}
           >
             Encode
           </button>
           <button
-            onClick={() => {
-              setUrlMode("decode");
-              handleUrlProcess(urlInput, "decode");
-            }}
-            className={`px-3 py-1.5 rounded-md font-medium transition ${
-              urlMode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+            onClick={() => toggleMode("decode")}
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              mode === "decode" ? "bg-indigo-600 text-white" : "text-zinc-400 hover:text-white"
             }`}
           >
             Decode
@@ -59,21 +67,48 @@ export default function UrlEncoderDecoder() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <textarea
-          rows={10}
-          value={urlInput}
-          onChange={(e) => handleUrlProcess(e.target.value, urlMode)}
-          placeholder="Metin veya URL yazın..."
-          className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
-        />
-        <textarea
-          rows={10}
-          readOnly
-          value={urlOutput}
-          placeholder="Çıktı burada görünecek..."
-          className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
-        />
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm text-zinc-400 mb-1">
+            {mode === "encode" ? "Normal Metin / URL" : "Encoded URL"}
+          </label>
+          <textarea
+            rows={5}
+            value={input}
+            onChange={(e) => handleProcess(e.target.value, mode)}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm font-mono text-white focus:outline-none focus:border-indigo-500 shadow-inner"
+            placeholder={mode === "encode" ? "Dönüştürülecek metni yazın..." : "Çözülecek URL kodunu yapıştırın..."}
+          />
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <label className="block text-sm text-zinc-400">
+              {mode === "encode" ? "URL Encoded Çıktısı" : "Çözülmüş Metin"}
+            </label>
+            {output && (
+              <button
+                onClick={copyToClipboard}
+                className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+              >
+                Sonucu Kopyala
+              </button>
+            )}
+          </div>
+          <textarea
+            rows={5}
+            readOnly
+            value={output}
+            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm font-mono text-emerald-300 shadow-inner select-all"
+            placeholder="Sonuç burada görünecek..."
+          />
+        </div>
+
+        {error && (
+          <div className="p-3 bg-red-950/50 border border-red-800/60 rounded-lg text-red-300 text-xs font-mono">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );
