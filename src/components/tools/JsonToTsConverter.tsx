@@ -35,7 +35,7 @@ export default function JsonToTsConverter() {
       };
 
       setTsOutput(parseObject(parsed));
-    } catch (err) {
+    } catch (err: any) {
       setError("Geçersiz JSON formatı!");
       setTsOutput("");
     }
