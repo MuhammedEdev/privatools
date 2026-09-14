@@ -21,10 +21,11 @@ import {
   LayoutGrid,
   AlignLeft,
   QrCode,
+  Ruler,
   ArrowRight
 } from "lucide-react";
 
-// Tüm Modüler Bileşenler (Artık Hepsi Modüler!)
+// Tüm Modüler Bileşenler (Artık 20 Araç!)
 import ImageCompressor from "@/components/tools/ImageCompressor";
 import PasswordGenerator from "@/components/tools/PasswordGenerator";
 import JwtDecoder from "@/components/tools/JwtDecoder";
@@ -44,9 +45,10 @@ import HtmlEntityConverter from "@/components/tools/HtmlEntityConverter";
 import UnixTimestampConverter from "@/components/tools/UnixTimestampConverter";
 import RegexTester from "@/components/tools/RegexTester";
 import LoremIpsumGenerator from "@/components/tools/LoremIpsumGenerator";
+import CssUnitConverter from "@/components/tools/CssUnitConverter";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr">("compressor");
+  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr" | "unit">("compressor");
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
@@ -67,7 +69,7 @@ export default function Home() {
         {/* Sidebar */}
         <aside className="lg:col-span-3 space-y-2">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Araçlar (19)
+            Araçlar (20)
           </p>
           <button
             onClick={() => setActiveTab("compressor")}
@@ -353,12 +355,26 @@ export default function Home() {
             </div>
             <ArrowRight className="w-3.5 h-3.5 opacity-50" />
           </button>
+
+          <button
+            onClick={() => setActiveTab("unit")}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              activeTab === "unit"
+                ? "bg-slate-800 text-white border border-slate-700"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Ruler className="w-4 h-4 text-emerald-400" />
+              <span>CSS Unit Converter</span>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
+          </button>
         </aside>
 
         {/* Dashboard Area */}
         <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-sm">
           
-          {/* Tüm Araçların Bileşen Bağlantıları */}
           {activeTab === "compressor" && <ImageCompressor />}
           {activeTab === "password" && <PasswordGenerator />}
           {activeTab === "jwt" && <JwtDecoder />}
@@ -378,6 +394,7 @@ export default function Home() {
           {activeTab === "timestamp" && <UnixTimestampConverter />}
           {activeTab === "regex" && <RegexTester />}
           {activeTab === "lorem" && <LoremIpsumGenerator />}
+          {activeTab === "unit" && <CssUnitConverter />}
 
         </section>
       </main>
