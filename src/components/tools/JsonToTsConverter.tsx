@@ -23,7 +23,7 @@ export default function JsonToTsConverter() {
               type = "any";
             } else if (Array.isArray(val)) {
               if (val.length > 0 && typeof val[0] === "object" && val[0] !== null) {
-                type = "ItemType[]"; // Basitleştirilmiş array tipi
+                type = "ItemType[]";
               } else {
                 type = `${typeof val[0]}[]`;
               }
