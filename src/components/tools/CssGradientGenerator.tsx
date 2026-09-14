@@ -53,10 +53,10 @@ export default function CssGradientGenerator() {
             onChange={(e) => setDirection(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
           >
-            <value value="to right">Sağa Doğru (to right)</value>
-            <value value="to bottom">Aşağı Doğru (to bottom)</value>
-            <value value="to bottom right">Çapraz (to bottom right)</value>
-            <value value="to top right">Yukarı Sağ (to top right)</value>
+            <option value="to right">Sağa Doğru (to right)</option>
+            <option value="to bottom">Aşağı Doğru (to bottom)</option>
+            <option value="to bottom right">Çapraz (to bottom right)</option>
+            <option value="to top right">Yukarı Sağ (to top right)</option>
           </select>
         </div>
 
