@@ -12,30 +12,24 @@ export default function JsonToTsConverter() {
       setError("");
       const parsed = JSON.parse(jsonInput);
       
-      const parseObject = (obj: any, name = "RootObject"): string => {
-        let result = `export interface ${name} {\n`;
-        for (const key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            const val = obj[key];
-            let tsType = typeof val;
-            
-            if (val === null) {
-              tsType = "any";
-            } else if (Array.isArray(val)) {
-              tsType = "any[]";
-            } else if (tsType === "object") {
-              tsType = "Record<string, any>";
-            }
-            
-            result += `  ${key}: ${tsType};\n`;
-          }
+      let result = "export interface RootObject {\n";
+      for (const key in parsed) {
+        if (Object.prototype.hasOwnProperty.call(parsed, key)) {
+          const val = parsed[key];
+          let t = "any";
+          if (typeof val === "string") t = "string";
+          else if (typeof val === "number") t = "number";
+          else if (typeof val === "boolean") t = "boolean";
+          else if (Array.isArray(val)) t = "any[]";
+          else if (typeof val === "object" && val !== null) t = "Record<string, any>";
+          
+          result += `  ${key}: ${t};\n`;
         }
-        result += `}\n`;
-        return result;
-      };
+      }
+      result += "}\n";
 
-      setTsOutput(parseObject(parsed));
-    } catch (err: any) {
+      setTsOutput(result);
+    } catch (err) {
       setError("Geçersiz JSON formatı!");
       setTsOutput("");
     }
