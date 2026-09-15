@@ -1,101 +1,138 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { Copy, Check, AlertCircle, Minimize2, Maximize2, Code2 } from "lucide-react";
 
 export default function JsonFormatter() {
-  const [jsonInput, setJsonInput] = useState('{\n  "name": "PrivaTools",\n  "version": "1.0.0",\n  "active": true,\n  "features": ["formatter", "converter", "secure"]\n}');
-  const [error, setError] = useState<string | null>(null);
+  const [rawJson, setRawJson] = useState<string>('{"name": "PrivaTools", "version": "1.0.0", "openSource": true, "modules": ["jwt", "hash", "base64"]}');
+  const [formattedJson, setFormattedJson] = useState<string>("");
+  const [jsonError, setJsonError] = useState<string | null>(null);
+  const [jsonCopied, setJsonCopied] = useState<boolean>(false);
+  const [indentSize, setIndentSize] = useState<number>(2);
 
-  const handleFormat = (indent: number) => {
+  const handleFormatJson = (input: string, spaces: number = indentSize) => {
+    setRawJson(input);
+    if (!input.trim()) {
+      setFormattedJson("");
+      setJsonError(null);
+      return;
+    }
     try {
-      setError(null);
-      const parsed = JSON.parse(jsonInput);
-      setJsonInput(JSON.stringify(parsed, null, indent));
+      const parsed = JSON.parse(input);
+      setFormattedJson(JSON.stringify(parsed, null, spaces));
+      setJsonError(null);
     } catch (err: any) {
-      setError(err.message);
+      setJsonError(err.message || "Geçersiz JSON sözdizimi");
+      setFormattedJson("");
     }
   };
 
-  const handleMinify = () => {
+  const handleMinimize = () => {
+    if (!rawJson.trim()) return;
     try {
-      setError(null);
-      const parsed = JSON.parse(jsonInput);
-      setJsonInput(JSON.stringify(parsed));
+      const parsed = JSON.parse(rawJson);
+      const minified = JSON.stringify(parsed);
+      setFormattedJson(minified);
+      setJsonError(null);
     } catch (err: any) {
-      setError(err.message);
+      setJsonError(err.message || "Geçersiz JSON");
     }
+  };
+
+  const handleIndentChange = (spaces: number) => {
+    setIndentSize(spaces);
+    handleFormatJson(rawJson, spaces);
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(jsonInput);
-    alert("JSON panoya kopyalandı!");
+    if (!formattedJson) return;
+    navigator.clipboard.writeText(formattedJson);
+    setJsonCopied(true);
+    setTimeout(() => setJsonCopied(false), 2000);
   };
 
   return (
-    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-3xl mx-auto shadow-xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-        <h2 className="text-xl font-bold">Pro JSON Formatter & Validator</h2>
-        <div className="flex flex-wrap gap-2">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-white">JSON Formatter & Validator</h1>
+          <p className="text-sm text-slate-400 mt-1">
+            JSON verilerinizi biçimlendirin, doğrulayın ve optimize edin.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
+            <button
+              onClick={() => handleIndentChange(2)}
+              className={`px-2.5 py-1.5 rounded-md font-medium transition ${indentSize === 2 && !jsonError ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"}`}
+            >
+              2 Boşluk
+            </button>
+            <button
+              onClick={() => handleIndentChange(4)}
+              className={`px-2.5 py-1.5 rounded-md font-medium transition ${indentSize === 4 && !jsonError ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"}`}
+            >
+              4 Boşluk
+            </button>
+          </div>
+
           <button
-            onClick={() => handleFormat(2)}
-            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-medium rounded-lg transition-colors"
+            onClick={handleMinimize}
+            className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5 border border-slate-700"
+            title="Tek Satıra Sıkıştır (Minify)"
           >
-            Format (2 Spaces)
-          </button>
-          <button
-            onClick={() => handleFormat(4)}
-            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-xs font-medium rounded-lg transition-colors"
-          >
-            Format (4 Spaces)
-          </button>
-          <button
-            onClick={handleMinify}
-            className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium rounded-lg transition-colors border border-zinc-700"
-          >
-            Minify
-          </button>
-          <button
-            onClick={copyToClipboard}
-            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-xs font-medium rounded-lg transition-colors"
-          >
-            Kopyala
+            <Minimize2 className="w-3.5 h-3.5" /> Sıkıştır
           </button>
         </div>
       </div>
 
-      <div className="relative">
-        <textarea
-          rows={14}
-          value={jsonInput}
-          onChange={(e) => {
-            setJsonInput(e.target.value);
-            try {
-              if (e.target.value.trim() === "") {
-                setError(null);
-                return;
-              }
-              JSON.parse(e.target.value);
-              setError(null);
-            } catch (err: any) {
-              setError(err.message);
-            }
-          }}
-          className={`w-full bg-zinc-950 border ${
-            error ? "border-red-500" : "border-zinc-800"
-          } rounded-xl p-4 text-sm font-mono text-emerald-300 focus:outline-none focus:border-indigo-500 transition-colors shadow-inner`}
-          placeholder="JSON verinizi buraya yapıştırın..."
-        />
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-slate-400">Ham JSON Verisi</label>
+          <textarea
+            rows={12}
+            value={rawJson}
+            onChange={(e) => handleFormatJson(e.target.value)}
+            placeholder="JSON verinizi buraya yapıştırın..."
+            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 transition resize-none"
+          />
+        </div>
 
-      {error ? (
-        <div className="mt-3 p-3 bg-red-950/50 border border-red-800/60 rounded-lg flex items-center gap-2 text-red-300 text-xs font-mono">
-          <span className="font-bold">Hata:</span> {error}
+        <div className="space-y-2 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-xs font-medium text-slate-400">Formatlanmış Sonuç</label>
+              {formattedJson && (
+                <button
+                  onClick={copyToClipboard}
+                  className="text-xs text-emerald-400 hover:underline flex items-center gap-1"
+                >
+                  {jsonCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                  {jsonCopied ? "Kopyalandı" : "Kopyala"}
+                </button>
+              )}
+            </div>
+
+            {jsonError ? (
+              <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 flex items-start gap-3 text-rose-400 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">Sözdizimi Hatası</p>
+                  <p className="mt-1 opacity-90 font-mono">{jsonError}</p>
+                </div>
+              </div>
+            ) : (
+              <textarea
+                rows={12}
+                readOnly
+                value={formattedJson || (rawJson ? "" : "Düzenlenmiş çıktı burada görünecek...")}
+                className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
+              />
+            )}
+          </div>
         </div>
-      ) : (
-        <div className="mt-3 p-3 bg-emerald-950/30 border border-emerald-800/40 rounded-lg flex items-center gap-2 text-emerald-400 text-xs font-mono">
-          <span>✓ Geçerli JSON formatı</span>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
