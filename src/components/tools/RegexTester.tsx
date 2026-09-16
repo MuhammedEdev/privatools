@@ -1,84 +1,90 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { Copy, Check, Search, AlertCircle } from "lucide-react";
 
 export default function RegexTester() {
-  const [pattern, setPattern] = useState("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}");
-  const [flags, setFlags] = useState("g");
-  const [testText, setTestText] = useState("Destek için destek@privatools.com veya info@test.org adresine yazabilirsiniz.");
-  const [error, setError] = useState<string | null>(null);
+  const [pattern, setPattern] = useState<string>("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b");
+  const [flags, setFlags] = useState<string>("g");
+  const [testString, setTestString] = useState<string>("Destek için bize contact@privatools.app veya support@dev.com adresinden ulaşabilirsiniz.");
+  const [copied, setCopied] = useState<boolean>(false);
 
   let matches: string[] = [];
+  let error: string | null = null;
+
   try {
     const regex = new RegExp(pattern, flags);
-    const results = testText.match(regex);
+    const results = testString.match(regex);
     if (results) {
       matches = Array.from(results);
     }
-    if (error) setError(null);
   } catch (err: any) {
-    if (!error) setError(err.message);
+    error = err.message || "Geçersiz Regular Expression ifadesi";
   }
 
   return (
-    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-2xl mx-auto shadow-xl">
-      <h2 className="text-xl font-bold mb-4">Pro Regex Tester & Matcher</h2>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-semibold text-white">Regex Tester</h1>
+        <p className="text-sm text-slate-400 mt-1">
+          Düzenli ifadelerinizi (Regular Expressions) test edin ve eşleşmeleri anında görün.
+        </p>
+      </div>
 
-      <div className="space-y-4">
-        {/* Regex ve Bayraklar (Flags) */}
-        <div className="flex gap-2">
-          <div className="flex-1 relative flex items-center">
-            <span className="absolute left-3 text-zinc-500 font-mono">/</span>
-            <input
-              type="text"
-              value={pattern}
-              onChange={(e) => setPattern(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-7 pr-4 py-2.5 text-sm font-mono text-indigo-300 focus:outline-none focus:border-indigo-500 shadow-inner"
-              placeholder="Regex deseni (örn: \d+)"
-            />
-            <span className="absolute right-3 text-zinc-500 font-mono">/</span>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="md:col-span-2 space-y-1">
+          <label className="text-xs font-medium text-slate-400">Regex Deseni (Pattern)</label>
+          <input
+            type="text"
+            value={pattern}
+            onChange={(e) => setPattern(e.target.value)}
+            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none focus:border-slate-700"
+            placeholder="Örn: [0-9]+"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-slate-400">Bayraklar (Flags)</label>
           <input
             type="text"
             value={flags}
             onChange={(e) => setFlags(e.target.value)}
-            className="w-20 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm font-mono text-center text-emerald-400 focus:outline-none focus:border-indigo-500 shadow-inner"
-            placeholder="flags"
+            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700"
+            placeholder="g, i, m vb."
           />
         </div>
+      </div>
 
-        {error && (
-          <div className="p-3 bg-red-950/50 border border-red-800/60 rounded-lg text-red-300 text-xs font-mono">
-            Geçersiz Regex: {error}
-          </div>
-        )}
+      {error && (
+        <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-3 text-rose-400 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        {/* Test Metni */}
-        <div>
-          <label className="block text-sm text-zinc-400 mb-1">Test Edilecek Metin</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-slate-400">Test Metni</label>
           <textarea
-            rows={4}
-            value={testText}
-            onChange={(e) => setTestText(e.target.value)}
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm font-mono text-white focus:outline-none focus:border-indigo-500 shadow-inner"
-            placeholder="Regex testi yapılacak metni girin..."
+            rows={8}
+            value={testString}
+            onChange={(e) => setTestString(e.target.value)}
+            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none resize-none"
+            placeholder="Test edilecek metni yazın..."
           />
         </div>
 
-        {/* Sonuçlar / Eşleşmeler */}
-        <div>
-          <label className="block text-sm text-zinc-400 mb-1">
-            Bulunan Eşleşmeler ({matches.length})
-          </label>
-          <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-xl font-mono text-xs max-h-40 overflow-auto space-y-1">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-slate-400">Eşleşen Sonuçlar ({matches.length})</label>
+          <div className="w-full h-[172px] bg-[#090D16] border border-slate-800 rounded-lg p-3 overflow-y-auto space-y-1 font-mono text-xs">
             {matches.length > 0 ? (
-              matches.map((match, idx) => (
-                <div key={idx} className="bg-emerald-950/40 text-emerald-300 border border-emerald-800/40 px-2.5 py-1 rounded">
-                  {idx + 1}. Eşleşme: <span className="font-bold">{match}</span>
+              matches.map((m, idx) => (
+                <div key={idx} className="bg-[#0D121F] border border-slate-800 text-emerald-400 px-2 py-1 rounded">
+                  {m}
                 </div>
               ))
             ) : (
-              <span className="text-zinc-500">// Eşleşme bulunamadı</span>
+              <span className="text-slate-500">Eşleşme bulunamadı</span>
             )}
           </div>
         </div>
