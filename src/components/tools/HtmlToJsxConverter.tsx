@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, Check, FileCode } from "lucide-react";
 
 export default function HtmlToJsConverter() {
@@ -9,7 +9,6 @@ export default function HtmlToJsConverter() {
   const [copied, setCopied] = useState<boolean>(false);
 
   const convertToJsx = (html: string) => {
-    setHtmlInput(html);
     if (!html.trim()) {
       setJsxOutput("");
       return;
@@ -27,7 +26,6 @@ export default function HtmlToJsConverter() {
       .replace(/tabindex=/g, "tabIndex=")
       .replace(/autocomplete=/g, "autoComplete=");
 
-    // style="color: red; font-size: 12px;" -> style={{ color: 'red', fontSize: '12px' }} dönüşüm simülasyonu / temizliği
     converted = converted.replace(/style="([^"]*)"/g, (match, p1) => {
       const styles = p1.split(";").filter(Boolean).map((s: string) => {
         const [key, val] = s.split(":").map((x: string) => x.trim());
@@ -40,6 +38,10 @@ export default function HtmlToJsConverter() {
 
     setJsxOutput(converted);
   };
+
+  useEffect(() => {
+    convertToJsx(htmlInput);
+  }, [htmlInput]);
 
   const copyToClipboard = () => {
     if (!jsxOutput) return;
@@ -65,7 +67,7 @@ export default function HtmlToJsConverter() {
           <textarea
             rows={10}
             value={htmlInput}
-            onChange={(e) => convertToJsx(e.target.value)}
+            onChange={(e) => setHtmlInput(e.target.value)}
             placeholder="HTML kodunu buraya yapıştırın..."
             className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none"
           />
@@ -87,7 +89,7 @@ export default function HtmlToJsConverter() {
           <textarea
             rows={10}
             readOnly
-            value={jsxOutput || (htmlInput ? convertToJsx(htmlInput) || jsxOutput : "")}
+            value={jsxOutput}
             placeholder="JSX çıktısı burada görünecek..."
             className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none"
           />
