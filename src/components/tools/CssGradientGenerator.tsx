@@ -1,75 +1,122 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { Copy, Check, Palette, Sliders } from "lucide-react";
 
 export default function CssGradientGenerator() {
-  const [color1, setColor1] = useState("#4f46e5");
-  const [color2, setColor2] = useState("#06b6d4");
+  const [color1, setColor1] = useState("#10b981");
+  const [color2, setColor2] = useState("#0f172a");
   const [direction, setDirection] = useState("to right");
+  const [gradientType, setGradientType] = useState<"linear" | "radial">("linear");
+  const [copied, setCopied] = useState(false);
 
-  const gradientStyle = {
-    background: `linear-gradient(${direction}, ${color1}, ${color2})`,
-  };
+  const gradientCss = gradientType === "linear"
+    ? `linear-gradient(${direction}, ${color1}, ${color2})`
+    : `radial-gradient(circle, ${color1}, ${color2})`;
 
-  const cssCode = `background: linear-gradient(${direction}, ${color1}, ${color2});`;
+  const cssCode = `background: ${color1};
+background: ${gradientCss};`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(cssCode);
-    alert("CSS Kodu kopyalandı!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 text-white max-w-lg mx-auto shadow-xl">
-      <h2 className="text-xl font-bold mb-4">CSS Gradient Generator</h2>
-
-      <div className="space-y-4">
-        <div className="h-32 rounded-xl shadow-inner transition-all duration-300" style={gradientStyle}></div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-zinc-400 mb-1">Renk 1</label>
-            <input
-              type="color"
-              value={color1}
-              onChange={(e) => setColor1(e.target.value)}
-              className="w-full h-10 bg-zinc-800 border border-zinc-700 rounded-lg cursor-pointer"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-zinc-400 mb-1">Renk 2</label>
-            <input
-              type="color"
-              value={color2}
-              onChange={(e) => setColor2(e.target.value)}
-              className="w-full h-10 bg-zinc-800 border border-zinc-700 rounded-lg cursor-pointer"
-            />
-          </div>
-        </div>
-
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <label className="block text-sm text-zinc-400 mb-1">Yön</label>
-          <select
-            value={direction}
-            onChange={(e) => setDirection(e.target.value)}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-indigo-500"
-          >
-            <option value="to right">Sağa Doğru (to right)</option>
-            <option value="to bottom">Aşağı Doğru (to bottom)</option>
-            <option value="to bottom right">Çapraz (to bottom right)</option>
-            <option value="to top right">Yukarı Sağ (to top right)</option>
-          </select>
+          <h1 className="text-xl font-semibold text-white">CSS Gradient Generator</h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Modern CSS renk geçişleri (gradient) oluşturun ve kodunu anında kopyalayın.
+          </p>
         </div>
-
-        <div className="p-3 bg-zinc-800/80 rounded-lg border border-zinc-700 font-mono text-xs text-indigo-300 break-all">
-          {cssCode}
-        </div>
-
         <button
           onClick={copyToClipboard}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+          className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2 px-3 rounded-lg transition flex items-center gap-1.5"
         >
-          CSS Kodunu Kopyala
+          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          {copied ? "Kopyalandı" : "CSS Kopyala"}
         </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-[#090D16] border border-slate-800 rounded-lg p-6 flex flex-col justify-between min-h-[280px]">
+          <div
+            className="w-full h-full min-h-[200px] rounded-lg shadow-inner border border-slate-800/80 transition-all duration-300"
+            style={{ background: gradientCss }}
+          />
+
+          <div className="mt-4 bg-[#0D121F] border border-slate-800/80 rounded-md p-3 font-mono text-xs text-emerald-400 whitespace-pre">
+            {cssCode}
+          </div>
+        </div>
+
+        <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs">
+          <div className="space-y-1">
+            <label className="text-slate-400 font-medium">Gradient Tipi</label>
+            <div className="flex bg-[#0D121F] border border-slate-800 rounded-md p-1">
+              <button
+                onClick={() => setGradientType("linear")}
+                className={`flex-1 py-1.5 rounded text-center transition ${gradientType === "linear" ? "bg-slate-800 text-white" : "text-slate-400"}`}
+              >
+                Linear
+              </button>
+              <button
+                onClick={() => setGradientType("radial")}
+                className={`flex-1 py-1.5 rounded text-center transition ${gradientType === "radial" ? "bg-slate-800 text-white" : "text-slate-400"}`}
+              >
+                Radial
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-slate-400 font-medium">1. Renk</label>
+              <div className="flex items-center gap-2 bg-[#0D121F] border border-slate-800 rounded-md p-2">
+                <input
+                  type="color"
+                  value={color1}
+                  onChange={(e) => setColor1(e.target.value)}
+                  className="w-6 h-6 rounded border-0 cursor-pointer bg-transparent"
+                />
+                <span className="font-mono text-slate-200 uppercase">{color1}</span>
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-slate-400 font-medium">2. Renk</label>
+              <div className="flex items-center gap-2 bg-[#0D121F] border border-slate-800 rounded-md p-2">
+                <input
+                  type="color"
+                  value={color2}
+                  onChange={(e) => setColor2(e.target.value)}
+                  className="w-6 h-6 rounded border-0 cursor-pointer bg-transparent"
+                />
+                <span className="font-mono text-slate-200 uppercase">{color2}</span>
+              </div>
+            </div>
+          </div>
+
+          {gradientType === "linear" && (
+            <div className="space-y-1">
+              <label className="text-slate-400 font-medium">Yön (Direction)</label>
+              <select
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+                className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2 text-slate-200 focus:outline-none"
+              >
+                <option value="to right">Sağa Doğru (to right)</option>
+                <option value="to left">Sola Doğru (to left)</option>
+                <option value="to bottom">Aşağı Doğru (to bottom)</option>
+                <option value="to top">Yukarı Doğru (to top)</option>
+                <option value="to bottom right">Sağ Aşağı (to bottom right)</option>
+              </select>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
