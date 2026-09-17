@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Copy, Check, Code2 } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 
 export default function HtmlEntityConverter() {
   const [input, setInput] = useState<string>('<div class="card">\n  <h1>PrivaTools &copy; 2026</h1>\n  <p>Güvenli &amp; Hızlı Araçlar</p>\n</div>');
@@ -31,7 +31,6 @@ export default function HtmlEntityConverter() {
         .replace(/&amp;/g, "&")
         .replace(/&lt;/g, "<")
         .replace(/&gt;/g, ">")
-        .replace(/&quot;", '"')
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'")
         .replace(/&#x27;/g, "'")
