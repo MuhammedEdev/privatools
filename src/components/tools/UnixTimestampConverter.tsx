@@ -1,65 +1,43 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
-import { Copy, Check, Upload, Download, FileText, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Clock, Copy, Check, RefreshCcw } from "lucide-react";
 
-export default function Base64Converter() {
-  const [input, setInput] = useState<string>("PrivaTools - Güvenli Geliştirici Araçları");
-  const [output, setOutput] = useState<string>("");
-  const [mode, setMode] = useState<"encode" | "decode">("encode");
-  const [error, setError] = useState<string | null>(null);
+export default function UnixTimestampConverter() {
+  const [currentTimestamp, setCurrentTimestamp] = useState<number>(Math.floor(Date.now() / 1000));
+  const [inputTimestamp, setInputTimestamp] = useState<string>(Math.floor(Date.now() / 1000).toString());
   const [copied, setCopied] = useState<boolean>(false);
 
-  // Türkçe karakter destekli güvenli UTF-8 Base64 Encode / Decode
-  const handleProcess = (text: string, currentMode: "encode" | "decode") => {
-    setInput(text);
-    setError(null);
-    if (!text.trim()) {
-      setOutput("");
-      return;
-    }
+  // Canlı saat sayacı
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTimestamp(Math.floor(Date.now() / 1000));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-    try {
-      if (currentMode === "encode") {
-        const utf8Encoder = new TextEncoder();
-        const utf8Bytes = utf8Encoder.encode(text);
-        let binaryString = "";
-        for (let i = 0; i < utf8Bytes.length; i++) {
-          binaryString += String.fromCharCode(utf8Bytes[i]);
-        }
-        setOutput(btoa(binaryString));
-      } else {
-        const binaryString = atob(text);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-        const utf8Decoder = new TextDecoder();
-        setOutput(utf8Decoder.decode(bytes));
-      }
-    } catch (err) {
-      setError("Geçersiz format! (Malformed Base64 veya desteklenmeyen karakter)");
-      setOutput("");
-    }
-  };
+  const parseDate = (tsStr: string) => {
+    const num = parseInt(tsStr);
+    if (isNaN(num)) return { utc: "Geçersiz Timestamp", local: "Geçersiz Timestamp" };
+    // Milisaniye mi saniye mi kontrolü (10 haneden büyükse milisaniyedir)
+    const date = new Date(num > 1e11 ? num : num * 1000);
+    if (isNaN(date.getTime())) return { utc: "Geçersiz Tarih", local: "Geçersiz Tarih" };
 
-  // Dosyayı Base64'e çevirme
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setInput(result);
-      setOutput(result);
-      setMode("encode");
+    return {
+      utc: date.toUTCString(),
+      local: date.toLocaleString("tr-TR"),
     };
-    reader.readAsDataURL(file);
   };
 
-  const copyToClipboard = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output);
+  const result = parseDate(inputTimestamp);
+
+  const setToNow = () => {
+    const now = Math.floor(Date.now() / 1000).toString();
+    setInputTimestamp(now);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -68,77 +46,64 @@ export default function Base64Converter() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-white">Pro Base64 Encoder / Decoder</h1>
+          <h1 className="text-xl font-semibold text-white">Pro Unix Timestamp Converter</h1>
           <p className="text-sm text-slate-400 mt-1">
-            UTF-8 destekli metin kodlama, çözme ve dosya to Base64 dönüştürme stüdyosu.
+            Unix zaman damgalarını insan tarafından okunabilir tarihlere dönüştürün ve anlık zamanı takip edin.
           </p>
         </div>
-
-        <div className="flex items-center gap-3">
-          <label className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium py-2 px-3 rounded-lg transition cursor-pointer flex items-center gap-1.5 border border-slate-700">
-            <Upload className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Dosya Yükle</span>
-            <input type="file" onChange={handleFileUpload} className="hidden" />
-          </label>
-
-          <div className="flex bg-[#090D16] border border-slate-800 rounded-lg p-1 text-xs">
-            <button
-              onClick={() => { setMode("encode"); handleProcess(input, "encode"); }}
-              className={`px-3 py-1.5 rounded-md font-medium transition ${mode === "encode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"}`}
-            >
-              Encode
-            </button>
-            <button
-              onClick={() => { setMode("decode"); handleProcess(input, "decode"); }}
-              className={`px-3 py-1.5 rounded-md font-medium transition ${mode === "decode" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"}`}
-            >
-              Decode
-            </button>
+        <div className="bg-[#090D16] border border-slate-800 rounded-lg px-4 py-2.5 flex items-center gap-3">
+          <Clock className="w-4 h-4 text-emerald-400 animate-pulse" />
+          <div className="text-right">
+            <span className="text-[10px] text-slate-500 block uppercase font-medium">Canlı Zaman Damgası</span>
+            <span className="font-mono text-sm text-emerald-400 font-bold">{currentTimestamp}</span>
           </div>
         </div>
       </div>
 
-      {error && (
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-3 text-rose-400 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="text-xs font-medium text-slate-400">
-            {mode === "encode" ? "Dönüştürülecek Metin / Veri" : "Base64 Metni"}
-          </label>
-          <textarea
-            rows={10}
-            value={input}
-            onChange={(e) => handleProcess(e.target.value, mode)}
-            placeholder="Veriyi buraya girin..."
-            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-slate-700 resize-none shadow-inner"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-xs font-medium text-slate-400">Sonuç Çıktısı</label>
-            {output && (
-              <button
-                onClick={copyToClipboard}
-                className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-medium"
-              >
-                {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                {copied ? "Kopyalandı" : "Kopyala"}
-              </button>
-            )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs">
+          <div className="flex justify-between items-center">
+            <label className="text-slate-400 font-medium">Unix Timestamp Girin</label>
+            <button
+              onClick={setToNow}
+              className="text-emerald-400 hover:underline flex items-center gap-1 font-medium"
+            >
+              <RefreshCcw className="w-3 h-3" /> Şu Anki Zaman
+            </button>
           </div>
-          <textarea
-            rows={10}
-            readOnly
-            value={output}
-            placeholder="Sonuç burada görüntülenecek..."
-            className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-3 text-xs font-mono text-emerald-400 focus:outline-none resize-none shadow-inner select-all"
+          <input
+            type="text"
+            value={inputTimestamp}
+            onChange={(e) => setInputTimestamp(e.target.value)}
+            placeholder="Örn: 1774000000"
+            className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-3 text-white font-mono focus:outline-none focus:border-slate-700 shadow-inner"
           />
+        </div>
+
+        <div className="bg-[#090D16] border border-slate-800 rounded-lg p-5 space-y-4 text-xs flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <span className="text-slate-500 font-medium">UTC Tarih Formatı</span>
+              <div className="bg-[#0D121F] border border-slate-800 rounded-md p-2.5 font-mono text-slate-200 select-all">
+                {result.utc}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <span className="text-slate-500 font-medium">Yerel Tarih (TR)</span>
+              <div className="bg-[#0D121F] border border-slate-800 rounded-md p-2.5 font-mono text-emerald-400 font-semibold select-all">
+                {result.local}
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => copyToClipboard(result.local)}
+            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 rounded-lg transition border border-slate-700 flex items-center justify-center gap-1.5 mt-4"
+          >
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? "Tarih Kopyalandı" : "Yerel Tarihi Kopyala"}
+          </button>
         </div>
       </div>
     </div>
