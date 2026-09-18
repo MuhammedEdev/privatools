@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, Check, FileText } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Copy, Check, FileText, RefreshCw } from "lucide-react";
 
 export default function LoremIpsumGenerator() {
   const [count, setCount] = useState<number>(3);
@@ -17,6 +17,16 @@ export default function LoremIpsumGenerator() {
     "exercitation", "ullamco", "laboris", "nisi", "aliquip", "ex", "ea", "commodo"
   ];
 
+  const generateSentence = () => {
+    const wordCount = Math.floor(Math.random() * 6) + 6;
+    const sentWords: string[] = [];
+    for (let i = 0; i < wordCount; i++) {
+      sentWords.push(wordsList[Math.floor(Math.random() * wordsList.length)]);
+    }
+    sentWords[0] = sentWords[0].charAt(0).toUpperCase() + sentWords[0].slice(1);
+    return sentWords.join(" ") + ".";
+  };
+
   const generateLorem = () => {
     let result = "";
     if (type === "paragraphs") {
@@ -30,34 +40,34 @@ export default function LoremIpsumGenerator() {
         paras.push(paraSentences.join(" "));
       }
       result = paras.join("\n\n");
+      if (startWithLorem && !result.startsWith("Lorem ipsum")) {
+        result = "Lorem ipsum " + result.charAt(0).toLowerCase() + result.slice(1);
+      }
     } else if (type === "sentences") {
       const sents: string[] = [];
       for (let i = 0; i < count; i++) {
         sents.push(generateSentence());
       }
       result = sents.join(" ");
+      if (startWithLorem && !result.startsWith("Lorem ipsum")) {
+        result = "Lorem ipsum " + result.charAt(0).toLowerCase() + result.slice(1);
+      }
     } else {
       const wds: string[] = [];
       for (let i = 0; i < count; i++) {
         wds.push(wordsList[Math.floor(Math.random() * wordsList.length)]);
       }
       result = wds.join(" ");
-      if (startWithLorem && result.length > 0) {
+      if (startWithLorem) {
         result = "Lorem ipsum " + result;
       }
     }
     setOutput(result);
   };
 
-  const generateSentence = () => {
-    const wordCount = Math.floor(Math.random() * 6) + 6;
-    const sentWords: string[] = [];
-    for (let i = 0; i < wordCount; i++) {
-      sentWords.push(wordsList[Math.floor(Math.random() * wordsList.length)]);
-    }
-    sentWords[0] = sentWords[0].charAt(0).toUpperCase() + sentWords[0].slice(1);
-    return sentWords.join(" ") + ".";
-  };
+  useEffect(() => {
+    generateLorem();
+  }, [count, type, startWithLorem]);
 
   const copyToClipboard = () => {
     if (!output) return;
@@ -70,7 +80,7 @@ export default function LoremIpsumGenerator() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-white">Lorem Ipsum Generator</h1>
+          <h1 className="text-xl font-semibold text-white">Pro Lorem Ipsum Generator</h1>
           <p className="text-sm text-slate-400 mt-1">
             Projeleriniz için özelleştirilebilir yer tutucu metinler (Lorem Ipsum) üretin.
           </p>
@@ -90,10 +100,10 @@ export default function LoremIpsumGenerator() {
           <input
             type="number"
             min="1"
-            max="20"
+            max="30"
             value={count}
             onChange={(e) => setCount(parseInt(e.target.value) || 1)}
-            className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2.5 text-white font-mono focus:outline-none"
+            className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2.5 text-white font-mono focus:outline-none focus:border-slate-700"
           />
         </div>
 
@@ -102,7 +112,7 @@ export default function LoremIpsumGenerator() {
           <select
             value={type}
             onChange={(e) => setType(e.target.value as any)}
-            className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2.5 text-white focus:outline-none"
+            className="w-full bg-[#0D121F] border border-slate-800 rounded-md p-2.5 text-white focus:outline-none focus:border-slate-700"
           >
             <option value="paragraphs">Paragraf</option>
             <option value="sentences">Cümle</option>
@@ -113,9 +123,9 @@ export default function LoremIpsumGenerator() {
         <div className="flex items-end">
           <button
             onClick={generateLorem}
-            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 px-4 rounded-md transition border border-slate-700"
+            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 px-4 rounded-md transition border border-slate-700 flex items-center justify-center gap-2"
           >
-            Yeniden Üret
+            <RefreshCw className="w-3.5 h-3.5" /> Yeniden Üret
           </button>
         </div>
       </div>
@@ -124,8 +134,8 @@ export default function LoremIpsumGenerator() {
         <textarea
           rows={10}
           readOnly
-          value={output || "Metin üretmek için üstteki butona tıklayın..."}
-          className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed select-all"
+          value={output}
+          className="w-full bg-[#090D16] border border-slate-800 rounded-lg p-4 text-xs font-mono text-emerald-400 focus:outline-none resize-none leading-relaxed select-all shadow-inner"
         />
       </div>
     </div>
