@@ -1,12 +1,12 @@
 // src/app/studio/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -39,6 +39,32 @@ export default function StudioPage() {
   const [activeTab, setActiveTab] = useState<string>("compressor");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  // LocalStorage'dan favorileri yükle
+  useEffect(() => {
+    const savedFavs = localStorage.getItem("privatools_favorites");
+    if (savedFavs) {
+      try {
+        setFavorites(JSON.parse(savedFavs));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  // Favorileri localStorage'a kaydet
+  const toggleFavorite = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    let updated;
+    if (favorites.includes(id)) {
+      updated = favorites.filter((fav) => fav !== id);
+    } else {
+      updated = [...favorites, id];
+    }
+    setFavorites(updated);
+    localStorage.setItem("privatools_favorites", JSON.stringify(updated));
+  };
 
   const toolsList = [
     { id: "compressor", name: "Görsel Sıkıştırıcı", category: "design", icon: FileImage, component: ImageCompressor },
@@ -70,6 +96,7 @@ export default function StudioPage() {
 
   const categories = [
     { id: "all", name: "Tümü" },
+    { id: "favorites", name: "⭐ Favoriler" },
     { id: "dev", name: "Geliştirici" },
     { id: "security", name: "Güvenlik" },
     { id: "converter", name: "Dönüştürücü" },
@@ -78,6 +105,9 @@ export default function StudioPage() {
 
   const filteredTools = toolsList.filter((tool) => {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
+    if (selectedCategory === "favorites") {
+      return matchesSearch && favorites.includes(tool.id);
+    }
     const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -88,7 +118,7 @@ export default function StudioPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
       <main className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
         
-        {/* Sol Sidebar & Arama & Kategoriler */}
+        {/* Sol Sidebar */}
         <aside className="lg:col-span-3 space-y-4">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
@@ -130,11 +160,12 @@ export default function StudioPage() {
             {filteredTools.map((tool) => {
               const IconComponent = tool.icon;
               const isActive = activeTab === tool.id;
+              const isFav = favorites.includes(tool.id);
               return (
                 <button
                   key={tool.id}
                   onClick={() => setActiveTab(tool.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all group ${
                     isActive
                       ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
@@ -144,12 +175,21 @@ export default function StudioPage() {
                     <IconComponent className={`w-4 h-4 shrink-0 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />
                     <span className="truncate">{tool.name}</span>
                   </div>
-                  <ArrowRight className={`w-3.5 h-3.5 shrink-0 opacity-50 ${isActive ? "text-emerald-400" : ""}`} />
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      onClick={(e) => toggleFavorite(tool.id, e)}
+                      className={`p-1 rounded hover:bg-slate-700/50 transition ${isFav ? "text-amber-400" : "text-slate-600 hover:text-slate-400"}`}
+                      title={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
+                    >
+                      <Star className={`w-3.5 h-3.5 ${isFav ? "fill-amber-400" : ""}`} />
+                    </span>
+                    <ArrowRight className={`w-3.5 h-3.5 shrink-0 opacity-50 ${isActive ? "text-emerald-400" : ""}`} />
+                  </div>
                 </button>
               );
             })}
             {filteredTools.length === 0 && (
-              <p className="text-xs text-slate-500 text-center py-6">Araç bulunamadı.</p>
+              <p className="text-xs text-slate-500 text-center py-6">Araç bulunamadı.</p>
             )}
           </div>
         </aside>
