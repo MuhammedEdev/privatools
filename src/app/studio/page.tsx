@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -40,17 +40,26 @@ export default function StudioPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [recentTools, setRecentTools] = useState<string[]>([]);
 
   useEffect(() => {
     const savedFavs = localStorage.getItem("privatools_favorites");
     if (savedFavs) {
-      try {
-        setFavorites(JSON.parse(savedFavs));
-      } catch (e) {
-        console.error(e);
-      }
+      try { setFavorites(JSON.parse(savedFavs)); } catch (e) { console.error(e); }
+    }
+    const savedRecents = localStorage.getItem("privatools_recents");
+    if (savedRecents) {
+      try { setRecentTools(JSON.parse(savedRecents)); } catch (e) { console.error(e); }
     }
   }, []);
+
+  const handleSelectTool = (id: string) => {
+    setActiveTab(id);
+    // Son kullanılanlara ekle (en fazla 5 adet tutalım, başa ekle)
+    const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 5);
+    setRecentTools(updatedRecents);
+    localStorage.setItem("privatools_recents", JSON.stringify(updatedRecents));
+  };
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -95,6 +104,7 @@ export default function StudioPage() {
   const categories = [
     { id: "all", name: "Tümü", icon: Layers },
     { id: "favorites", name: "Favoriler", icon: Star },
+    { id: "recent", name: "Geçmiş", icon: History },
     { id: "dev", name: "Geliştirici", icon: Cpu },
     { id: "security", name: "Güvenlik", icon: Shield },
     { id: "converter", name: "Dönüştürücü", icon: RefreshCw },
@@ -105,6 +115,9 @@ export default function StudioPage() {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
     if (selectedCategory === "favorites") {
       return matchesSearch && favorites.includes(tool.id);
+    }
+    if (selectedCategory === "recent") {
+      return matchesSearch && recentTools.includes(tool.id);
     }
     const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -166,7 +179,7 @@ export default function StudioPage() {
               return (
                 <button
                   key={tool.id}
-                  onClick={() => setActiveTab(tool.id)}
+                  onClick={() => handleSelectTool(tool.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all group ${
                     isActive
                       ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
