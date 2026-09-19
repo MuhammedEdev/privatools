@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Github, Zap } from "lucide-react";
+import { Shield, Code, Zap } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -30,7 +30,7 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-lg transition border border-slate-700 flex items-center gap-1.5 text-xs font-medium"
           >
-            <Github className="w-4 h-4" />
+            <Code className="w-4 h-4" />
             <span className="hidden sm:inline">GitHub</span>
           </a>
         </div>
