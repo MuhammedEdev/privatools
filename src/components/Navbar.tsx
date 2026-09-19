@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wrench, Info, Mail, Code, Zap } from "lucide-react";
+import { Wrench, Info, Mail, Code } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -26,7 +26,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Gerçekçi ve Doğal Menü Linkleri (Dış Kutu Kaldırıldı) */}
+        {/* Menü Linkleri */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -48,20 +48,15 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Sağ Butonlar */}
+        {/* Sağ Buton (Sadece GitHub Kaldı) */}
         <div className="flex items-center gap-3">
-          <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900/50 border border-slate-800/80 px-3 py-1.5 rounded-full">
-            <Zap className="w-3.5 h-3.5 text-emerald-400" />
-            <span>%100 Client-Side</span>
-          </div>
-
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-lg transition border border-slate-700 flex items-center gap-1.5 text-xs font-medium"
+            className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg transition border border-slate-700 flex items-center gap-1.5 text-xs font-medium"
           >
-            <Code className="w-4 h-4" />
+            <Code className="w-4 h-4 text-emerald-400" />
             <span className="hidden sm:inline">GitHub</span>
           </a>
         </div>
