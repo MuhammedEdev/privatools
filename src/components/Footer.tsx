@@ -1,6 +1,6 @@
 // src/components/Footer.tsx
 import Link from "next/link";
-import { Shield, Github, Twitter } from "lucide-react";
+import { Shield, Code, Globe } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -38,7 +38,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Kolon 3: Sosyal Medya & Açık Kaynak */}
+        {/* Kolon 3: Bağlantılar */}
         <div className="space-y-3">
           <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Topluluk</h4>
           <div className="flex items-center gap-3">
@@ -49,16 +49,16 @@ export default function Footer() {
               className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition border border-slate-700"
               title="GitHub"
             >
-              <Github className="w-4 h-4" />
+              <Code className="w-4 h-4 text-emerald-400" />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
               className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition border border-slate-700"
-              title="Twitter"
+              title="Website"
             >
-              <Twitter className="w-4 h-4" />
+              <Globe className="w-4 h-4 text-emerald-400" />
             </a>
           </div>
         </div>
