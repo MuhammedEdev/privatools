@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -41,7 +41,6 @@ export default function StudioPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  // LocalStorage'dan favorileri yükle
   useEffect(() => {
     const savedFavs = localStorage.getItem("privatools_favorites");
     if (savedFavs) {
@@ -53,7 +52,6 @@ export default function StudioPage() {
     }
   }, []);
 
-  // Favorileri localStorage'a kaydet
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     let updated;
@@ -95,12 +93,12 @@ export default function StudioPage() {
   ];
 
   const categories = [
-    { id: "all", name: "Tümü" },
-    { id: "favorites", name: "⭐ Favoriler" },
-    { id: "dev", name: "Geliştirici" },
-    { id: "security", name: "Güvenlik" },
-    { id: "converter", name: "Dönüştürücü" },
-    { id: "design", name: "Tasarım" },
+    { id: "all", name: "Tümü", icon: Layers },
+    { id: "favorites", name: "Favoriler", icon: Star },
+    { id: "dev", name: "Geliştirici", icon: Cpu },
+    { id: "security", name: "Güvenlik", icon: Shield },
+    { id: "converter", name: "Dönüştürücü", icon: RefreshCw },
+    { id: "design", name: "Tasarım", icon: Palette },
   ];
 
   const filteredTools = toolsList.filter((tool) => {
@@ -140,19 +138,23 @@ export default function StudioPage() {
 
           {/* Kategori Filtreleri */}
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
-                  selectedCategory === cat.id
-                    ? "bg-emerald-500 text-slate-950 font-bold"
-                    : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const CatIcon = cat.icon;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    selectedCategory === cat.id
+                      ? "bg-emerald-500 text-slate-950 font-bold"
+                      : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80"
+                  }`}
+                >
+                  <CatIcon className={`w-3 h-3 ${selectedCategory === cat.id ? "text-slate-950" : "text-emerald-400"}`} />
+                  <span>{cat.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Araç Listesi */}
