@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Maximize2 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -209,36 +209,50 @@ export default function StudioPage() {
           </div>
         </aside>
 
-        {/* Sağ Çalışma Alanı ve Üst Bilgi Paneli */}
-        <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl flex flex-col space-y-6">
+        {/* Sağ Çalışma Alanı */}
+        <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl flex flex-col justify-between space-y-6">
           
-          {/* Araç Üst Bilgi Barı */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">{activeToolObj.name}</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Client-Side
-                </span>
+          <div className="space-y-6">
+            {/* Araç Üst Bilgi Barı */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-white tracking-tight">{activeToolObj.name}</h2>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    Client-Side
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">{activeToolObj.description}</p>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">{activeToolObj.description}</p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCopyToolInfo}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
+                  title="Sayfa bağlantısını kopyala"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copied ? "Kopyalandı" : "Bağlantı"}</span>
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleCopyToolInfo}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
-                title="Sayfa bağlantısını kopyala"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? "Kopyalandı" : "Bağlantı"}</span>
-              </button>
+            {/* Aktif Araç Bileşeni */}
+            <div>
+              <ActiveComponent />
             </div>
           </div>
 
-          {/* Aktif Araç Bileşeni */}
-          <div className="flex-1">
-            <ActiveComponent />
+          {/* Alt Güvenlik ve Performans Bilgi Bandı */}
+          <div className="mt-8 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+            <div className="flex items-center gap-2">
+              <Lock className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Sıfır veri kaybı ve tam gizlilik garantisiyle tarayıcınızda çalışır.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Next.js & Turbopack</span>
+            </div>
           </div>
 
         </section>
