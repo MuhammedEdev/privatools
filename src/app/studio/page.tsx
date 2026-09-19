@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Maximize2 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -41,6 +41,7 @@ export default function StudioPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recentTools, setRecentTools] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const savedFavs = localStorage.getItem("privatools_favorites");
@@ -55,7 +56,6 @@ export default function StudioPage() {
 
   const handleSelectTool = (id: string) => {
     setActiveTab(id);
-    // Son kullanılanlara ekle (en fazla 5 adet tutalım, başa ekle)
     const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 5);
     setRecentTools(updatedRecents);
     localStorage.setItem("privatools_recents", JSON.stringify(updatedRecents));
@@ -74,31 +74,31 @@ export default function StudioPage() {
   };
 
   const toolsList = [
-    { id: "compressor", name: "Görsel Sıkıştırıcı", category: "design", icon: FileImage, component: ImageCompressor },
-    { id: "password", name: "Güvenli Şifre Üreteci", category: "security", icon: KeyRound, component: PasswordGenerator },
-    { id: "shadow", name: "CSS Shadow Generator", category: "design", icon: Palette, component: BoxShadowGenerator },
-    { id: "json", name: "JSON Formatter", category: "dev", icon: Code2, component: JsonFormatter },
-    { id: "base64", name: "Base64 Encoder / Decoder", category: "converter", icon: Binary, component: Base64Converter },
-    { id: "markdown", name: "Markdown Live Editor", category: "dev", icon: FileCode, component: MarkdownEditor },
-    { id: "meta", name: "Meta Tag Generator", category: "dev", icon: Globe, component: MetaTagGenerator },
-    { id: "jwt", name: "JWT Decoder", category: "security", icon: ShieldAlert, component: JwtDecoder },
-    { id: "url", name: "URL Encoder / Decoder", category: "converter", icon: Link2, component: UrlEncoderDecoder },
-    { id: "text", name: "Metin Analizörü", category: "dev", icon: FileText, component: TextAnalyzer },
-    { id: "uuid", name: "UUID Generator", category: "security", icon: Fingerprint, component: UuidGenerator },
-    { id: "html", name: "HTML Entity Converter", category: "converter", icon: Code, component: HtmlEntityConverter },
-    { id: "timestamp", name: "Unix Timestamp Converter", category: "converter", icon: Clock, component: UnixTimestampConverter },
-    { id: "color", name: "Color Converter & Picker", category: "design", icon: Pipette, component: ColorPicker },
-    { id: "regex", name: "Regex Tester & Matcher", category: "dev", icon: Regex, component: RegexTester },
-    { id: "hash", name: "Crypto Hash Generator", category: "security", icon: Hash, component: HashGenerator },
-    { id: "flexbox", name: "Flexbox Visual Playground", category: "design", icon: LayoutGrid, component: FlexboxPlayground },
-    { id: "lorem", name: "Lorem Ipsum Generator", category: "dev", icon: AlignLeft, component: LoremIpsumGenerator },
-    { id: "qr", name: "QR Code Generator", category: "design", icon: QrCode, component: QrGenerator },
-    { id: "unit", name: "CSS Unit Converter", category: "design", icon: Ruler, component: CssUnitConverter },
-    { id: "gradient", name: "CSS Gradient Generator", category: "design", icon: Sparkles, component: CssGradientGenerator },
-    { id: "ts", name: "JSON to TS Converter", category: "dev", icon: Braces, component: JsonToTsConverter },
-    { id: "keycode", name: "Keycode Info", category: "dev", icon: Keyboard, component: KeycodeInfo },
-    { id: "jsx", name: "HTML to JSX Converter", category: "converter", icon: FileSpreadsheet, component: HtmlToJsxConverter },
-    { id: "slug", name: "Slug Generator", category: "dev", icon: Link, component: SlugGenerator },
+    { id: "compressor", name: "Görsel Sıkıştırıcı", description: "Görsellerinizi kaliteden ödün vermeden tarayıcı tarafında sıkıştırın.", category: "design", icon: FileImage, component: ImageCompressor },
+    { id: "password", name: "Güvenli Şifre Üreteci", description: "Güçlü ve özelleştirilebilir rastgele parolalar oluşturun.", category: "security", icon: KeyRound, component: PasswordGenerator },
+    { id: "shadow", name: "CSS Shadow Generator", description: "Görsel olarak kutu gölgeleri tasarlayın ve CSS kodunu alın.", category: "design", icon: Palette, component: BoxShadowGenerator },
+    { id: "json", name: "JSON Formatter", description: "JSON verilerinizi doğrulayın, düzenleyin ve biçimlendirin.", category: "dev", icon: Code2, component: JsonFormatter },
+    { id: "base64", name: "Base64 Encoder / Decoder", description: "Metin ve verileri Base64 formatına çevirin veya çözün.", category: "converter", icon: Binary, component: Base64Converter },
+    { id: "markdown", name: "Markdown Live Editor", description: "Markdown metinlerinizi yazın ve canlı önizlemesini görüntüleyin.", category: "dev", icon: FileCode, component: MarkdownEditor },
+    { id: "meta", name: "Meta Tag Generator", description: "SEO ve sosyal medya paylaşımları için meta etiketleri oluşturun.", category: "dev", icon: Globe, component: MetaTagGenerator },
+    { id: "jwt", name: "JWT Decoder", description: "JSON Web Token (JWT) içeriklerini ve imza detaylarını çözümleyin.", category: "security", icon: ShieldAlert, component: JwtDecoder },
+    { id: "url", name: "URL Encoder / Decoder", description: "Web adreslerini URL encode veya decode işlemlerine tabi tutun.", category: "converter", icon: Link2, component: UrlEncoderDecoder },
+    { id: "text", name: "Metin Analizörü", description: "Kelime, karakter ve satır istatistiklerini anlık olarak analiz edin.", category: "dev", icon: FileText, component: TextAnalyzer },
+    { id: "uuid", name: "UUID Generator", description: "Benzersiz evrensel kimlik tanımlayıcıları (v4 UUID) üretin.", category: "security", icon: Fingerprint, component: UuidGenerator },
+    { id: "html", name: "HTML Entity Converter", description: "Özel karakterleri HTML entity kodlarına dönüştürün.", category: "converter", icon: Code, component: HtmlEntityConverter },
+    { id: "timestamp", name: "Unix Timestamp Converter", description: "Unix zaman damgalarını okunabilir tarihlere çevirin.", category: "converter", icon: Clock, component: UnixTimestampConverter },
+    { id: "color", name: "Color Converter & Picker", description: "HEX, RGB ve HSL renk kodları arasında dönüşüm yapın.", category: "design", icon: Pipette, component: ColorPicker },
+    { id: "regex", name: "Regex Tester & Matcher", description: "Düzenli ifadeleri (RegEx) metinler üzerinde test edin.", category: "dev", icon: Regex, component: RegexTester },
+    { id: "hash", name: "Crypto Hash Generator", description: "SHA-256, MD5 ve diğer kriptografik hash değerlerini hesaplayın.", category: "security", icon: Hash, component: HashGenerator },
+    { id: "flexbox", name: "Flexbox Visual Playground", description: "CSS Flexbox özelliklerini görsel olarak deneyimleyin.", category: "design", icon: LayoutGrid, component: FlexboxPlayground },
+    { id: "lorem", name: "Lorem Ipsum Generator", description: "Projeleriniz için örnek placeholder metinleri üretin.", category: "dev", icon: AlignLeft, component: LoremIpsumGenerator },
+    { id: "qr", name: "QR Code Generator", description: "Metin ve bağlantılar için hızlıca QR kodlar oluşturun.", category: "design", icon: QrCode, component: QrGenerator },
+    { id: "unit", name: "CSS Unit Converter", description: "PX, REM, EM ve diğer CSS birimleri arasında dönüştürme yapın.", category: "design", icon: Ruler, component: CssUnitConverter },
+    { id: "gradient", name: "CSS Gradient Generator", description: "Modern ve şık CSS doğrusal geçiş (gradient) renkleri tasarlayın.", category: "design", icon: Sparkles, component: CssGradientGenerator },
+    { id: "ts", name: "JSON to TS Converter", description: "JSON objelerini otomatik olarak TypeScript arayüzlerine (interface) çevirin.", category: "dev", icon: Braces, component: JsonToTsConverter },
+    { id: "keycode", name: "Keycode Info", description: "Klavyeden basılan tuşların kodlarını ve detaylarını öğrenin.", category: "dev", icon: Keyboard, component: KeycodeInfo },
+    { id: "jsx", name: "HTML to JSX Converter", description: "HTML etiketlerini React JSX formatına otomatik dönüştürün.", category: "converter", icon: FileSpreadsheet, component: HtmlToJsxConverter },
+    { id: "slug", name: "Slug Generator", description: "Metinleri URL uyumlu slug formatına optimize edin.", category: "dev", icon: Link, component: SlugGenerator },
   ];
 
   const categories = [
@@ -113,17 +113,20 @@ export default function StudioPage() {
 
   const filteredTools = toolsList.filter((tool) => {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
-    if (selectedCategory === "favorites") {
-      return matchesSearch && favorites.includes(tool.id);
-    }
-    if (selectedCategory === "recent") {
-      return matchesSearch && recentTools.includes(tool.id);
-    }
+    if (selectedCategory === "favorites") return matchesSearch && favorites.includes(tool.id);
+    if (selectedCategory === "recent") return matchesSearch && recentTools.includes(tool.id);
     const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const ActiveComponent = toolsList.find((t) => t.id === activeTab)?.component || ImageCompressor;
+  const activeToolObj = toolsList.find((t) => t.id === activeTab) || toolsList[0];
+  const ActiveComponent = activeToolObj.component;
+
+  const handleCopyToolInfo = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
@@ -137,7 +140,6 @@ export default function StudioPage() {
             </span>
           </div>
 
-          {/* Arama Barı */}
           <div className="relative">
             <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
@@ -149,7 +151,6 @@ export default function StudioPage() {
             />
           </div>
 
-          {/* Kategori Filtreleri */}
           <div className="flex flex-wrap gap-1.5 pt-1">
             {categories.map((cat) => {
               const CatIcon = cat.icon;
@@ -170,7 +171,6 @@ export default function StudioPage() {
             })}
           </div>
 
-          {/* Araç Listesi */}
           <div className="space-y-1 max-h-[550px] overflow-y-auto pr-1">
             {filteredTools.map((tool) => {
               const IconComponent = tool.icon;
@@ -209,9 +209,38 @@ export default function StudioPage() {
           </div>
         </aside>
 
-        {/* Sağ Çalışma Alanı */}
-        <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl">
-          <ActiveComponent />
+        {/* Sağ Çalışma Alanı ve Üst Bilgi Paneli */}
+        <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl flex flex-col space-y-6">
+          
+          {/* Araç Üst Bilgi Barı */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white tracking-tight">{activeToolObj.name}</h2>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Client-Side
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">{activeToolObj.description}</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCopyToolInfo}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
+                title="Sayfa bağlantısını kopyala"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? "Kopyalandı" : "Bağlantı"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Aktif Araç Bileşeni */}
+          <div className="flex-1">
+            <ActiveComponent />
+          </div>
+
         </section>
 
       </main>
