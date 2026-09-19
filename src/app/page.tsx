@@ -1,497 +1,55 @@
+// src/app/page.tsx
 "use client";
 
-import { useState } from "react";
-import { 
-  FileImage, 
-  KeyRound, 
-  Palette, 
-  Code2, 
-  Binary,
-  FileCode,
-  Globe,
-  ShieldAlert,
-  Link2,
-  FileText,
-  Fingerprint,
-  Code,
-  Clock,
-  Pipette,
-  Regex,
-  Hash,
-  LayoutGrid,
-  AlignLeft,
-  QrCode,
-  Ruler,
-  Sparkles,
-  Braces,
-  Keyboard,
-  FileSpreadsheet,
-  Link,
-  ArrowRight
-} from "lucide-react";
-
-// Tüm Modüler Bileşenler (Artık Tam 25 Araç!)
-import ImageCompressor from "@/components/tools/ImageCompressor";
-import PasswordGenerator from "@/components/tools/PasswordGenerator";
-import JwtDecoder from "@/components/tools/JwtDecoder";
-import UuidGenerator from "@/components/tools/UuidGenerator";
-import ColorPicker from "@/components/tools/ColorPicker";
-import HashGenerator from "@/components/tools/HashGenerator";
-import FlexboxPlayground from "@/components/tools/FlexboxPlayground";
-import QrGenerator from "@/components/tools/QrGenerator";
-import BoxShadowGenerator from "@/components/tools/BoxShadowGenerator";
-import JsonFormatter from "@/components/tools/JsonFormatter";
-import Base64Converter from "@/components/tools/Base64Converter";
-import MarkdownEditor from "@/components/tools/MarkdownEditor";
-import MetaTagGenerator from "@/components/tools/MetaTagGenerator";
-import UrlEncoderDecoder from "@/components/tools/UrlEncoderDecoder";
-import TextAnalyzer from "@/components/tools/TextAnalyzer";
-import HtmlEntityConverter from "@/components/tools/HtmlEntityConverter";
-import UnixTimestampConverter from "@/components/tools/UnixTimestampConverter";
-import RegexTester from "@/components/tools/RegexTester";
-import LoremIpsumGenerator from "@/components/tools/LoremIpsumGenerator";
-import CssUnitConverter from "@/components/tools/CssUnitConverter";
-import CssGradientGenerator from "@/components/tools/CssGradientGenerator";
-import JsonToTsConverter from "@/components/tools/JsonToTsConverter";
-import KeycodeInfo from "@/components/tools/KeycodeInfo";
-import HtmlToJsxConverter from "@/components/tools/HtmlToJsxConverter";
-import SlugGenerator from "@/components/tools/SlugGenerator";
+import { Shield, Sparkles, ArrowRight, Lock, Zap } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"compressor" | "password" | "shadow" | "json" | "base64" | "markdown" | "meta" | "jwt" | "url" | "text" | "uuid" | "html" | "timestamp" | "color" | "regex" | "hash" | "flexbox" | "lorem" | "qr" | "unit" | "gradient" | "ts" | "keycode" | "jsx" | "slug">("compressor");
-
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-200 font-sans flex flex-col justify-between">
-      <header className="border-b border-slate-800/80 bg-[#0D121F]/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-bold text-emerald-400">
-            P
-          </div>
-          <span className="font-semibold text-lg tracking-tight text-white">PrivaTools</span>
-        </div>
-        <nav className="text-xs text-slate-400 font-mono">
-          client-side / zero-data-retention
-        </nav>
-      </header>
-
-      <main className="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-center items-center px-4 py-16">
+      <div className="max-w-4xl mx-auto text-center space-y-8">
         
-        {/* Sidebar */}
-        <aside className="lg:col-span-3 space-y-2">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Araçlar (25)
-          </p>
-          <button
-            onClick={() => setActiveTab("compressor")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "compressor"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <FileImage className="w-4 h-4 text-emerald-400" />
-              <span>Görsel Sıkıştırıcı</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+        {/* Üst Rozet */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Geliştiriciler İçin Yeni Nesil Araç Seti</span>
+        </div>
 
-          <button
-            onClick={() => setActiveTab("password")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "password"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <KeyRound className="w-4 h-4 text-emerald-400" />
-              <span>Güvenli Şifre Üreteci</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+        {/* Ana Başlık */}
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Güvenli, Hızlı ve Modern <br />
+          <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">
+            Geliştirici Stüdyosu
+          </span>
+        </h1>
 
-          <button
-            onClick={() => setActiveTab("shadow")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "shadow"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Palette className="w-4 h-4 text-emerald-400" />
-              <span>CSS Shadow Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+        {/* Açıklama */}
+        <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Tüm verileriniz tarayıcınızda (client-side) işlenir. Asla sunucuya gönderilmez. Tamamen açık kaynaklı ve gizlilik odaklı araçlar.
+        </p>
 
-          <button
-            onClick={() => setActiveTab("json")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "json"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Code2 className="w-4 h-4 text-emerald-400" />
-              <span>JSON Formatter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+        {/* Özellik Rozetleri */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 max-w-2xl mx-auto text-left">
+          <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-4 space-y-2">
+            <Lock className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-sm font-semibold text-white">%100 Güvenli</h3>
+            <p className="text-xs text-slate-400">Verileriniz dışarı sızmaz, tamamen tarayıcınızda kalır.</p>
+          </div>
 
-          <button
-            onClick={() => setActiveTab("base64")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "base64"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Binary className="w-4 h-4 text-emerald-400" />
-              <span>Base64 Encoder / Decoder</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+          <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-4 space-y-2">
+            <Zap className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-sm font-semibold text-white">Yüksek Performans</h3>
+            <p className="text-xs text-slate-400">Next.js ve Turbopack gücüyle anında sonuç alın.</p>
+          </div>
 
-          <button
-            onClick={() => setActiveTab("markdown")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "markdown"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <FileCode className="w-4 h-4 text-emerald-400" />
-              <span>Markdown Live Editor</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
+          <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-4 space-y-2">
+            <Shield className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-sm font-semibold text-white">Modern Tasarım</h3>
+            <p className="text-xs text-slate-400">Göz yormayan koyu tema ve akıcı arayüz deneyimi.</p>
+          </div>
+        </div>
 
-          <button
-            onClick={() => setActiveTab("meta")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "meta"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Globe className="w-4 h-4 text-emerald-400" />
-              <span>Meta Tag Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("jwt")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "jwt"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <ShieldAlert className="w-4 h-4 text-emerald-400" />
-              <span>JWT Decoder</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("url")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "url"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Link2 className="w-4 h-4 text-emerald-400" />
-              <span>URL Encoder / Decoder</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("text")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "text"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <FileText className="w-4 h-4 text-emerald-400" />
-              <span>Metin Analizörü</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("uuid")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "uuid"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Fingerprint className="w-4 h-4 text-emerald-400" />
-              <span>UUID Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("html")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "html"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Code className="w-4 h-4 text-emerald-400" />
-              <span>HTML Entity Converter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("timestamp")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "timestamp"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Clock className="w-4 h-4 text-emerald-400" />
-              <span>Unix Timestamp Converter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("color")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "color"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Pipette className="w-4 h-4 text-emerald-400" />
-              <span>Color Converter & Picker</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("regex")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "regex"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Regex className="w-4 h-4 text-emerald-400" />
-              <span>Regex Tester & Matcher</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("hash")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "hash"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Hash className="w-4 h-4 text-emerald-400" />
-              <span>Crypto Hash Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("flexbox")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "flexbox"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <LayoutGrid className="w-4 h-4 text-emerald-400" />
-              <span>Flexbox Visual Playground</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("lorem")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "lorem"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <AlignLeft className="w-4 h-4 text-emerald-400" />
-              <span>Lorem Ipsum Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("qr")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "qr"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <QrCode className="w-4 h-4 text-emerald-400" />
-              <span>QR Code Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("unit")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "unit"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Ruler className="w-4 h-4 text-emerald-400" />
-              <span>CSS Unit Converter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("gradient")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "gradient"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>CSS Gradient Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("ts")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "ts"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Braces className="w-4 h-4 text-emerald-400" />
-              <span>JSON to TS Converter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("keycode")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "keycode"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Keyboard className="w-4 h-4 text-emerald-400" />
-              <span>Keycode Info</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("jsx")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "jsx"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-              <span>HTML to JSX Converter</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-
-          <button
-            onClick={() => setActiveTab("slug")}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-              activeTab === "slug"
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <Link className="w-4 h-4 text-emerald-400" />
-              <span>Slug Generator</span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 opacity-50" />
-          </button>
-        </aside>
-
-        {/* Dashboard Area */}
-        <section className="lg:col-span-9 bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-sm">
-          
-          {activeTab === "compressor" && <ImageCompressor />}
-          {activeTab === "password" && <PasswordGenerator />}
-          {activeTab === "jwt" && <JwtDecoder />}
-          {activeTab === "uuid" && <UuidGenerator />}
-          {activeTab === "color" && <ColorPicker />}
-          {activeTab === "hash" && <HashGenerator />}
-          {activeTab === "flexbox" && <FlexboxPlayground />}
-          {activeTab === "qr" && <QrGenerator />}
-          {activeTab === "shadow" && <BoxShadowGenerator />}
-          {activeTab === "json" && <JsonFormatter />}
-          {activeTab === "base64" && <Base64Converter />}
-          {activeTab === "markdown" && <MarkdownEditor />}
-          {activeTab === "meta" && <MetaTagGenerator />}
-          {activeTab === "url" && <UrlEncoderDecoder />}
-          {activeTab === "text" && <TextAnalyzer />}
-          {activeTab === "html" && <HtmlEntityConverter />}
-          {activeTab === "timestamp" && <UnixTimestampConverter />}
-          {activeTab === "regex" && <RegexTester />}
-          {activeTab === "lorem" && <LoremIpsumGenerator />}
-          {activeTab === "unit" && <CssUnitConverter />}
-{activeTab === "gradient" && <CssGradientGenerator />}
-          {activeTab === "ts" && <JsonToTsConverter />}
-          {activeTab === "keycode" && <KeycodeInfo />}
-          {activeTab === "jsx" && <HtmlToJsxConverter />}
-          {activeTab === "slug" && <SlugGenerator />}
-
-        </section>
-      </main>
-
-      <footer className="border-t border-slate-800/80 px-6 py-4 text-center text-xs text-slate-500">
-        PrivaTools Open Source Utility Framework
-      </footer>
+      </div>
     </div>
   );
 }
