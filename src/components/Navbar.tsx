@@ -19,15 +19,15 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-[#090D16]/90 backdrop-blur-md border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* Sadece Proje İsmi (Logo Kaldırıldı) */}
+        {/* Proje İsmi */}
         <Link href="/" className="flex items-center gap-2 group">
           <span className="font-extrabold text-white text-lg tracking-tight">
             Priva<span className="text-emerald-400">Tools</span>
           </span>
         </Link>
 
-        {/* Menü Linkleri */}
-        <nav className="hidden md:flex items-center gap-1 bg-[#0D121F] border border-slate-800/80 px-2 py-1.5 rounded-xl">
+        {/* Gerçekçi ve Doğal Menü Linkleri (Dış Kutu Kaldırıldı) */}
+        <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -35,13 +35,13 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   isActive
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-sm"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
+                    : "text-slate-400 hover:text-white hover:bg-slate-900/60"
                 }`}
               >
-                {Icon && <Icon className={`w-3.5 h-3.5 ${isActive ? "text-slate-950" : "text-emerald-400"}`} />}
+                {Icon && <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />}
                 <span>{link.label}</span>
               </Link>
             );
@@ -50,7 +50,7 @@ export default function Navbar() {
 
         {/* Sağ Butonlar */}
         <div className="flex items-center gap-3">
-          <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full">
+          <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900/50 border border-slate-800/80 px-3 py-1.5 rounded-full">
             <Zap className="w-3.5 h-3.5 text-emerald-400" />
             <span>%100 Client-Side</span>
           </div>
