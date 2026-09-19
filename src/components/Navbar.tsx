@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Code, Zap } from "lucide-react";
+import { Shield, Code, Zap, Wrench } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -18,10 +18,19 @@ export default function Navbar() {
           </div>
         </Link>
 
+        {/* Orta / Sağ Menü Linkleri */}
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
-            <Zap className="w-3.5 h-3.5" />
-            <span>%100 Client-Side & Secure</span>
+          <Link
+            href="/studio"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 px-3.5 py-2 rounded-lg transition"
+          >
+            <Wrench className="w-3.5 h-3.5" />
+            <span>Stüdyoya Git</span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full">
+            <Zap className="w-3.5 h-3.5 text-emerald-400" />
+            <span>%100 Client-Side</span>
           </div>
 
           <a
