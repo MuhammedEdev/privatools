@@ -72,10 +72,7 @@ export default function Home() {
 
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 px-6 py-6 text-center text-xs text-slate-500">
-        © 2026 PrivaTools. Tüm hakları saklıdır. Açık kaynaklı geliştirici platformu.
-      </footer>
+      {/* Eski Footer Buradan Kaldırıldı */}
     </div>
   );
 }
