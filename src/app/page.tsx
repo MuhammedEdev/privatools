@@ -2,20 +2,14 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Sparkles, ArrowRight, Lock, Zap, Layers, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between">
       
       {/* Hero Section */}
-      <div className="max-w-5xl mx-auto px-4 py-20 text-center space-y-8">
-        
-        {/* Üst Rozet */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium shadow-inner">
-          <Sparkles className="w-4 h-4" />
-          <span>Geliştiriciler İçin Yeni Nesil Gizlilik Odaklı Stüdyo</span>
-        </div>
+      <div className="max-w-5xl mx-auto px-4 py-24 text-center space-y-8">
 
         {/* Ana Başlık */}
         <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
@@ -33,7 +27,7 @@ export default function Home() {
         {/* CTA Butonları */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <Link
-            href="/studio" // Veya araçlar sayfasına yönlendirme
+            href="/studio"
             className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 py-4 rounded-xl transition flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-500/20"
           >
             <span>Stüdyoyu Başlat (25 Araç)</span>
