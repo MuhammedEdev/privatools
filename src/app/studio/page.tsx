@@ -38,38 +38,49 @@ import SlugGenerator from "@/components/tools/SlugGenerator";
 export default function StudioPage() {
   const [activeTab, setActiveTab] = useState<string>("compressor");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const toolsList = [
-    { id: "compressor", name: "Görsel Sıkıştırıcı", icon: FileImage, component: ImageCompressor },
-    { id: "password", name: "Güvenli Şifre Üreteci", icon: KeyRound, component: PasswordGenerator },
-    { id: "shadow", name: "CSS Shadow Generator", icon: Palette, component: BoxShadowGenerator },
-    { id: "json", name: "JSON Formatter", icon: Code2, component: JsonFormatter },
-    { id: "base64", name: "Base64 Encoder / Decoder", icon: Binary, component: Base64Converter },
-    { id: "markdown", name: "Markdown Live Editor", icon: FileCode, component: MarkdownEditor },
-    { id: "meta", name: "Meta Tag Generator", icon: Globe, component: MetaTagGenerator },
-    { id: "jwt", name: "JWT Decoder", icon: ShieldAlert, component: JwtDecoder },
-    { id: "url", name: "URL Encoder / Decoder", icon: Link2, component: UrlEncoderDecoder },
-    { id: "text", name: "Metin Analizörü", icon: FileText, component: TextAnalyzer },
-    { id: "uuid", name: "UUID Generator", icon: Fingerprint, component: UuidGenerator },
-    { id: "html", name: "HTML Entity Converter", icon: Code, component: HtmlEntityConverter },
-    { id: "timestamp", name: "Unix Timestamp Converter", icon: Clock, component: UnixTimestampConverter },
-    { id: "color", name: "Color Converter & Picker", icon: Pipette, component: ColorPicker },
-    { id: "regex", name: "Regex Tester & Matcher", icon: Regex, component: RegexTester },
-    { id: "hash", name: "Crypto Hash Generator", icon: Hash, component: HashGenerator },
-    { id: "flexbox", name: "Flexbox Visual Playground", icon: LayoutGrid, component: FlexboxPlayground },
-    { id: "lorem", name: "Lorem Ipsum Generator", icon: AlignLeft, component: LoremIpsumGenerator },
-    { id: "qr", name: "QR Code Generator", icon: QrCode, component: QrGenerator },
-    { id: "unit", name: "CSS Unit Converter", icon: Ruler, component: CssUnitConverter },
-    { id: "gradient", name: "CSS Gradient Generator", icon: Sparkles, component: CssGradientGenerator },
-    { id: "ts", name: "JSON to TS Converter", icon: Braces, component: JsonToTsConverter },
-    { id: "keycode", name: "Keycode Info", icon: Keyboard, component: KeycodeInfo },
-    { id: "jsx", name: "HTML to JSX Converter", icon: FileSpreadsheet, component: HtmlToJsxConverter },
-    { id: "slug", name: "Slug Generator", icon: Link, component: SlugGenerator },
+    { id: "compressor", name: "Görsel Sıkıştırıcı", category: "design", icon: FileImage, component: ImageCompressor },
+    { id: "password", name: "Güvenli Şifre Üreteci", category: "security", icon: KeyRound, component: PasswordGenerator },
+    { id: "shadow", name: "CSS Shadow Generator", category: "design", icon: Palette, component: BoxShadowGenerator },
+    { id: "json", name: "JSON Formatter", category: "dev", icon: Code2, component: JsonFormatter },
+    { id: "base64", name: "Base64 Encoder / Decoder", category: "converter", icon: Binary, component: Base64Converter },
+    { id: "markdown", name: "Markdown Live Editor", category: "dev", icon: FileCode, component: MarkdownEditor },
+    { id: "meta", name: "Meta Tag Generator", category: "dev", icon: Globe, component: MetaTagGenerator },
+    { id: "jwt", name: "JWT Decoder", category: "security", icon: ShieldAlert, component: JwtDecoder },
+    { id: "url", name: "URL Encoder / Decoder", category: "converter", icon: Link2, component: UrlEncoderDecoder },
+    { id: "text", name: "Metin Analizörü", category: "dev", icon: FileText, component: TextAnalyzer },
+    { id: "uuid", name: "UUID Generator", category: "security", icon: Fingerprint, component: UuidGenerator },
+    { id: "html", name: "HTML Entity Converter", category: "converter", icon: Code, component: HtmlEntityConverter },
+    { id: "timestamp", name: "Unix Timestamp Converter", category: "converter", icon: Clock, component: UnixTimestampConverter },
+    { id: "color", name: "Color Converter & Picker", category: "design", icon: Pipette, component: ColorPicker },
+    { id: "regex", name: "Regex Tester & Matcher", category: "dev", icon: Regex, component: RegexTester },
+    { id: "hash", name: "Crypto Hash Generator", category: "security", icon: Hash, component: HashGenerator },
+    { id: "flexbox", name: "Flexbox Visual Playground", category: "design", icon: LayoutGrid, component: FlexboxPlayground },
+    { id: "lorem", name: "Lorem Ipsum Generator", category: "dev", icon: AlignLeft, component: LoremIpsumGenerator },
+    { id: "qr", name: "QR Code Generator", category: "design", icon: QrCode, component: QrGenerator },
+    { id: "unit", name: "CSS Unit Converter", category: "design", icon: Ruler, component: CssUnitConverter },
+    { id: "gradient", name: "CSS Gradient Generator", category: "design", icon: Sparkles, component: CssGradientGenerator },
+    { id: "ts", name: "JSON to TS Converter", category: "dev", icon: Braces, component: JsonToTsConverter },
+    { id: "keycode", name: "Keycode Info", category: "dev", icon: Keyboard, component: KeycodeInfo },
+    { id: "jsx", name: "HTML to JSX Converter", category: "converter", icon: FileSpreadsheet, component: HtmlToJsxConverter },
+    { id: "slug", name: "Slug Generator", category: "dev", icon: Link, component: SlugGenerator },
   ];
 
-  const filteredTools = toolsList.filter((tool) =>
-    tool.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const categories = [
+    { id: "all", name: "Tümü" },
+    { id: "dev", name: "Geliştirici" },
+    { id: "security", name: "Güvenlik" },
+    { id: "converter", name: "Dönüştürücü" },
+    { id: "design", name: "Tasarım" },
+  ];
+
+  const filteredTools = toolsList.filter((tool) => {
+    const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const ActiveComponent = toolsList.find((t) => t.id === activeTab)?.component || ImageCompressor;
 
@@ -77,16 +88,17 @@ export default function StudioPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
       <main className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
         
-        {/* Sol Sidebar & Arama */}
-        <aside className="lg:col-span-3 space-y-3">
-          <div className="flex items-center justify-between px-3">
+        {/* Sol Sidebar & Arama & Kategoriler */}
+        <aside className="lg:col-span-3 space-y-4">
+          <div className="flex items-center justify-between px-1">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Araçlar ({toolsList.length})
+              Araçlar ({filteredTools.length})
             </span>
           </div>
 
-          <div className="relative px-1">
-            <Search className="w-4 h-4 text-slate-500 absolute left-4 top-3" />
+          {/* Arama Barı */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
               type="text"
               placeholder="Araç ara..."
@@ -96,7 +108,25 @@ export default function StudioPage() {
             />
           </div>
 
-          <div className="space-y-1 max-h-[650px] overflow-y-auto pr-1">
+          {/* Kategori Filtreleri */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                  selectedCategory === cat.id
+                    ? "bg-emerald-500 text-slate-950 font-bold"
+                    : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Araç Listesi */}
+          <div className="space-y-1 max-h-[550px] overflow-y-auto pr-1">
             {filteredTools.map((tool) => {
               const IconComponent = tool.icon;
               const isActive = activeTab === tool.id;
@@ -104,7 +134,7 @@ export default function StudioPage() {
                 <button
                   key={tool.id}
                   onClick={() => setActiveTab(tool.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                     isActive
                       ? "bg-slate-800 text-white border border-slate-700 shadow-sm"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
@@ -119,7 +149,7 @@ export default function StudioPage() {
               );
             })}
             {filteredTools.length === 0 && (
-              <p className="text-xs text-slate-500 text-center py-4">Araç bulunamadı.</p>
+              <p className="text-xs text-slate-500 text-center py-6">Araç bulunamadı.</p>
             )}
           </div>
         </aside>
