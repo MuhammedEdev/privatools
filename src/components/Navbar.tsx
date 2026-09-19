@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Github, Sparkles } from "lucide-react";
+import { Shield, Github, Zap } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -20,8 +20,8 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>100% Client-Side & Secure</span>
+            <Zap className="w-3.5 h-3.5" />
+            <span>%100 Client-Side & Secure</span>
           </div>
 
           <a
