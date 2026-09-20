@@ -2,21 +2,22 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Cpu, Shield, RefreshCw, Palette, CheckCircle2, Terminal } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Cpu, Shield, RefreshCw, Palette, CheckCircle2, Terminal, Code2, Globe, Command, Heart } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between relative overflow-hidden">
       
       {/* Arkaplan Dekoratif Işık Efektleri (Glow) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] bg-emerald-500/10 blur-[180px] rounded-full pointer-events-none animate-pulse" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[600px] bg-emerald-500/10 blur-[190px] rounded-full pointer-events-none animate-pulse" />
       <div className="absolute top-1/3 left-10 w-[500px] h-[350px] bg-teal-500/5 blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-20 right-10 w-[600px] h-[400px] bg-emerald-500/5 blur-[160px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
 
         {/* Üst Küçük Animasyonlu Rozet */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-bounce">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-bounce shadow-lg shadow-emerald-500/5">
           <Sparkles className="w-3.5 h-3.5" />
           <span>v2.4 Sürümü Yayında — 25+ Geliştirici Aracı ile %100 Ücretsiz</span>
         </div>
@@ -53,27 +54,27 @@ export default function Home() {
 
         {/* İstatistik / Özet Barı */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
-          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
-            <h4 className="text-2xl sm:text-3xl font-black text-emerald-400">25+</h4>
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all group">
+            <h4 className="text-2xl sm:text-3xl font-black text-emerald-400 group-hover:scale-105 transition-transform">25+</h4>
             <p className="text-xs text-slate-400 mt-1">Modüler Geliştirici Aracı</p>
           </div>
-          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
-            <h4 className="text-2xl sm:text-3xl font-black text-white">%100</h4>
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all group">
+            <h4 className="text-2xl sm:text-3xl font-black text-white group-hover:scale-105 transition-transform">%100</h4>
             <p className="text-xs text-slate-400 mt-1">İstemci Tarafı (Client-Side)</p>
           </div>
-          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
-            <h4 className="text-2xl sm:text-3xl font-black text-emerald-400">0ms</h4>
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all group">
+            <h4 className="text-2xl sm:text-3xl font-black text-emerald-400 group-hover:scale-105 transition-transform">0ms</h4>
             <p className="text-xs text-slate-400 mt-1">Sunucu Gecikmesi</p>
           </div>
-          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
-            <h4 className="text-2xl sm:text-3xl font-black text-white">Açık</h4>
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all group">
+            <h4 className="text-2xl sm:text-3xl font-black text-white group-hover:scale-105 transition-transform">Açık</h4>
             <p className="text-xs text-slate-400 mt-1">Kaynak Kod Politikası</p>
           </div>
         </div>
 
         {/* Özellikler Grid (Animasyonlu Kartlar) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 text-left">
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Lock className="w-5 h-5" />
             </div>
@@ -81,7 +82,7 @@ export default function Home() {
             <p className="text-xs text-slate-400 leading-relaxed">Verileriniz cihazınızın dışına çıkmaz. JWT, şifreler ve JSON verileriniz güvendedir.</p>
           </div>
 
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Zap className="w-5 h-5" />
             </div>
@@ -89,7 +90,7 @@ export default function Home() {
             <p className="text-xs text-slate-400 leading-relaxed">Next.js ve Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
           </div>
 
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Layers className="w-5 h-5" />
             </div>
@@ -162,6 +163,33 @@ export default function Home() {
               <span className="text-emerald-400 font-mono text-xs font-bold">03. ADIM</span>
               <h4 className="text-white font-semibold text-sm">Anında Sonuç Alın</h4>
               <p className="text-xs text-slate-400 leading-relaxed">Sonucunuzu tek tıkla kopyalayın veya projenizde güvenle kullanmaya devam edin.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Yeni Bölüm: Sık Sorulan Sorular (FAQ) */}
+        <div className="pt-12 space-y-8 text-left">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Sık Sorulan Sorular</h2>
+            <p className="text-xs sm:text-sm text-slate-400">PrivaTools hakkında merak edilenler.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-6 space-y-2">
+              <h4 className="text-white font-semibold text-sm">Verilerim sunucularda saklanıyor mu?</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Asla. PrivaTools %100 client-side (istemci tarafı) mimariyle çalışır. Girdiğiniz hiçbir veri internet üzerinden başka bir sunucuya iletilmez.</p>
+            </div>
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-6 space-y-2">
+              <h4 className="text-white font-semibold text-sm">Platformu kullanmak ücretli mi?</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Hayır, PrivaTools tamamen açık kaynaklı ve geliştiriciler için ücretsiz bir araç süitidir.</p>
+            </div>
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-6 space-y-2">
+              <h4 className="text-white font-semibold text-sm">Hangi tarayıcılarda çalışır?</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Chrome, Firefox, Safari ve Edge gibi güncel tüm modern tarayıcılarda sorunsuz çalışır.</p>
+            </div>
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-6 space-y-2">
+              <h4 className="text-white font-semibold text-sm">Yeni bir araç önerebilir miyim?</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Evet! İletişim sayfasından veya GitHub üzerinden eklenmesini istediğiniz araçları bildirebilirsiniz.</p>
             </div>
           </div>
         </div>
