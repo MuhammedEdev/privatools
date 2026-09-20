@@ -2,14 +2,20 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Send, CheckCircle, MessageSquare } from "lucide-react";
+import { Mail, Send, CheckCircle, Loader2 } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    // Simüle edilmiş istemci tarafı gönderim gecikmesi
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+    }, 800);
   };
 
   return (
@@ -82,10 +88,20 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                disabled={loading}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 disabled:opacity-50"
               >
-                <Send className="w-4 h-4" />
-                <span>Mesajı Gönder</span>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Gönderiliyor...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Mesajı Gönder</span>
+                  </>
+                )}
               </button>
             </form>
           )}
