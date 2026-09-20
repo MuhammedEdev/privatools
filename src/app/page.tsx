@@ -2,15 +2,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Terminal, Code2, CheckCircle2, HelpCircle } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Terminal, Code2, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between relative overflow-hidden">
       
       {/* Arkaplan Dekoratif Işık Efektleri (Glow) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-emerald-500/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute top-1/2 left-10 w-[400px] h-[300px] bg-teal-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-emerald-500/10 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 right-0 w-[450px] h-[350px] bg-teal-500/5 blur-[130px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
@@ -98,8 +98,50 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Yeni Eklenen Bölüm: Nasıl Çalışır? */}
-        <div className="pt-12 space-y-8">
+        {/* Yeni Eklenen Bölüm: Araç Kategorileri Önizlemesi */}
+        <div className="pt-12 space-y-8 text-left">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Geniş Araç Kategorileri</h2>
+            <p className="text-xs sm:text-sm text-slate-400">İhtiyacınız olan kategoriye odaklanarak işlerinizi anında çözün.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <Cpu className="w-4 h-4" />
+              </div>
+              <h4 className="text-white font-semibold text-sm">Geliştirici Araçları</h4>
+              <p className="text-[11px] text-slate-400">JSON formatter, Markdown editor, Metin analizörü ve dahası.</p>
+            </div>
+
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <Shield className="w-4 h-4" />
+              </div>
+              <h4 className="text-white font-semibold text-sm">Güvenlik Araçları</h4>
+              <p className="text-[11px] text-slate-400">Şifre üreteci, JWT decoder, Hash hesaplayıcı ve UUID üretici.</p>
+            </div>
+
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <RefreshCw className="w-4 h-4" />
+              </div>
+              <h4 className="text-white font-semibold text-sm">Dönüştürücüler</h4>
+              <p className="text-[11px] text-slate-400">Base64, URL encoder, HTML entity ve Unix timestamp çevirici.</p>
+            </div>
+
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                <Palette className="w-4 h-4" />
+              </div>
+              <h4 className="text-white font-semibold text-sm">Tasarım & UI</h4>
+              <p className="text-[11px] text-slate-400">CSS Shadow generator, renk seçici, Flexbox playground ve QR kod.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Nasıl Çalışır? Bölümü */}
+        <div className="pt-8 space-y-8">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">Nasıl Çalışır?</h2>
             <p className="text-xs sm:text-sm text-slate-400">Üç basit adımda güvenli geliştirici araçlarını kullanmaya başlayın.</p>
