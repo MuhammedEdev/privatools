@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Send, CheckCircle, Loader2 } from "lucide-react";
+import { Send, CheckCircle, Loader2 } from "lucide-react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -11,7 +11,6 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simüle edilmiş istemci tarafı gönderim gecikmesi
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
@@ -22,12 +21,8 @@ export default function ContactPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto space-y-8 w-full">
         
-        {/* Başlık */}
+        {/* Başlık (Rozet Kaldırıldı) */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-            <Mail className="w-3.5 h-3.5" />
-            <span>Bizimle İletişime Geçin</span>
-          </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Geri Bildirim & Destek
           </h1>
