@@ -2,21 +2,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, ShieldCheck, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, ShieldCheck, Cpu, Shield, RefreshCw, Palette, Terminal, Code2, Globe, CheckCircle2, Activity, CpuIcon } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between relative overflow-hidden">
       
       {/* Arkaplan Dekoratif Işık Efektleri (Glow) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[600px] bg-emerald-500/10 blur-[190px] rounded-full pointer-events-none animate-pulse" />
-      <div className="absolute top-1/3 left-10 w-[500px] h-[350px] bg-teal-500/5 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-[600px] h-[400px] bg-emerald-500/5 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[650px] bg-emerald-500/10 blur-[200px] rounded-full pointer-events-none animate-pulse" />
+      <div className="absolute top-1/4 left-10 w-[550px] h-[400px] bg-teal-500/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-[650px] h-[450px] bg-emerald-500/5 blur-[170px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-20 text-center space-y-16 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
 
-        {/* Ana Başlık (Üst rozet kaldırıldı) */}
+        {/* Canlı Sistem Durum Bantçığı */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium shadow-lg shadow-emerald-500/5">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span>Sistem Çevrimiçi — Tüm 25+ İstemci Araçları Aktif</span>
+        </div>
+
+        {/* Ana Başlık */}
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Geliştiriciler İçin Güvenli, <br />
@@ -93,8 +99,45 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Araç Kategorileri Önizlemesi */}
+        {/* Yeni Bölüm: Popüler Hızlı Araçlar Önizleme Kutuları */}
         <div className="pt-12 space-y-8 text-left">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">En Çok Kullanılan Araçlar</h2>
+            <p className="text-xs sm:text-sm text-slate-400">Geliştiricilerin favori araçlarına tek tıkla ulaşın.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link href="/studio" className="bg-[#0D121F] border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition group">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded">Geliştirici</span>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+              </div>
+              <h4 className="text-white font-bold text-base">JSON Formatter & Validator</h4>
+              <p className="text-xs text-slate-400">Karmaşık JSON verilerinizi doğrulayın, biçimlendirin ve tek tuşla sıkıştırın.</p>
+            </Link>
+
+            <Link href="/studio" className="bg-[#0D121F] border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition group">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded">Güvenlik</span>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+              </div>
+              <h4 className="text-white font-bold text-base">Güvenli Şifre Üreteci</h4>
+              <p className="text-xs text-slate-400">Özelleştirilebilir, yüksek güvenlikli rastgele parolalar ve hash anahtarları oluşturun.</p>
+            </Link>
+
+            <Link href="/studio" className="bg-[#0D121F] border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition group">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded">Dönüştürücü</span>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition" />
+              </div>
+              <h4 className="text-white font-bold text-base">Base64 Encoder / Decoder</h4>
+              <p className="text-xs text-slate-400">Metin ve dosyalarınızı güvenli bir şekilde Base64 formatına çevirin veya çözümleyin.</p>
+            </Link>
+          </div>
+        </div>
+
+        {/* Araç Kategorileri Önizlemesi */}
+        <div className="pt-8 space-y-8 text-left">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">Geniş Araç Kategorileri</h2>
             <p className="text-xs sm:text-sm text-slate-400">İhtiyacınız olan kategoriye odaklanarak işlerinizi anında çözün.</p>
