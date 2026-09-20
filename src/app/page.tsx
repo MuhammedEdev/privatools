@@ -2,27 +2,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Terminal, Code2, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Cpu, Shield, RefreshCw, Palette, CheckCircle2, Terminal } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between relative overflow-hidden">
       
       {/* Arkaplan Dekoratif Işık Efektleri (Glow) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-emerald-500/10 blur-[160px] rounded-full pointer-events-none" />
-      <div className="absolute top-1/3 right-0 w-[450px] h-[350px] bg-teal-500/5 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] bg-emerald-500/10 blur-[180px] rounded-full pointer-events-none animate-pulse" />
+      <div className="absolute top-1/3 left-10 w-[500px] h-[350px] bg-teal-500/5 blur-[140px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
 
         {/* Üst Küçük Animasyonlu Rozet */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-pulse">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-bounce">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>v2.4 Sürümü Yayında — 25+ Geliştirici Aracı ile Tamamen Ücretsiz</span>
+          <span>v2.4 Sürümü Yayında — 25+ Geliştirici Aracı ile %100 Ücretsiz</span>
         </div>
 
         {/* Ana Başlık */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Geliştiriciler İçin Güvenli, <br />
             <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
@@ -38,14 +38,14 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <Link
             href="/studio"
-            className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 py-4 rounded-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm shadow-xl shadow-emerald-500/20"
+            className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 py-4 rounded-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2 text-sm shadow-xl shadow-emerald-500/20"
           >
             <span>Stüdyoyu Hemen Başlat</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/about"
-            className="w-full sm:w-auto bg-[#0D121F] hover:bg-slate-800 text-slate-200 font-semibold px-8 py-4 rounded-xl transition-all border border-slate-800 text-sm flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-[#0D121F] hover:bg-slate-800 text-slate-200 font-semibold px-8 py-4 rounded-xl transition-all border border-slate-800 text-sm flex items-center justify-center gap-2 hover:border-slate-700"
           >
             Sistem Mimarisini İncele
           </Link>
@@ -53,19 +53,19 @@ export default function Home() {
 
         {/* İstatistik / Özet Barı */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
-          <div className="bg-[#0D121F]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
             <h4 className="text-2xl sm:text-3xl font-black text-emerald-400">25+</h4>
             <p className="text-xs text-slate-400 mt-1">Modüler Geliştirici Aracı</p>
           </div>
-          <div className="bg-[#0D121F]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
             <h4 className="text-2xl sm:text-3xl font-black text-white">%100</h4>
             <p className="text-xs text-slate-400 mt-1">İstemci Tarafı (Client-Side)</p>
           </div>
-          <div className="bg-[#0D121F]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
             <h4 className="text-2xl sm:text-3xl font-black text-emerald-400">0ms</h4>
             <p className="text-xs text-slate-400 mt-1">Sunucu Gecikmesi</p>
           </div>
-          <div className="bg-[#0D121F]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+          <div className="bg-[#0D121F]/60 backdrop-blur border border-slate-800/80 rounded-2xl p-4 text-center hover:border-emerald-500/30 transition-all">
             <h4 className="text-2xl sm:text-3xl font-black text-white">Açık</h4>
             <p className="text-xs text-slate-400 mt-1">Kaynak Kod Politikası</p>
           </div>
@@ -73,7 +73,7 @@ export default function Home() {
 
         {/* Özellikler Grid (Animasyonlu Kartlar) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 text-left">
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-6 space-y-3 transition-all group">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Lock className="w-5 h-5" />
             </div>
@@ -81,7 +81,7 @@ export default function Home() {
             <p className="text-xs text-slate-400 leading-relaxed">Verileriniz cihazınızın dışına çıkmaz. JWT, şifreler ve JSON verileriniz güvendedir.</p>
           </div>
 
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-6 space-y-3 transition-all group">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Zap className="w-5 h-5" />
             </div>
@@ -89,7 +89,7 @@ export default function Home() {
             <p className="text-xs text-slate-400 leading-relaxed">Next.js ve Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
           </div>
 
-          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-6 space-y-3 transition-all group">
+          <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Layers className="w-5 h-5" />
             </div>
@@ -98,7 +98,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Yeni Eklenen Bölüm: Araç Kategorileri Önizlemesi */}
+        {/* Araç Kategorileri Önizlemesi */}
         <div className="pt-12 space-y-8 text-left">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">Geniş Araç Kategorileri</h2>
@@ -106,32 +106,32 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition group">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:rotate-6 transition-transform">
                 <Cpu className="w-4 h-4" />
               </div>
               <h4 className="text-white font-semibold text-sm">Geliştirici Araçları</h4>
               <p className="text-[11px] text-slate-400">JSON formatter, Markdown editor, Metin analizörü ve dahası.</p>
             </div>
 
-            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition group">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:rotate-6 transition-transform">
                 <Shield className="w-4 h-4" />
               </div>
               <h4 className="text-white font-semibold text-sm">Güvenlik Araçları</h4>
               <p className="text-[11px] text-slate-400">Şifre üreteci, JWT decoder, Hash hesaplayıcı ve UUID üretici.</p>
             </div>
 
-            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition group">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:rotate-6 transition-transform">
                 <RefreshCw className="w-4 h-4" />
               </div>
               <h4 className="text-white font-semibold text-sm">Dönüştürücüler</h4>
               <p className="text-[11px] text-slate-400">Base64, URL encoder, HTML entity ve Unix timestamp çevirici.</p>
             </div>
 
-            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <div className="bg-[#0D121F] border border-slate-800 rounded-2xl p-5 space-y-2 hover:border-emerald-500/40 transition group">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:rotate-6 transition-transform">
                 <Palette className="w-4 h-4" />
               </div>
               <h4 className="text-white font-semibold text-sm">Tasarım & UI</h4>
@@ -148,17 +148,17 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-slate-700 transition">
               <span className="text-emerald-400 font-mono text-xs font-bold">01. ADIM</span>
               <h4 className="text-white font-semibold text-sm">Stüdyoyu Açın</h4>
               <p className="text-xs text-slate-400 leading-relaxed">Üst menüden Stüdyo sayfasına gidin veya Ctrl + K kısayolunu kullanarak aradığınız aracı anında bulun.</p>
             </div>
-            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-slate-700 transition">
               <span className="text-emerald-400 font-mono text-xs font-bold">02. ADIM</span>
               <h4 className="text-white font-semibold text-sm">Verinizi Girin</h4>
               <p className="text-xs text-slate-400 leading-relaxed">JSON, JWT, şifre veya kod bloklarınızı ilgili araca yapıştırın. Tüm işlemler tarayıcınızda işlenir.</p>
             </div>
-            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3 hover:border-slate-700 transition">
               <span className="text-emerald-400 font-mono text-xs font-bold">03. ADIM</span>
               <h4 className="text-white font-semibold text-sm">Anında Sonuç Alın</h4>
               <p className="text-xs text-slate-400 leading-relaxed">Sonucunuzu tek tıkla kopyalayın veya projenizde güvenle kullanmaya devam edin.</p>
