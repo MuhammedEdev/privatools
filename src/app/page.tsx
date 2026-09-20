@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Cpu, Shield, RefreshCw, Palette, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-20 text-center space-y-16 relative z-10">
 
-        {/* Ana Başlık (Durum rozeti kaldırıldı) */}
+        {/* Ana Başlık */}
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Geliştiriciler İçin Güvenli, <br />
@@ -81,7 +81,7 @@ export default function Home() {
               <Zap className="w-5 h-5" />
             </div>
             <h3 className="text-base font-semibold text-white">Işık Hızında Çalışma</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">Next.js and Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Next.js ve Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
           </div>
 
           <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1 shadow-lg">
