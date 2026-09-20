@@ -2,18 +2,18 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Terminal, Cpu, Globe, Code2, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Terminal, Code2, CheckCircle2, HelpCircle } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between relative overflow-hidden">
       
       {/* Arkaplan Dekoratif Işık Efektleri (Glow) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/3 right-10 w-[400px] h-[300px] bg-teal-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-emerald-500/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-10 w-[400px] h-[300px] bg-teal-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-12 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
 
         {/* Üst Küçük Animasyonlu Rozet */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-pulse">
@@ -52,7 +52,7 @@ export default function Home() {
         </div>
 
         {/* İstatistik / Özet Barı */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
           <div className="bg-[#0D121F]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
             <h4 className="text-2xl sm:text-3xl font-black text-emerald-400">25+</h4>
             <p className="text-xs text-slate-400 mt-1">Modüler Geliştirici Aracı</p>
@@ -72,7 +72,7 @@ export default function Home() {
         </div>
 
         {/* Özellikler Grid (Animasyonlu Kartlar) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 text-left">
           <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-6 space-y-3 transition-all group">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
               <Lock className="w-5 h-5" />
@@ -95,6 +95,32 @@ export default function Home() {
             </div>
             <h3 className="text-base font-semibold text-white">Zengin Ekosistem</h3>
             <p className="text-xs text-slate-400 leading-relaxed">Base64, Regex, Markdown, UUID, Hash ve renk araçları tek bir çatı altında.</p>
+          </div>
+        </div>
+
+        {/* Yeni Eklenen Bölüm: Nasıl Çalışır? */}
+        <div className="pt-12 space-y-8">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Nasıl Çalışır?</h2>
+            <p className="text-xs sm:text-sm text-slate-400">Üç basit adımda güvenli geliştirici araçlarını kullanmaya başlayın.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+              <span className="text-emerald-400 font-mono text-xs font-bold">01. ADIM</span>
+              <h4 className="text-white font-semibold text-sm">Stüdyoyu Açın</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Üst menüden Stüdyo sayfasına gidin veya Ctrl + K kısayolunu kullanarak aradığınız aracı anında bulun.</p>
+            </div>
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+              <span className="text-emerald-400 font-mono text-xs font-bold">02. ADIM</span>
+              <h4 className="text-white font-semibold text-sm">Verinizi Girin</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">JSON, JWT, şifre veya kod bloklarınızı ilgili araca yapıştırın. Tüm işlemler tarayıcınızda işlenir.</p>
+            </div>
+            <div className="bg-[#0D121F]/40 border border-slate-800 rounded-2xl p-6 space-y-3">
+              <span className="text-emerald-400 font-mono text-xs font-bold">03. ADIM</span>
+              <h4 className="text-white font-semibold text-sm">Anında Sonuç Alın</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Sonucunuzu tek tıkla kopyalayın veya projenizde güvenle kullanmaya devam edin.</p>
+            </div>
           </div>
         </div>
 
