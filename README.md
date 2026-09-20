@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ PrivaTools | Modern Developer Utility Suite
 
-## Getting Started
+<p align="center">
+  <b>Geliştiriciler İçin Güvenli, Hızlı ve %100 İstemci Tarafında (Client-Side) Çalışan Açık Kaynak Araç Süiti.</b>
+</p>
 
-First, run the development server:
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.8-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status">
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Proje Hakkında
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**PrivaTools**, modern web geliştiricilerinin günlük iş akışlarında ihtiyaç duyduğu **25+ modüler aracı** tek bir çatı altında toplayan yüksek performanslı bir SaaS platformudur. 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Hassas verilerinizin (JSON, şifreler, JWT anahtarları vb.) güvenliğini en üst düzeyde tutmak amacıyla **sıfır sunucu depolama politikası**yla, yani tamamen tarayıcınızın içinde (`client-side`) çalışacak şekilde tasarlanmıştır.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ Öne Çıkan Özellikler
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **🔒 %100 Gizlilik (Client-Side):** Tüm işlemler tarayıcınızdaki yerel Web API'leri ve JavaScript ile gerçekleştirilir. Verileriniz asla uzak sunuculara gönderilmez.
+* **⚡ Işık Hızında Performans:** Next.js App Router ve Turbopack altyapısı sayesinde sıfır gecikme ve anında yüklenme deneyimi.
+* **⌨️ Global Hızlı Arama (`Ctrl + K`):** Stüdyo içerisindeki 25+ araca saniyeler içinde klavye kısayollarıyla ulaşın.
+* **🎨 Modern UI / UX:** Tailwind CSS ile tasarlanmış, şık koyu tema, ambient parıltı (glow) efektleri ve duyarlı (responsive) mobil uyumlu arayüz.
+* **🛠️ Zengin Araç Koleksiyonu:** JSON biçimlendiriciden şifre üretecine, Base64 dönüştürücüden hash hesaplayıcılara kadar geniş araç yelpazesi.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🛠️ Kullanılan Teknolojiler
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* **Framework:** Next.js (App Router)
+* **Stil & Tasarım:** Tailwind CSS
+* **İkon Kütüphanesi:** Lucide React
+* **Dil:** TypeScript / JavaScript
+* **Mimari:** %100 İstemci Tarafı (Client-Side Components)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📦 Kurulum ve Çalıştırma
+
+Projeyi kendi yerel ortamınızda (local) çalıştırmak için aşağıdaki adımları takip edebilirsiniz:
+
+1. **Repoyu klonlayın:**
+   ```bash
+   git clone [https://github.com/MuhammedEdev/privatools.git](https://github.com/MuhammedEdev/privatools.git)
