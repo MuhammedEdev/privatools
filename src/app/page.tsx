@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, Sparkles, ShieldCheck, Cpu, Shield, RefreshCw, Palette, CheckCircle2, Terminal, Code2, Globe, Command, Heart } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, ShieldCheck, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
 
 export default function Home() {
   return (
@@ -14,15 +14,9 @@ export default function Home() {
       <div className="absolute bottom-20 right-10 w-[600px] h-[400px] bg-emerald-500/5 blur-[160px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-20 text-center space-y-16 relative z-10">
 
-        {/* Üst Küçük Animasyonlu Rozet */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium animate-bounce shadow-lg shadow-emerald-500/5">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>v2.4 Sürümü Yayında — 25+ Geliştirici Aracı ile %100 Ücretsiz</span>
-        </div>
-
-        {/* Ana Başlık */}
+        {/* Ana Başlık (Üst rozet kaldırıldı) */}
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Geliştiriciler İçin Güvenli, <br />
@@ -167,7 +161,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Yeni Bölüm: Sık Sorulan Sorular (FAQ) */}
+        {/* Sık Sorulan Sorular (FAQ) */}
         <div className="pt-12 space-y-8 text-left">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">Sık Sorulan Sorular</h2>
