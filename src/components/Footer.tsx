@@ -1,6 +1,6 @@
 // src/components/Footer.tsx
 import Link from "next/link";
-import { Shield, Code, Globe } from "lucide-react";
+import { Code, Globe } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -65,13 +65,9 @@ export default function Footer() {
 
       </div>
 
-      {/* Alt Telif Çizgisi */}
-      <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-        <p>© 2026 PrivaTools. Tüm hakları saklıdır.</p>
-        <div className="flex items-center gap-1 text-emerald-400 font-mono text-[11px]">
-          <Shield className="w-3.5 h-3.5" />
-          <span>Güvenli & Şifreli İstemci Mimarisi</span>
-        </div>
+      {/* Alt Telif Çizgisi (Rozet Kaldırıldı) */}
+      <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800/60 text-center text-xs text-slate-500">
+        <p>© 2026 PrivaTools. Tüm hakları saklıdır. Açık kaynaklı geliştirici platformu.</p>
       </div>
     </footer>
   );

@@ -1,7 +1,7 @@
 // src/app/studio/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
@@ -42,6 +42,21 @@ export default function StudioPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recentTools, setRecentTools] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Ctrl + K Klavye Kısayolu Entegrasyonu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const savedFavs = localStorage.getItem("privatools_favorites");
@@ -143,12 +158,16 @@ export default function StudioPage() {
           <div className="relative">
             <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder="Araç ara..."
+              placeholder="Araç ara... (Ctrl + K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-700"
+              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-12 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-700"
             />
+            <span className="absolute right-3 top-2.5 text-[10px] font-mono text-slate-500 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/60">
+              Ctrl+K
+            </span>
           </div>
 
           <div className="flex flex-wrap gap-1.5 pt-1">
