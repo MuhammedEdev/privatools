@@ -2,11 +2,9 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Zap, Lock, Code2, ArrowRight } from "lucide-react";
+import { Zap, Lock, Code2, ArrowRight } from "lucide-react";
 
-export default openAboutPage();
-
-export function openAboutPage() {
+export default function AboutPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-12 w-full">
