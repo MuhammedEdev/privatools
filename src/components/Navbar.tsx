@@ -1,12 +1,14 @@
 // src/components/Navbar.tsx
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wrench, Info, Mail, Code } from "lucide-react";
+import { Wrench, Info, Mail, Code, Terminal, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Ana Sayfa" },
@@ -19,14 +21,17 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-[#090D16]/90 backdrop-blur-md border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* Proje İsmi */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="font-extrabold text-white text-lg tracking-tight">
+        {/* Proje İsmi & İkonu */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition">
+            <Terminal className="w-4 h-4" />
+          </div>
+          <span className="font-extrabold text-white text-base sm:text-lg tracking-tight">
             Priva<span className="text-emerald-400">Tools</span>
           </span>
         </Link>
 
-        {/* Menü Linkleri */}
+        {/* Masaüstü Menü Linkleri */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -48,8 +53,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Sağ Buton (Sadece GitHub Kaldı) */}
-        <div className="flex items-center gap-3">
+        {/* Sağ Butonlar (GitHub & Mobil Menü Butonu) */}
+        <div className="flex items-center gap-2">
           <a
             href="https://github.com"
             target="_blank"
@@ -59,9 +64,43 @@ export default function Navbar() {
             <Code className="w-4 h-4 text-emerald-400" />
             <span className="hidden sm:inline">GitHub</span>
           </a>
+
+          {/* Mobil Menü Açma Butonu */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden bg-slate-800/80 hover:bg-slate-700 text-slate-200 p-2 rounded-lg transition border border-slate-700"
+            aria-label="Menüyü Aç"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
 
       </div>
+
+      {/* Mobil Açılır Menü */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-[#0D121F] border-b border-slate-800 px-4 py-4 space-y-2">
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-medium transition-all ${
+                  isActive
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
+                    : "text-slate-300 hover:text-white hover:bg-slate-900"
+                }`}
+              >
+                {Icon && <Icon className="w-4 h-4 text-emerald-400" />}
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 }
