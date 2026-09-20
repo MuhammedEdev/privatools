@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, Zap, Layers, ShieldCheck, Cpu, Shield, RefreshCw, Palette, Terminal, Code2, Globe, CheckCircle2, Activity, CpuIcon } from "lucide-react";
+import { ArrowRight, Lock, Zap, Layers, Cpu, Shield, RefreshCw, Palette } from "lucide-react";
 
 export default function Home() {
   return (
@@ -14,15 +14,9 @@ export default function Home() {
       <div className="absolute bottom-10 right-10 w-[650px] h-[450px] bg-emerald-500/5 blur-[170px] rounded-full pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-16 text-center space-y-16 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-20 text-center space-y-16 relative z-10">
 
-        {/* Canlı Sistem Durum Bantçığı */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium shadow-lg shadow-emerald-500/5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>Sistem Çevrimiçi — Tüm 25+ İstemci Araçları Aktif</span>
-        </div>
-
-        {/* Ana Başlık */}
+        {/* Ana Başlık (Durum rozeti kaldırıldı) */}
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-7xl font-extrabold tracking-tight text-white leading-tight">
             Geliştiriciler İçin Güvenli, <br />
@@ -87,7 +81,7 @@ export default function Home() {
               <Zap className="w-5 h-5" />
             </div>
             <h3 className="text-base font-semibold text-white">Işık Hızında Çalışma</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">Next.js ve Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
+            <p className="text-xs text-slate-400 leading-relaxed">Next.js and Turbopack gücüyle optimize edilmiş, anında yanıt veren reaktif bileşenler.</p>
           </div>
 
           <div className="bg-[#0D121F]/80 backdrop-blur border border-slate-800/80 hover:border-emerald-500/50 rounded-2xl p-6 space-y-3 transition-all duration-300 group hover:-translate-y-1 shadow-lg">
@@ -99,7 +93,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Yeni Bölüm: Popüler Hızlı Araçlar Önizleme Kutuları */}
+        {/* Popüler Hızlı Araçlar Önizleme Kutuları */}
         <div className="pt-12 space-y-8 text-left">
           <div className="text-center space-y-2">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">En Çok Kullanılan Araçlar</h2>
