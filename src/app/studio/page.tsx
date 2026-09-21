@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -73,7 +73,7 @@ export default function StudioPage() {
   const handleSelectTool = (id: string) => {
     setActiveTab(id);
     setResetKey(prev => prev + 1); // Araç değiştiğinde state'i sıfırla
-    const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 5);
+    const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 4);
     setRecentTools(updatedRecents);
     localStorage.setItem("privatools_recents", JSON.stringify(updatedRecents));
   };
@@ -119,7 +119,7 @@ export default function StudioPage() {
     { id: "ts", name: "JSON to TS Converter", description: "JSON objelerini otomatik olarak TypeScript arayüzlerine (interface) çevirin.", category: "dev", icon: Braces, component: JsonToTsConverter },
     { id: "keycode", name: "Keycode Info", description: "Klavyeden basılan tuşların kodlarını ve detaylarını öğrenin.", category: "dev", icon: Keyboard, component: KeycodeInfo },
     { id: "jsx", name: "HTML to JSX Converter", description: "HTML etiketlerini React JSX formatına otomatik dönüştürün.", category: "converter", icon: FileSpreadsheet, component: HtmlToJsxConverter },
-    { id: "slug", name: "Slug Generator", description: "Metinleri URL uyumlu slug formatına optimize edin.", category: "dev", icon: Link, component: SlugGenerator },
+    { id: "slug", name: "Slug Generator", description: "Metin들을 URL uyumlu slug formatına optimize edin.", category: "dev", icon: Link, component: SlugGenerator },
   ];
 
   const categories = [
@@ -172,9 +172,18 @@ export default function StudioPage() {
               placeholder="Araç ara... (Ctrl + K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-12 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
+              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-16 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
             />
-            <span className="absolute right-3 top-2.5 text-[10px] font-mono text-slate-500 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/60">
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-9 top-2.5 text-slate-500 hover:text-white"
+                title="Aramayı temizle"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <span className="absolute right-2.5 top-2 text-[9px] font-mono text-slate-500 bg-slate-800/80 px-1 py-0.5 rounded border border-slate-700/60">
               Ctrl+K
             </span>
           </div>
@@ -199,7 +208,7 @@ export default function StudioPage() {
             })}
           </div>
 
-          <div className="space-y-1 max-h-[550px] overflow-y-auto pr-1">
+          <div className="space-y-1 max-h-[520px] overflow-y-auto pr-1">
             {filteredTools.map((tool) => {
               const IconComponent = tool.icon;
               const isActive = activeTab === tool.id;
