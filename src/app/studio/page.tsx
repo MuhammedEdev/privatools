@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Info 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -95,7 +95,6 @@ export default function StudioPage() {
     localStorage.setItem("privatools_favorites", JSON.stringify(updated));
   };
 
-  // Geçmişi veya Favorileri Temizleme Fonksiyonları
   const handleClearRecents = () => {
     setRecentTools([]);
     localStorage.removeItem("privatools_recents");
@@ -172,13 +171,12 @@ export default function StudioPage() {
           <aside className="lg:col-span-3 space-y-4">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <span>Araçlar</span>
+                <span>Araç Kataloğu</span>
                 <span className="px-1.5 py-0.5 rounded-full bg-slate-800 text-emerald-400 font-mono text-[10px]">
                   {filteredTools.length} / {toolsList.length}
                 </span>
               </span>
 
-              {/* Geçmişi Temizle Butonu (Eğer geçmiş sekmesindeyse veya geçmiş varsa) */}
               {recentTools.length > 0 && selectedCategory === "recent" && (
                 <button
                   onClick={handleClearRecents}
@@ -239,7 +237,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[520px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[500px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
@@ -283,6 +281,14 @@ export default function StudioPage() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Sol Menü Alt Bilgi İpucu Kartı */}
+            <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-3 flex items-start gap-2.5">
+              <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                İpucu: Sık kullandığınız araçları yıldızlayarak favorilere ekleyebilir, <code className="text-emerald-400 font-mono">Ctrl+K</code> ile hızlıca arama yapabilirsiniz.
+              </p>
             </div>
           </aside>
         )}
