@@ -123,7 +123,6 @@ export default function StudioPage() {
     { id: "slug", name: "Slug Generator", description: "Metinleri URL uyumlu slug formatına optimize edin.", category: "dev", icon: Link, component: SlugGenerator },
   ];
 
-  // Kategori sayaçları hesaplama
   const getCategoryCount = (catId: string) => {
     if (catId === "all") return toolsList.length;
     if (catId === "favorites") return toolsList.filter(t => favorites.includes(t.id)).length;
@@ -198,7 +197,6 @@ export default function StudioPage() {
               </span>
             </div>
 
-            {/* Kategori Butonları ve Dinamik Sayaçlar */}
             <div className="flex flex-wrap gap-1.5 pt-1">
               {categories.map((cat) => {
                 const CatIcon = cat.icon;
@@ -256,7 +254,6 @@ export default function StudioPage() {
                 );
               })}
 
-              {/* Boş Durum (Empty State) Tasarımı */}
               {filteredTools.length === 0 && (
                 <div className="py-12 px-4 text-center space-y-3 bg-[#0D121F]/60 border border-slate-800/80 rounded-xl">
                   <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto text-base">
@@ -276,6 +273,39 @@ export default function StudioPage() {
         <section className={`${isFullscreen ? "lg:col-span-12" : "lg:col-span-9"} bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl flex flex-col justify-between space-y-6 transition-all duration-300`}>
           
           <div className="space-y-6">
+            
+            {/* Yeni Eklenen: Hızlı Son Kullanılanlar Barı */}
+            {recentTools.length > 0 && (
+              <div className="flex items-center gap-2 pb-3 border-b border-slate-800/60 overflow-x-auto text-xs">
+                <span className="text-slate-500 font-medium flex items-center gap-1 shrink-0">
+                  <History className="w-3 h-3 text-emerald-400" />
+                  <span>Son Kullanılanlar:</span>
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {recentTools.map(toolId => {
+                    const toolObj = toolsList.find(t => t.id === toolId);
+                    if (!toolObj) return null;
+                    const ToolIcon = toolObj.icon;
+                    const isCurrent = activeTab === toolId;
+                    return (
+                      <button
+                        key={toolId}
+                        onClick={() => handleSelectTool(toolId)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg transition border text-[11px] shrink-0 ${
+                          isCurrent 
+                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-bold" 
+                            : "bg-[#090D16] border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                        }`}
+                      >
+                        <ToolIcon className="w-3 h-3" />
+                        <span>{toolObj.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Araç Üst Bilgi Barı */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
               <div>
@@ -289,7 +319,6 @@ export default function StudioPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Tam Ekran Toggle */}
                 <button
                   onClick={() => setIsFullscreen(!isFullscreen)}
                   className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
@@ -299,7 +328,6 @@ export default function StudioPage() {
                   <span>{isFullscreen ? "Küçült" : "Tam Ekran"}</span>
                 </button>
 
-                {/* Sıfırla Butonu */}
                 <button
                   onClick={handleResetTool}
                   className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
