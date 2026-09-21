@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -42,6 +42,7 @@ export default function StudioPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recentTools, setRecentTools] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,9 +72,14 @@ export default function StudioPage() {
 
   const handleSelectTool = (id: string) => {
     setActiveTab(id);
+    setResetKey(prev => prev + 1); // Araç değiştiğinde state'i sıfırla
     const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 5);
     setRecentTools(updatedRecents);
     localStorage.setItem("privatools_recents", JSON.stringify(updatedRecents));
+  };
+
+  const handleResetTool = () => {
+    setResetKey(prev => prev + 1);
   };
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
@@ -223,14 +229,14 @@ export default function StudioPage() {
               );
             })}
 
-            {/* Şık ve Zengin Boş Durum (Empty State) Tasarımı */}
+            {/* Boş Durum (Empty State) Tasarımı */}
             {filteredTools.length === 0 && (
               <div className="py-12 px-4 text-center space-y-3 bg-[#0D121F]/60 border border-slate-800/80 rounded-xl">
                 <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto text-base">
                   🔍
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-white font-semibold text-xs">Araç Bulunamadı</h4>
+                  <h4 className="text-white font-semibold text-xs">Araç Bulunamadı</h4>
                   <p className="text-[11px] text-slate-400 leading-relaxed">Aradığınız kriterlere uygun sonuç bulunamadı.</p>
                 </div>
               </div>
@@ -255,6 +261,16 @@ export default function StudioPage() {
               </div>
 
               <div className="flex items-center gap-2">
+                {/* Sıfırla Butonu */}
+                <button
+                  onClick={handleResetTool}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
+                  title="Aracı sıfırla"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Sıfırla</span>
+                </button>
+
                 <button
                   onClick={handleCopyToolInfo}
                   className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
@@ -266,9 +282,9 @@ export default function StudioPage() {
               </div>
             </div>
 
-            {/* Aktif Araç Bileşeni */}
+            {/* Aktif Araç Bileşeni (key prop ile sıfırlama destekli) */}
             <div>
-              <ActiveComponent />
+              <ActiveComponent key={resetKey} />
             </div>
           </div>
 
