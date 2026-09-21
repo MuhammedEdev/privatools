@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Lock, Code2, ArrowRight } from "lucide-react";
+import { Zap, Lock, Code2, ArrowRight, ShieldCheck, Cpu, RefreshCw } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -52,6 +52,41 @@ export default function AboutPage() {
             <p className="text-xs text-slate-400 leading-relaxed">
               JSON formatlayıcıdan JWT çözümleyiciye, şifre üretecinden görsel sıkıştırıcıya kadar ihtiyacınız olan her şey tek çatı altında.
             </p>
+          </div>
+        </div>
+
+        {/* Yeni Eklenen: Mimari Güvenlik ve Şeffaflık Bölümü */}
+        <div className="bg-[#0D121F] border border-slate-800/80 rounded-2xl p-8 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white">Neden PrivaTools?</h3>
+              <p className="text-xs text-slate-400">Geliştiricilerin güvenlik endişelerini kökten çözen mimari yaklaşımımız.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="bg-[#090D16]/60 border border-slate-800/60 p-4 rounded-xl space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+                <Cpu className="w-4 h-4" />
+                <span>Sıfır Sunucu Maliyeti ve Yükü</span>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Tüm ağır hesaplamalar istemci tarafında yapıldığı için sunucu tarafında veri tabanı veya log tutulmaz.
+              </p>
+            </div>
+
+            <div className="bg-[#090D16]/60 border border-slate-800/60 p-4 rounded-xl space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+                <RefreshCw className="w-4 h-4" />
+                <span>Açık Kaynak ve Şeffaf Kod</span>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Projenin tamamı açık kaynaklıdır. Kodları inceleyebilir, kendi local ortamınızda güvenle çalıştırabilirsiniz.
+              </p>
+            </div>
           </div>
         </div>
 
