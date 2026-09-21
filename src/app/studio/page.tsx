@@ -163,7 +163,7 @@ export default function StudioPage() {
               placeholder="Araç ara... (Ctrl + K)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-12 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-700"
+              className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-12 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
             />
             <span className="absolute right-3 top-2.5 text-[10px] font-mono text-slate-500 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/60">
               Ctrl+K
@@ -179,8 +179,8 @@ export default function StudioPage() {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
                     selectedCategory === cat.id
-                      ? "bg-emerald-500 text-slate-950 font-bold"
-                      : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80"
+                      ? "bg-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/20"
+                      : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80 hover:border-slate-700"
                   }`}
                 >
                   <CatIcon className={`w-3 h-3 ${selectedCategory === cat.id ? "text-slate-950" : "text-emerald-400"}`} />
@@ -222,8 +222,18 @@ export default function StudioPage() {
                 </button>
               );
             })}
+
+            {/* Şık ve Zengin Boş Durum (Empty State) Tasarımı */}
             {filteredTools.length === 0 && (
-              <p className="text-xs text-slate-500 text-center py-6">Araç bulunamadı.</p>
+              <div className="py-12 px-4 text-center space-y-3 bg-[#0D121F]/60 border border-slate-800/80 rounded-xl">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto text-base">
+                  🔍
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-white font-semibold text-xs">Araç Bulunamadı</h4>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">Aradığınız kriterlere uygun sonuç bulunamadı.</p>
+                </div>
+              </div>
             )}
           </div>
         </aside>
