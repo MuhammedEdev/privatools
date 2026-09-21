@@ -156,8 +156,11 @@ export default function StudioPage() {
         {/* Sol Sidebar */}
         <aside className="lg:col-span-3 space-y-4">
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Araçlar ({filteredTools.length})
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span>Araçlar</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-slate-800 text-emerald-400 font-mono text-[10px]">
+                {filteredTools.length} / {toolsList.length}
+              </span>
             </span>
           </div>
 
