@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Info 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -237,7 +237,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[500px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[480px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
@@ -283,12 +283,22 @@ export default function StudioPage() {
               )}
             </div>
 
-            {/* Sol Menü Alt Bilgi İpucu Kartı */}
-            <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-3 flex items-start gap-2.5">
-              <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] text-slate-400 leading-relaxed">
-                İpucu: Sık kullandığınız araçları yıldızlayarak favorilere ekleyebilir, <code className="text-emerald-400 font-mono">Ctrl+K</code> ile hızlıca arama yapabilirsiniz.
-              </p>
+            {/* Sol Menü Alt Kısayol Barı */}
+            <div className="bg-[#0D121F] border border-slate-800/80 rounded-xl p-3 space-y-2">
+              <div className="flex items-center gap-1.5 text-slate-400 font-semibold text-[11px]">
+                <Command className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Klavye Kısayolları</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400">
+                <div className="flex items-center justify-between bg-slate-900/60 px-2 py-1 rounded border border-slate-800/60">
+                  <span>Hızlı Arama</span>
+                  <code className="text-emerald-400 font-mono">Ctrl+K</code>
+                </div>
+                <div className="flex items-center justify-between bg-slate-900/60 px-2 py-1 rounded border border-slate-800/60">
+                  <span>Sıfırla</span>
+                  <code className="text-emerald-400 font-mono">R</code>
+                </div>
+              </div>
             </div>
           </aside>
         )}
