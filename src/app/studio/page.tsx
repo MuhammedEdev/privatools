@@ -123,6 +123,14 @@ export default function StudioPage() {
     { id: "slug", name: "Slug Generator", description: "Metinleri URL uyumlu slug formatına optimize edin.", category: "dev", icon: Link, component: SlugGenerator },
   ];
 
+  // Kategori sayaçları hesaplama
+  const getCategoryCount = (catId: string) => {
+    if (catId === "all") return toolsList.length;
+    if (catId === "favorites") return toolsList.filter(t => favorites.includes(t.id)).length;
+    if (catId === "recent") return toolsList.filter(t => recentTools.includes(t.id)).length;
+    return toolsList.filter(t => t.category === catId).length;
+  };
+
   const categories = [
     { id: "all", name: "Tümü", icon: Layers },
     { id: "favorites", name: "Favoriler", icon: Star },
@@ -154,7 +162,7 @@ export default function StudioPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
       <main className={`max-w-7xl w-full mx-auto grid grid-cols-1 ${isFullscreen ? "lg:grid-cols-1" : "lg:grid-cols-12"} gap-6 flex-1 transition-all duration-300`}>
         
-        {/* Sol Sidebar (Tam ekranda gizlenir) */}
+        {/* Sol Sidebar */}
         {!isFullscreen && (
           <aside className="lg:col-span-3 space-y-4">
             <div className="flex items-center justify-between px-1">
@@ -190,9 +198,11 @@ export default function StudioPage() {
               </span>
             </div>
 
+            {/* Kategori Butonları ve Dinamik Sayaçlar */}
             <div className="flex flex-wrap gap-1.5 pt-1">
               {categories.map((cat) => {
                 const CatIcon = cat.icon;
+                const count = getCategoryCount(cat.id);
                 return (
                   <button
                     key={cat.id}
@@ -205,6 +215,9 @@ export default function StudioPage() {
                   >
                     <CatIcon className={`w-3 h-3 ${selectedCategory === cat.id ? "text-slate-950" : "text-emerald-400"}`} />
                     <span>{cat.name}</span>
+                    <span className={`text-[9px] px-1 rounded-full ${selectedCategory === cat.id ? "bg-slate-950/20 text-slate-950 font-bold" : "bg-slate-800 text-slate-400"}`}>
+                      {count}
+                    </span>
                   </button>
                 );
               })}
@@ -259,7 +272,7 @@ export default function StudioPage() {
           </aside>
         )}
 
-        {/* Sağ Çalışma Alanı (Tam Ekran Destekli) */}
+        {/* Sağ Çalışma Alanı */}
         <section className={`${isFullscreen ? "lg:col-span-12" : "lg:col-span-9"} bg-[#0D121F] border border-slate-800/80 rounded-xl p-6 shadow-xl flex flex-col justify-between space-y-6 transition-all duration-300`}>
           
           <div className="space-y-6">
@@ -307,7 +320,7 @@ export default function StudioPage() {
               </div>
             </div>
 
-            {/* Aktif Araç Bileşeni (key prop ile sıfırlama destekli) */}
+            {/* Aktif Araç Bileşeni */}
             <div>
               <ActiveComponent key={resetKey} />
             </div>
