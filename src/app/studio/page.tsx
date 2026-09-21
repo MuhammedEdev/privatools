@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -95,6 +95,12 @@ export default function StudioPage() {
     localStorage.setItem("privatools_favorites", JSON.stringify(updated));
   };
 
+  // Geçmişi veya Favorileri Temizleme Fonksiyonları
+  const handleClearRecents = () => {
+    setRecentTools([]);
+    localStorage.removeItem("privatools_recents");
+  };
+
   const toolsList = [
     { id: "compressor", name: "Görsel Sıkıştırıcı", description: "Görsellerinizi kaliteden ödün vermeden tarayıcı tarafında sıkıştırın.", category: "design", icon: FileImage, component: ImageCompressor },
     { id: "password", name: "Güvenli Şifre Üreteci", description: "Güçlü ve özelleştirilebilir rastgele parolalar oluşturun.", category: "security", icon: KeyRound, component: PasswordGenerator },
@@ -171,6 +177,18 @@ export default function StudioPage() {
                   {filteredTools.length} / {toolsList.length}
                 </span>
               </span>
+
+              {/* Geçmişi Temizle Butonu (Eğer geçmiş sekmesindeyse veya geçmiş varsa) */}
+              {recentTools.length > 0 && selectedCategory === "recent" && (
+                <button
+                  onClick={handleClearRecents}
+                  className="text-[10px] text-slate-500 hover:text-red-400 flex items-center gap-1 transition"
+                  title="Geçmişi temizle"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Temizle</span>
+                </button>
+              )}
             </div>
 
             <div className="relative">
@@ -274,7 +292,7 @@ export default function StudioPage() {
           
           <div className="space-y-6">
             
-            {/* Yeni Eklenen: Hızlı Son Kullanılanlar Barı */}
+            {/* Hızlı Son Kullanılanlar Barı */}
             {recentTools.length > 0 && (
               <div className="flex items-center gap-2 pb-3 border-b border-slate-800/60 overflow-x-auto text-xs">
                 <span className="text-slate-500 font-medium flex items-center gap-1 shrink-0">
