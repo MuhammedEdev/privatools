@@ -7,6 +7,7 @@ import { Send, CheckCircle, Loader2 } from "lucide-react";
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ export default function ContactPage() {
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
+      setMessage("");
     }, 800);
   };
 
@@ -21,7 +23,7 @@ export default function ContactPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto space-y-8 w-full">
         
-        {/* Başlık (Rozet Kaldırıldı) */}
+        {/* Başlık */}
         <div className="text-center space-y-3">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Geri Bildirim & Destek
@@ -76,9 +78,16 @@ export default function ContactPage() {
                 <textarea
                   required
                   rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  maxLength={500}
                   placeholder="Öneri veya görüşlerinizi buraya yazın..."
                   className="w-full bg-[#090D16] border border-slate-800 rounded-lg px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition resize-none"
                 />
+                <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 pt-0.5">
+                  <span>Minimum 10 karakter</span>
+                  <span>{message.length} / 500 karakter</span>
+                </div>
               </div>
 
               <button
