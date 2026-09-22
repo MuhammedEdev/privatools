@@ -241,6 +241,34 @@ export default function StudioPage() {
               </div>
             </div>
 
+            {/* Favori Araçlar Hızlı Çubuğu */}
+            {favorites.length > 0 && (
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] scrollbar-none bg-[#0D121F] p-2 rounded-lg border border-slate-800/80">
+                <span className="text-amber-400 font-semibold shrink-0 flex items-center gap-1">
+                  <Star className="w-3 h-3 fill-amber-400" /> Favoriler:
+                </span>
+                {favorites.map((favId) => {
+                  const toolObj = toolsList.find((t) => t.id === favId);
+                  if (!toolObj) return null;
+                  const isCurrent = activeTab === favId;
+                  return (
+                    <button
+                      key={favId}
+                      onClick={() => handleSelectTool(favId)}
+                      className={`px-2 py-0.5 rounded border transition shrink-0 truncate max-w-[100px] ${
+                        isCurrent
+                          ? "bg-amber-400/10 border-amber-400/30 text-amber-300 font-bold"
+                          : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                      title={toolObj.name}
+                    >
+                      {toolObj.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
             <div className="flex flex-wrap gap-1.5 pt-1">
               {categories.map((cat) => {
                 const CatIcon = cat.icon;
@@ -265,7 +293,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[450px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
