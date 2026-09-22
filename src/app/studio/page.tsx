@@ -323,7 +323,7 @@ export default function StudioPage() {
               </div>
             )}
 
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="grid grid-cols-2 gap-1.5 pt-1">
               {categories.map((cat) => {
                 const CatIcon = cat.icon;
                 const count = getCategoryCount(cat.id);
@@ -331,15 +331,17 @@ export default function StudioPage() {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all ${
                       selectedCategory === cat.id
                         ? "bg-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/20"
                         : "bg-[#0D121F] text-slate-400 hover:text-white border border-slate-800/80 hover:border-slate-700"
                     }`}
                   >
-                    <CatIcon className={`w-3 h-3 ${selectedCategory === cat.id ? "text-slate-950" : "text-emerald-400"}`} />
-                    <span>{cat.name}</span>
-                    <span className={`text-[9px] px-1 rounded-full ${selectedCategory === cat.id ? "bg-slate-950/20 text-slate-950 font-bold" : "bg-slate-800 text-slate-400"}`}>
+                    <div className="flex items-center gap-1.5">
+                      <CatIcon className={`w-3.5 h-3.5 ${selectedCategory === cat.id ? "text-slate-950" : "text-emerald-400"}`} />
+                      <span>{cat.name}</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono ${selectedCategory === cat.id ? "bg-slate-950/20 text-slate-950 font-bold" : "bg-slate-800 text-slate-400"}`}>
                       {count}
                     </span>
                   </button>
@@ -347,7 +349,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[380px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
