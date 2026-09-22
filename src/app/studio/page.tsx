@@ -189,28 +189,44 @@ export default function StudioPage() {
               )}
             </div>
 
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Araç ara... (Ctrl + K)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-16 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-9 top-2.5 text-slate-500 hover:text-white"
-                  title="Aramayı temizle"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-              <span className="absolute right-2.5 top-2 text-[9px] font-mono text-slate-500 bg-slate-800/80 px-1 py-0.5 rounded border border-slate-700/60">
-                Ctrl+K
-              </span>
+            <div className="space-y-2">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Araç ara... (Ctrl + K)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-16 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-9 top-2.5 text-slate-500 hover:text-white"
+                    title="Aramayı temizle"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <span className="absolute right-2.5 top-2 text-[9px] font-mono text-slate-500 bg-slate-800/80 px-1 py-0.5 rounded border border-slate-700/60">
+                  Ctrl+K
+                </span>
+              </div>
+
+              {/* Hızlı Arama Öneri Hapları */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] scrollbar-none">
+                <span className="text-slate-500 shrink-0">Hızlı:</span>
+                {["json", "password", "base64", "jwt", "uuid", "color"].map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setSearchQuery(tag)}
+                    className="bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-emerald-400 px-2 py-0.5 rounded border border-slate-800/80 transition shrink-0 font-mono"
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-1.5 pt-1">
@@ -237,7 +253,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[480px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[450px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
