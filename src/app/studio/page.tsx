@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info, Sparkle 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -113,14 +113,14 @@ export default function StudioPage() {
   };
 
   const toolsList = [
-    { id: "compressor", name: "Görsel Sıkıştırıcı", description: "Görsellerinizi kaliteden ödün vermeden tarayıcı tarafında sıkıştırın.", category: "design", icon: FileImage, component: ImageCompressor },
-    { id: "password", name: "Güvenli Şifre Üreteci", description: "Güçlü ve özelleştirilebilir rastgele parolalar oluşturun.", category: "security", icon: KeyRound, component: PasswordGenerator },
+    { id: "compressor", name: "Görsel Sıkıştırıcı", description: "Görsellerinizi kaliteden ödün vermeden tarayıcı tarafında sıkıştırın.", category: "design", icon: FileImage, component: ImageCompressor, popular: true },
+    { id: "password", name: "Güvenli Şifre Üreteci", description: "Güçlü ve özelleştirilebilir rastgele parolalar oluşturun.", category: "security", icon: KeyRound, component: PasswordGenerator, popular: true },
     { id: "shadow", name: "CSS Shadow Generator", description: "Görsel olarak kutu gölgeleri tasarlayın ve CSS kodunu alın.", category: "design", icon: Palette, component: BoxShadowGenerator },
-    { id: "json", name: "JSON Formatter", description: "JSON verilerinizi doğrulayın, düzenleyin ve biçimlendirin.", category: "dev", icon: Code2, component: JsonFormatter },
-    { id: "base64", name: "Base64 Encoder / Decoder", description: "Metin ve verileri Base64 formatına çevirin veya çözün.", category: "converter", icon: Binary, component: Base64Converter },
+    { id: "json", name: "JSON Formatter", description: "JSON verilerinizi doğrulayın, düzenleyin ve biçimlendirin.", category: "dev", icon: Code2, component: JsonFormatter, popular: true },
+    { id: "base64", name: "Base64 Encoder / Decoder", description: "Metin ve verileri Base64 formatına çevirin veya çözün.", category: "converter", icon: Binary, component: Base64Converter, popular: true },
     { id: "markdown", name: "Markdown Live Editor", description: "Markdown metinlerinizi yazın ve canlı önizlemesini görüntüleyin.", category: "dev", icon: FileCode, component: MarkdownEditor },
     { id: "meta", name: "Meta Tag Generator", description: "SEO ve sosyal medya paylaşımları için meta etiketleri oluşturun.", category: "dev", icon: Globe, component: MetaTagGenerator },
-    { id: "jwt", name: "JWT Decoder", description: "JSON Web Token (JWT) içeriklerini ve imza detaylarını çözümleyin.", category: "security", icon: ShieldAlert, component: JwtDecoder },
+    { id: "jwt", name: "JWT Decoder", description: "JSON Web Token (JWT) içeriklerini ve imza detaylarını çözümleyin.", category: "security", icon: ShieldAlert, component: JwtDecoder, popular: true },
     { id: "url", name: "URL Encoder / Decoder", description: "Web adreslerini URL encode veya decode işlemlerine tabi tutun.", category: "converter", icon: Link2, component: UrlEncoderDecoder },
     { id: "text", name: "Metin Analizörü", description: "Kelime, karakter ve satır istatistiklerini anlık olarak analiz edin.", category: "dev", icon: FileText, component: TextAnalyzer },
     { id: "uuid", name: "UUID Generator", description: "Benzersiz evrensel kimlik tanımlayıcıları (v4 UUID) üretin.", category: "security", icon: Fingerprint, component: UuidGenerator },
@@ -311,6 +311,11 @@ export default function StudioPage() {
                     <div className="flex items-center gap-2.5 truncate">
                       <IconComponent className={`w-4 h-4 shrink-0 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />
                       <span className="truncate">{tool.name}</span>
+                      {tool.popular && (
+                        <span className="text-[9px] font-mono bg-emerald-500/10 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-500/20 flex items-center gap-0.5">
+                          <Sparkle className="w-2.5 h-2.5" /> Pro
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span
