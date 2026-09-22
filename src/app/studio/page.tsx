@@ -235,11 +235,17 @@ export default function StudioPage() {
         {!isFullscreen && (
           <aside className="lg:col-span-3 space-y-4">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <span>Araç Kataloğu</span>
-                <span className="px-1.5 py-0.5 rounded-full bg-slate-800 text-emerald-400 font-mono text-[10px]">
-                  {filteredTools.length} / {toolsList.length}
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>Araç Kataloğu</span>
                 </span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {favorites.length} Favori • {recentTools.length} Son Kullanılan
+                </span>
+              </div>
+
+              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-emerald-400 font-mono text-[10px] border border-slate-700/60">
+                {filteredTools.length} / {toolsList.length}
               </span>
 
               {recentTools.length > 0 && selectedCategory === "recent" && (
