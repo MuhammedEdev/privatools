@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info, Sparkle 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info, Sparkle, BellRing 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -45,8 +45,17 @@ export default function StudioPage() {
   const [resetKey, setResetKey] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Toast Mesajı Gösterme Yardımcısı
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 2500);
+  };
 
   // Ctrl + K ve Enter ile Hızlı Seçim Kısayolu Entegrasyonu
   useEffect(() => {
@@ -83,15 +92,19 @@ export default function StudioPage() {
 
   const handleResetTool = () => {
     setResetKey(prev => prev + 1);
+    showToast("Araç çalışma alanı sıfırlandı.");
   };
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     let updated;
+    const toolObj = toolsList.find(t => t.id === id);
     if (favorites.includes(id)) {
       updated = favorites.filter((fav) => fav !== id);
+      showToast(`${toolObj?.name || 'Araç'} favorilerden çıkarıldı.`);
     } else {
       updated = [...favorites, id];
+      showToast(`${toolObj?.name || 'Araç'} favorilere eklendi! ⭐`);
     }
     setFavorites(updated);
     localStorage.setItem("privatools_favorites", JSON.stringify(updated));
@@ -100,6 +113,7 @@ export default function StudioPage() {
   const handleClearRecents = () => {
     setRecentTools([]);
     localStorage.removeItem("privatools_recents");
+    showToast("Geçmiş temizlendi.");
   };
 
   const handleDownloadResult = () => {
@@ -110,6 +124,7 @@ export default function StudioPage() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    showToast(`${activeToolObj.name} sonucu indirildi! 📥`);
   };
 
   const toolsList = [
@@ -171,6 +186,7 @@ export default function StudioPage() {
   const handleCopyToolInfo = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
+    showToast("Sayfa bağlantısı panoya kopyalandı! 🔗");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -178,11 +194,21 @@ export default function StudioPage() {
     if (e.key === "Enter" && filteredTools.length > 0) {
       handleSelectTool(filteredTools[0].id);
       setSearchQuery("");
+      showToast(`${filteredTools[0].name} aracı açıldı.`);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8 relative">
+      
+      {/* Global Toast Bildirim Alanı */}
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 bg-slate-900 border border-emerald-500/40 text-emerald-400 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs animate-bounce">
+          <BellRing className="w-4 h-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       <main className={`max-w-7xl w-full mx-auto grid grid-cols-1 ${isFullscreen ? "lg:grid-cols-1" : "lg:grid-cols-12"} gap-6 flex-1 transition-all duration-300`}>
         
         {/* Sol Sidebar */}
