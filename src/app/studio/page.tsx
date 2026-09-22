@@ -114,6 +114,16 @@ export default function StudioPage() {
     showToast("Geçmiş temizlendi.");
   };
 
+  const handleResetAllPreferences = () => {
+    if (window.confirm("Tüm favorileriniz ve oturum geçmişiniz temizlenecek. Emin misiniz?")) {
+      localStorage.removeItem("privatools_favorites");
+      localStorage.removeItem("privatools_recents");
+      setFavorites([]);
+      setRecentTools([]);
+      showToast("Tüm tercihler ve oturum geçmişi sıfırlandı.");
+    }
+  };
+
   const handleDownloadResult = () => {
     const element = document.createElement("a");
     const file = new Blob([`PrivaTools Studio Export\nTool Name: ${activeToolObj.name}\nTool ID: ${activeToolObj.id}\nExported Date: ${new Date().toISOString()}`], {type: 'text/plain'});
@@ -337,7 +347,7 @@ export default function StudioPage() {
               })}
             </div>
 
-            <div className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1">
               {filteredTools.map((tool) => {
                 const IconComponent = tool.icon;
                 const isActive = activeTab === tool.id;
@@ -404,6 +414,15 @@ export default function StudioPage() {
                   <code className="text-emerald-400 font-mono">Enter</code>
                 </div>
               </div>
+
+              <button
+                onClick={handleResetAllPreferences}
+                className="w-full mt-1 bg-slate-900 hover:bg-red-500/10 text-slate-400 hover:text-red-400 border border-slate-800/80 hover:border-red-500/30 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition flex items-center justify-center gap-1.5"
+                title="Tüm favorileri ve geçmişi sıfırla"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Tüm Tercihleri Sıfırla</span>
+              </button>
             </div>
           </aside>
         )}
