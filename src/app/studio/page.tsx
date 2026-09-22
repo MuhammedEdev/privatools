@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -44,6 +44,7 @@ export default function StudioPage() {
   const [copied, setCopied] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,6 +75,7 @@ export default function StudioPage() {
   const handleSelectTool = (id: string) => {
     setActiveTab(id);
     setResetKey(prev => prev + 1);
+    setShowInfoModal(false);
     const updatedRecents = [id, ...recentTools.filter(item => item !== id)].slice(0, 4);
     setRecentTools(updatedRecents);
     localStorage.setItem("privatools_recents", JSON.stringify(updatedRecents));
@@ -389,6 +391,17 @@ export default function StudioPage() {
                 </button>
 
                 <button
+                  onClick={() => setShowInfoModal(!showInfoModal)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border ${
+                    showInfoModal ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700"
+                  }`}
+                  title="Araç kullanım rehberi"
+                >
+                  <Info className="w-3.5 h-3.5" />
+                  <span>Rehber</span>
+                </button>
+
+                <button
                   onClick={handleDownloadResult}
                   className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
                   title="Sonucu dosya olarak indir"
@@ -416,6 +429,22 @@ export default function StudioPage() {
                 </button>
               </div>
             </div>
+
+            {/* Araç Bilgi / Rehber Paneli */}
+            {showInfoModal && (
+              <div className="bg-slate-900/90 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 space-y-1.5">
+                <div className="flex items-center justify-between text-emerald-400 font-semibold">
+                  <span>{activeToolObj.name} - Kullanım Rehberi</span>
+                  <button onClick={() => setShowInfoModal(false)} className="text-slate-500 hover:text-white">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <p className="text-slate-400 leading-relaxed">{activeToolObj.description}</p>
+                <div className="text-[10px] text-slate-500 font-mono pt-1">
+                  💡 Tüm işlemler doğrudan tarayıcınızda (Client-Side) güvenle gerçekleştirilir. Sunucuya hiçbir veri gönderilmez.
+                </div>
+              </div>
+            )}
 
             {/* Aktif Araç Bileşeni */}
             <div>
