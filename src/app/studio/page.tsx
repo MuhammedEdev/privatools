@@ -48,7 +48,7 @@ export default function StudioPage() {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Ctrl + K Klavye Kısayolu Entegrasyonu
+  // Ctrl + K ve Enter ile Hızlı Seçim Kısayolu Entegrasyonu
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
@@ -174,6 +174,13 @@ export default function StudioPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && filteredTools.length > 0) {
+      handleSelectTool(filteredTools[0].id);
+      setSearchQuery("");
+    }
+  };
+
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
       <main className={`max-w-7xl w-full mx-auto grid grid-cols-1 ${isFullscreen ? "lg:grid-cols-1" : "lg:grid-cols-12"} gap-6 flex-1 transition-all duration-300`}>
@@ -210,6 +217,7 @@ export default function StudioPage() {
                   placeholder="Araç ara... (Ctrl + K)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
                   className="w-full bg-[#0D121F] border border-slate-800 rounded-lg pl-10 pr-16 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50"
                 />
                 {searchQuery && (
@@ -356,8 +364,8 @@ export default function StudioPage() {
                   <code className="text-emerald-400 font-mono">Ctrl+K</code>
                 </div>
                 <div className="flex items-center justify-between bg-slate-900/60 px-2 py-1 rounded border border-slate-800/60">
-                  <span>Sıfırla</span>
-                  <code className="text-emerald-400 font-mono">R</code>
+                  <span>Seç / Aç</span>
+                  <code className="text-emerald-400 font-mono">Enter</code>
                 </div>
               </div>
             </div>
