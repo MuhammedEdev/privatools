@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -98,6 +98,16 @@ export default function StudioPage() {
   const handleClearRecents = () => {
     setRecentTools([]);
     localStorage.removeItem("privatools_recents");
+  };
+
+  const handleDownloadResult = () => {
+    const element = document.createElement("a");
+    const file = new Blob([`PrivaTools Studio Export\nTool Name: ${activeToolObj.name}\nTool ID: ${activeToolObj.id}\nExported Date: ${new Date().toISOString()}`], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `privatools-${activeToolObj.id}-export.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
   const toolsList = [
@@ -376,6 +386,15 @@ export default function StudioPage() {
                 >
                   {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 text-emerald-400" /> : <Maximize2 className="w-3.5 h-3.5 text-emerald-400" />}
                   <span>{isFullscreen ? "Küçült" : "Tam Ekran"}</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadResult}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
+                  title="Sonucu dosya olarak indir"
+                >
+                  <Download className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>İndir</span>
                 </button>
 
                 <button
