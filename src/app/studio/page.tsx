@@ -163,7 +163,7 @@ export default function StudioPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] text-slate-100 flex flex-col p-4 sm:p-6 lg:p-8">
       <main className={`max-w-7xl w-full mx-auto grid grid-cols-1 ${isFullscreen ? "lg:grid-cols-1" : "lg:grid-cols-12"} gap-6 flex-1 transition-all duration-300`}>
         
         {/* Sol Sidebar */}
