@@ -394,9 +394,14 @@ export default function StudioPage() {
               <Lock className="w-3.5 h-3.5 text-emerald-400" />
               <span>Sıfır veri kaybı ve tam gizlilik garantisiyle tarayıcınızda çalışır.</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Next.js & Turbopack</span>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono text-emerald-400/90 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                Oturum Geçmişi: {recentTools.length} Araç
+              </span>
+              <div className="flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Next.js & Turbopack</span>
+              </div>
             </div>
           </div>
 
