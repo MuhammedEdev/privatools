@@ -6,7 +6,7 @@ import {
   FileImage, KeyRound, Palette, Code2, Binary, FileCode, Globe, 
   ShieldAlert, Link2, FileText, Fingerprint, Code, Clock, Pipette, 
   Regex, Hash, LayoutGrid, AlignLeft, QrCode, Ruler, Sparkles, 
-  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info, Sparkle, BellRing 
+  Braces, Keyboard, FileSpreadsheet, Link, ArrowRight, Search, Star, Layers, Shield, Cpu, RefreshCw, History, Check, Copy, Lock, Zap, RotateCcw, X, Maximize2, Minimize2, Trash2, Command, Download, Info, Sparkle, BellRing, Share2 
 } from "lucide-react";
 
 import ImageCompressor from "@/components/tools/ImageCompressor";
@@ -49,7 +49,6 @@ export default function StudioPage() {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Toast Mesajı Gösterme Yardımcısı
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
@@ -57,7 +56,6 @@ export default function StudioPage() {
     }, 2500);
   };
 
-  // Ctrl + K ve Enter ile Hızlı Seçim Kısayolu Entegrasyonu
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
@@ -188,6 +186,18 @@ export default function StudioPage() {
     setCopied(true);
     showToast("Sayfa bağlantısı panoya kopyalandı! 🔗");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShareTool = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `PrivaTools - ${activeToolObj.name}`,
+        text: activeToolObj.description,
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      handleCopyToolInfo();
+    }
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -475,6 +485,15 @@ export default function StudioPage() {
                 >
                   <Download className="w-3.5 h-3.5 text-emerald-400" />
                   <span>İndir</span>
+                </button>
+
+                <button
+                  onClick={handleShareTool}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 border border-slate-700"
+                  title="Aracı veya bağlantıyı paylaş"
+                >
+                  <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Paylaş</span>
                 </button>
 
                 <button
