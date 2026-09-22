@@ -572,7 +572,10 @@ export default function StudioPage() {
               <span>Sıfır veri kaybı ve tam gizlilik garantisiyle tarayıcınızda çalışır.</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[11px] font-mono text-emerald-400/90 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
+                v1.0.0 Stable
+              </span>
+              <span className="text-[11px] font-mono text-slate-400">
                 Oturum Geçmişi: {recentTools.length} Araç
               </span>
               <div className="flex items-center gap-1.5">
