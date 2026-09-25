@@ -1,14 +1,38 @@
 // src/components/Navbar.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wrench, Info, Mail, Code, Terminal, Menu, X } from "lucide-react";
+import { Wrench, Info, Mail, Code, Terminal, Menu, X, Sun, Moon } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      setDarkMode(false);
+      document.documentElement.classList.remove("dark");
+    } else {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (darkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setDarkMode(true);
+    }
+  };
 
   const navLinks = [
     { href: "/", label: "Ana Sayfa" },
@@ -18,7 +42,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#090D16]/90 backdrop-blur-md border-b border-slate-800">
+    <header className="sticky top-0 z-50 bg-[#090D16]/90 dark:bg-white/90 backdrop-blur-md border-b border-slate-800 dark:border-slate-200 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Proje İsmi & İkonu */}
@@ -26,7 +50,7 @@ export default function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition">
             <Terminal className="w-4 h-4" />
           </div>
-          <span className="font-extrabold text-white text-base sm:text-lg tracking-tight">
+          <span className="font-extrabold text-white dark:text-slate-900 text-base sm:text-lg tracking-tight">
             Priva<span className="text-emerald-400">Tools</span>
           </span>
         </Link>
@@ -43,7 +67,7 @@ export default function Navbar() {
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900/60"
+                    : "text-slate-400 dark:text-slate-600 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900/60 dark:hover:bg-slate-100"
                 }`}
               >
                 {Icon && <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />}
@@ -53,22 +77,31 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Sağ Butonlar (GitHub & Mobil Menü Butonu) */}
+        {/* Sağ Butonlar (GitHub, Tema Değiştirici & Mobil Menü Butonu) */}
         <div className="flex items-center gap-2">
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg transition border border-slate-700 flex items-center gap-1.5 text-xs font-medium"
+            className="bg-slate-800 hover:bg-slate-700 dark:bg-slate-100 dark:hover:bg-slate-200 text-slate-200 dark:text-slate-800 px-3.5 py-2 rounded-lg transition border border-slate-700 dark:border-slate-300 flex items-center gap-1.5 text-xs font-medium"
           >
             <Code className="w-4 h-4 text-emerald-400" />
             <span className="hidden sm:inline">GitHub</span>
           </a>
 
+          {/* Gerçek İkonlu Tema Değiştirme Butonu (GitHub'ın hemen yanında) */}
+          <button
+            onClick={toggleTheme}
+            className="bg-slate-800 hover:bg-slate-700 dark:bg-slate-100 dark:hover:bg-slate-200 text-amber-400 dark:text-slate-800 p-2 rounded-lg transition border border-slate-700 dark:border-slate-300"
+            title="Temayı Değiştir"
+          >
+            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-slate-700" />}
+          </button>
+
           {/* Mobil Menü Açma Butonu */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden bg-slate-800/80 hover:bg-slate-700 text-slate-200 p-2 rounded-lg transition border border-slate-700"
+            className="md:hidden bg-slate-800/80 hover:bg-slate-700 text-slate-200 dark:bg-slate-100 dark:text-slate-800 p-2 rounded-lg transition border border-slate-700 dark:border-slate-300"
             aria-label="Menüyü Aç"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -79,7 +112,7 @@ export default function Navbar() {
 
       {/* Mobil Açılır Menü */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0D121F] border-b border-slate-800 px-4 py-4 space-y-2">
+        <div className="md:hidden bg-[#0D121F] dark:bg-white border-b border-slate-800 dark:border-slate-200 px-4 py-4 space-y-2">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -91,7 +124,7 @@ export default function Navbar() {
                 className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
-                    : "text-slate-300 hover:text-white hover:bg-slate-900"
+                    : "text-slate-300 dark:text-slate-700 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900 dark:hover:bg-slate-100"
                 }`}
               >
                 {Icon && <Icon className="w-4 h-4 text-emerald-400" />}
