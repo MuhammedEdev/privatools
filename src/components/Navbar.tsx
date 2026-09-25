@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wrench, Info, Mail, Code, Terminal, Menu, X, Sun, Moon } from "lucide-react";
+import { Code, Terminal, Menu, X, Sun, Moon } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,10 +12,7 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    // Sayfa ilk açıldığında localStorage kontrolü
     const savedTheme = localStorage.getItem("theme");
-    
-    // Eğer kullanıcı daha önce açık modu seçmediyse, varsayılan olarak hep dark (siyah) aç
     if (savedTheme === "light") {
       setIsDark(false);
       document.documentElement.classList.remove("dark");
@@ -40,9 +37,9 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Ana Sayfa" },
-    { href: "/studio", label: "Stüdyo", icon: Wrench },
-    { href: "/about", label: "Hakkımızda", icon: Info },
-    { href: "/contact", label: "İletişim", icon: Mail },
+    { href: "/studio", label: "Stüdyo" },
+    { href: "/about", label: "Hakkımızda" },
+    { href: "/contact", label: "İletişim" },
   ];
 
   return (
@@ -59,22 +56,20 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Masaüstü Menü Linkleri */}
+        {/* Masaüstü Menü Linkleri (İkonsuz Sadece Metin) */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
-            const Icon = link.icon;
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   isActive
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
                     : "text-slate-400 dark:text-slate-600 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900/60 dark:hover:bg-slate-100"
                 }`}
               >
-                {Icon && <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />}
                 <span>{link.label}</span>
               </Link>
             );
@@ -93,7 +88,7 @@ export default function Navbar() {
             <span className="hidden sm:inline">GitHub</span>
           </a>
 
-          {/* Tema Değiştirme Butonu (GitHub'ın hemen yanında) */}
+          {/* Tema Değiştirme Butonu */}
           <button
             onClick={toggleTheme}
             className="bg-slate-800 hover:bg-slate-700 dark:bg-slate-100 dark:hover:bg-slate-200 text-amber-400 dark:text-slate-800 p-2 rounded-lg transition border border-slate-700 dark:border-slate-300 flex items-center justify-center"
@@ -117,20 +112,18 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#030712] dark:bg-white border-b border-slate-800 dark:border-slate-200 px-4 py-4 space-y-2">
           {navLinks.map((link) => {
-            const Icon = link.icon;
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-medium transition-all ${
+                className={`block px-4 py-3 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold"
                     : "text-slate-300 dark:text-slate-700 hover:text-white dark:hover:text-slate-900 hover:bg-slate-900 dark:hover:bg-slate-100"
                 }`}
               >
-                {Icon && <Icon className="w-4 h-4 text-emerald-400" />}
                 <span>{link.label}</span>
               </Link>
             );
