@@ -8,7 +8,7 @@
 }
 
 .dark {
-  --background: #090D16;
+  --background: #030712; /* Saf ve net koyu siyah tonu (Yeşillik kalmaz) */
   --foreground: #f8fafc;
 }
 
