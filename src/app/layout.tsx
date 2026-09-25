@@ -31,16 +31,32 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#090D16] text-slate-100 transition-colors duration-300">
-        {/* Kalıcı Üst Menü */}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme');
+                  if (theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                  }
+                } catch (e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-[#030712] text-slate-100 transition-colors duration-300">
         <Navbar />
-
-        {/* Sayfa İçerikleri */}
         <main className="flex-1 flex flex-col">
           {children}
         </main>
-
-        {/* Kalıcı Alt Bilgi (Footer) */}
         <Footer />
       </body>
     </html>
