@@ -20,27 +20,27 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[var(--background)] text-[var(--foreground)] flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#090D16] dark:bg-slate-50 text-slate-100 dark:text-slate-900 flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-2xl mx-auto space-y-8 w-full">
         
         {/* Başlık */}
         <div className="text-center space-y-3">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-slate-900 tracking-tight">
             Geri Bildirim & Destek
           </h1>
-          <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
+          <p className="text-slate-400 dark:text-slate-600 text-xs sm:text-sm">
             Önerileriniz, eklemek istediğiniz yeni araçlar veya hata bildirimleri için bize mesaj gönderebilirsiniz.
           </p>
         </div>
 
         {/* Form Kartı */}
-        <div className="bg-slate-900/60 dark:bg-white border border-slate-800 dark:border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div className="bg-[#0D121F] dark:bg-white border border-slate-800/80 dark:border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xl">
           {submitted ? (
             <div className="text-center py-12 space-y-4">
               <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
                 <CheckCircle className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold">Mesajınız Alındı!</h3>
+              <h3 className="text-lg font-bold text-white dark:text-slate-900">Mesajınız Alındı!</h3>
               <p className="text-xs text-slate-400 dark:text-slate-600 max-w-sm mx-auto">
                 Geri bildiriminiz için teşekkür ederiz. En kısa sürede inceleyip dönüş yapacağız.
               </p>
@@ -59,7 +59,7 @@ export default function ContactPage() {
                   type="text"
                   required
                   placeholder="Adınız Soyadınız"
-                  className="w-full bg-slate-950/60 dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition"
+                  className="w-full bg-[#090D16] dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition"
                 />
               </div>
 
@@ -69,7 +69,7 @@ export default function ContactPage() {
                   type="email"
                   required
                   placeholder="ornek@domain.com"
-                  className="w-full bg-slate-950/60 dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition"
+                  className="w-full bg-[#090D16] dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition"
                 />
               </div>
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
                   onChange={(e) => setMessage(e.target.value)}
                   maxLength={500}
                   placeholder="Öneri veya görüşlerinizi buraya yazın..."
-                  className="w-full bg-slate-950/60 dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition resize-none"
+                  className="w-full bg-[#090D16] dark:bg-slate-100 border border-slate-800 dark:border-slate-300 rounded-lg px-4 py-2.5 text-xs text-white dark:text-slate-900 placeholder-slate-600 dark:placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition resize-none"
                 />
                 <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 pt-0.5">
                   <span>Minimum 10 karakter</span>
@@ -113,7 +113,7 @@ export default function ContactPage() {
 
       </div>
 
-      <footer className="border-t border-slate-800 dark:border-slate-200 pt-6 mt-12 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-800/80 dark:border-slate-200 pt-6 mt-12 text-center text-xs text-slate-500">
         PrivaTools Open Source Utility Framework
       </footer>
     </div>
